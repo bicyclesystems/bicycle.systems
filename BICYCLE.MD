@@ -1,4 +1,4 @@
-# Bicycle: The End of Traditional Computing
+# Bicycle: The birth of a new era (and The End of Traditional Computing as we know it).
 
 ## 1. The Problem
 Computers today are bloated, slow, and broken. Layers of outdated software trap users in inefficient workflows. Every action is mediated by windows, apps, and interfaces designed decades ago.
