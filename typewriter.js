@@ -18,6 +18,12 @@ class Typewriter {
                 this.element.innerHTML += currentChar;
             }
             
+            // Auto-scroll to keep the latest typed text in view
+            window.scrollTo({
+                top: document.documentElement.scrollHeight,
+                behavior: 'smooth'
+            });
+            
             this.currentIndex++;
             setTimeout(() => this.type(), this.speed);
         } else {
