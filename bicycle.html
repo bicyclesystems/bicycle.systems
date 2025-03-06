@@ -15,14 +15,32 @@
     <meta property="og:type" content="website">
     <link rel="stylesheet" href="https://unpkg.com/@rnbws/renecss/dist/rene.min.css" />
     <link rel="icon" href="./images/faviconbicycle.svg">
-    <script defer data-domain="bicycle.systems"
+    <script defer data-domain="bicycle.systems"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/2.0.3/marked.min.js"></script>
+    <style>
+        @media (max-width: 768px) {
+            aside {
+                display: none !important;
+            }
+            .view {
+                width: 100% !important;
+                padding: 1rem;
+            }
+        }
+        .row {
+            flex-wrap: wrap !important;
+        }
+        .view {
+            flex: 1;
+            min-width: 0;
+        }
+    </style>
 </head>
 <body>
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-    <div class="row" style="flex-wrap: nowrap;">
+    <div class="row">
         <div>
-            <aside class="column justify-stretch sticky padding-l" style="width: 15rem; display: inline-block;">
+            <aside class="column justify-stretch sticky padding-l" style="width: 15rem;">
             </aside>
         </div>
         <div class="view column align-top">
