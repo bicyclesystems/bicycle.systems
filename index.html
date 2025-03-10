@@ -4,177 +4,229 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The birth of a new era (and The End of Traditional Computing as we know it).</title>
+    <link rel="stylesheet" href="https://unpkg.com/@rnbws/renecss/dist/rene.min.css" />
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            line-height: 1.6;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 2rem;
-            color: #333;
-        }
-        #typewriter-content {
+        .typewriter-content {
             white-space: pre-line;
         }
         .section {
+            display: none;
+        }
+        .section.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+        .nav-buttons {
+            display: none;
+        }
+        .nav-buttons.visible {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
             margin: 2rem 0;
         }
-        .section-title {
-            font-size: 1.8rem;
-            margin-bottom: 1rem;
-            color: #111;
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
-        .example {
-            background: #f5f5f5;
-            padding: 1rem;
-            border-left: 4px solid #333;
-            margin: 1rem 0;
-        }
-        .cta {
-            background: #000;
-            color: #fff;
-            padding: 2rem;
-            margin: 2rem 0;
-            text-align: center;
+        /* Add padding to the bottom of the content container */
+        #conversation-flow {
+            padding-bottom: 25vh; /* Reduced from 50vh to 25vh */
         }
     </style>
 </head>
 <body>
-    <div id="typewriter-content">Bicycle
+    <div class="view align-center">
+        <div class="box-s padding-xl">
+            <div>
+                <div id="introduction">
+                    <p id="typewriter-content" class="typewriter-content">Bicycle. Just think.
 
-        The birth of a new era (and The End of Traditional Computing as we know it).
+                    The birth of a new era (and The End of Traditional Computing as we know it).
 
-        The Problem
-        Computers are broken. Bloated. Slow. Stuck in a world built for limitations, not possibilities. You don't use a computer. You fight it. You dig through files. You open apps. You waste time managing software instead of thinking freely. 
+                    The Problem
+                    Computers are broken. Bloated. Slow. Stuck in a world built for limitations, not possibilities. You don't use a computer. You fight it. You dig through files. You open apps. You waste time managing software instead of thinking freely. 
 
-        Computers were supposed to be a bicycle for the mind. Instead, they became a cage.
+                    Computers were supposed to be a bicycle for the mind. Instead, they became a cage.
 
-        What is Bicycle?
-        Bicycle is not an operating system. It is not software. It is not an AI assistant. Bicycle is the destruction of everything that slows us down. No apps. No OS. No UI clutter. No static files. No browsers. Just pure intelligence. Instant execution of thought. 
+                    What is Bicycle?
+                    Bicycle is not an operating system. It is not software. It is not an AI assistant. Bicycle is the destruction of everything that slows us down. No apps. No OS. No UI clutter. No static files. No browsers. Just pure intelligence. Instant execution of thought.
 
-        Example: Need to analyze quarterly sales data? Don't open Excel, PowerPoint, and your email. Simply express your need: "Show me Q3 performance trends and draft a summary email." Bicycle instantly generates the analysis, visualizations, and communication you need.
+                    The Future is Here
+                    This is not an upgrade. This is not an improvement. This is computing as it should have always been.
 
-        No waiting. No searching. No managing. Just doing.
+                    Bicycle is inevitable. The only question is: Will you lead the revolution, or watch it happen?</div>
+                    </p>
 
-        No competitors. No equals. Nothing else even tries to do this. 
+                <div id="conversation-flow">
+                    <!-- Sections will be dynamically added here -->
+                    
+                    <div class="nav-buttons" id="nav-buttons">
+                        <button class="btn" data-section="system-failed">Tell me why the system has failed</button>
+                        <button class="btn" data-section="technology">How does the technology work?</button>
+                        <button class="btn" data-section="education">How will it transform education?</button>
+                        <button class="btn" data-section="transition">What's the transition like?</button>
+                        <button class="btn" data-section="join">How can I join?</button>
+                        <button class="btn" data-section="how-we-build">How are you building it?</button>
+                        <button class="btn" data-section="investment">What are the investment details?</button>
+                        <button class="btn" data-section="team">Who is the team?</button>
+                    </div>
+                </div>
 
-        Bicycle is not an upgrade. It is an extinction event for everything before it.
+                <div id="sections-content">
+                    <section id="system-failed" class="section">
+                        <div class="question">Tell me why the system has failed</div>
+                        <div class="answer">
+                            <div id="system-failed-content" class="typewriter-content">
+                                We have spent decades refining the wrong thing. Computers have gotten more powerful, but not smarter. AI is being bolted onto outdated systems, but never as the foundation. 
 
-        The System Has Failed
-        We have spent decades refining the wrong thing. Computers have gotten more powerful, but not smarter. AI is being bolted onto outdated systems, but never as the foundation. 
+                                Operating systems were built for an era of weak machines. Software was created to patch their limitations. Apps are a crutch. Browsers are a distraction. Files are a relic. Everything about modern computing is a desperate attempt to make an inefficient model seem functional. 
 
-        Operating systems were built for an era of weak machines. Software was created to patch their limitations. Apps are a crutch. Browsers are a distraction. Files are a relic. Everything about modern computing is a desperate attempt to make an inefficient model seem functional. 
+                                Computers should not require a learning curve. You should not have to open a program to perform an action. You should not have to search for information when it should simply be available to you. 
 
-        Computers should not require a learning curve. You should not have to open a program to perform an action. You should not have to search for information when it should simply be available to you. 
+                                Bicycle doesn't refine computing. It erases what never worked in the first place.
+                            </div>
+                        </div>
+                    </section>
 
-        Bicycle doesn't refine computing. It erases what never worked in the first place.
+                    <section id="technology" class="section">
+                        <div class="question">How does the technology work?</div>
+                        <div class="answer">
+                            <div id="technology-content" class="typewriter-content">
+                                Bicycle is built on three core innovations:
 
-        The Technology
-        Bicycle is built on three core innovations:
+                                1. Neural-First Architecture: Unlike traditional systems that bolt AI onto existing software, Bicycle's core is a neural processing engine that understands context, intent, and execution.
 
-        1. Neural-First Architecture: Unlike traditional systems that bolt AI onto existing software, Bicycle's core is a neural processing engine that understands context, intent, and execution.
+                                2. Dynamic Interface Generation: No static UI. Every visual element is generated in real-time, optimized for your current task and thought process.
 
-        2. Dynamic Interface Generation: No static UI. Every visual element is generated in real-time, optimized for your current task and thought process.
+                                3. Unified Knowledge Processing: Instead of files and apps, Bicycle maintains a continuous, intelligent knowledge stream that evolves with your work.
+                            </div>
+                        </div>
+                    </section>
 
-        3. Unified Knowledge Processing: Instead of files and apps, Bicycle maintains a continuous, intelligent knowledge stream that evolves with your work.
+                    <section id="education" class="section">
+                        <div class="question">How will it transform education?</div>
+                        <div class="answer">
+                            <div id="education-content" class="typewriter-content">
+                                Education is our first frontier. Why?
 
-        Transforming Education
-        Education is our first frontier. Why?
+                                - Students think faster than software can keep up
+                                - Schools waste millions on outdated software licenses
+                                - Learning management systems create barriers, not bridges
+                                - Research is slowed by tool switching and data silos
 
-        - Students think faster than software can keep up
-        - Schools waste millions on outdated software licenses
-        - Learning management systems create barriers, not bridges
-        - Research is slowed by tool switching and data silos
+                                A Day with Bicycle in Education:
+                                - Students express ideas naturally, no app switching
+                                - Teachers receive real-time understanding of class comprehension
+                                - Research synthesizes across sources instantly
+                                - Administrative tasks happen automatically in the background
 
-        A Day with Bicycle in Education:
-        - Students express ideas naturally, no app switching
-        - Teachers receive real-time understanding of class comprehension
-        - Research synthesizes across sources instantly
-        - Administrative tasks happen automatically in the background
+                                Early adopter schools report:
+                                - 70% reduction in IT costs
+                                - 85% less time spent on software management
+                                - 3x increase in student engagement
+                            </div>
+                        </div>
+                    </section>
 
-        Early adopter schools report:
-        - 70% reduction in IT costs
-        - 85% less time spent on software management
-        - 3x increase in student engagement
+                    <section id="transition" class="section">
+                        <div class="question">What's the transition like?</div>
+                        <div class="answer">
+                            <div id="transition-content" class="typewriter-content">
+                                Your First Day with Bicycle:
+                                1. No migration needed - Bicycle understands your existing files and data
+                                2. No training required - it adapts to how you think
+                                3. No setup - just start working naturally
+                                4. Legacy systems remain accessible but fade into the background as you evolve
 
-        The Transition
-        Your First Day with Bicycle:
-        1. No migration needed - Bicycle understands your existing files and data
-        2. No training required - it adapts to how you think
-        3. No setup - just start working naturally
-        4. Legacy systems remain accessible but fade into the background as you evolve
+                                Bicycle doesn't replace your tools. It makes them irrelevant.
+                            </div>
+                        </div>
+                    </section>
 
-        Bicycle doesn't replace your tools. It makes them irrelevant.
+                    <section id="join" class="section">
+                        <div class="question">How can I join?</div>
+                        <div class="answer">
+                            <div id="join-content" class="typewriter-content">
+                                Ready to Transform Your School?
+                                
+                                Join our Education Pioneer Program:
+                                - Early access to Bicycle
+                                - Direct influence on development
+                                - Priority support and implementation
+                                - Significant cost advantages
 
-        Ready to Transform Your School?
-        
-        Join our Education Pioneer Program:
-        - Early access to Bicycle
-        - Direct influence on development
-        - Priority support and implementation
-        - Significant cost advantages
+                                Contact: pioneers@bicycle.ai
+                                (Secure channels available for serious inquiries)
+                            </div>
+                        </div>
+                    </section>
 
-        Contact: pioneers@bicycle.ai
-        (Secure channels available for serious inquiries)
+                    <section id="how-we-build" class="section">
+                        <div class="question">How are you building it?</div>
+                        <div class="answer">
+                            <div id="how-we-build-content" class="typewriter-content">
+                                We move fast. We break everything. We don't ask for permission.
 
-        The End of Traditional Computing
-        Apple will never build this. Microsoft will never build this. Google will never build this. 
+                                Step 1: Lock the Name and Identity. The domain. The socials. The presence. Make people curious before we even show them what's coming.
 
-        They make money from control. They sell software. They sell apps. They sell walled gardens. 
+                                Step 2: Build the Core. No apps. No windows. No folders. Just raw intelligence that executes instantly. No files. Just memory-based recall. No software. Just direct action. 
 
-        Bicycle destroys all of that. 
+                                Step 3: Train it. First internally. Then with early users. It must learn. It must refine itself. It must optimize its own UI based on real-world interaction.
 
-        Operating systems will never evolve into this, because they were built on the wrong foundation. They will always be limited by what came before them. They are systems designed to sustain themselves, not to set you free. 
+                                Step 4: Tease It. A single video. No explanation. Just a glimpse of something that shouldn't be possible. Make people demand access.
 
-        Bicycle makes them irrelevant.
+                                Step 5: Secure Funding Without Control. We take money, but we don't give up power. Anonymous structures. Nominee directors. Private banking. No one owns Bicycle except those who build it. 
 
-        How We Build Bicycle
-        We move fast. We break everything. We don't ask for permission.
+                                Step 6: Release it and Watch Everything Change. We don't launch it. We unleash it. One moment, the world is normal. The next, Bicycle exists, and nothing is the same after.
+                            </div>
+                        </div>
+                    </section>
 
-        Step 1: Lock the Name and Identity. The domain. The socials. The presence. Make people curious before we even show them what's coming.
+                    <section id="investment" class="section">
+                        <div class="question">What are the investment details?</div>
+                        <div class="answer">
+                            <div id="investment-content" class="typewriter-content">
+                                We are raising $50M in a SAFE round with the following terms:
+                                - Valuation Cap: $500M
+                                - Discount: 20% on the next round
+                                - Most Favored Nation (MFN) clause
+                                - No board seats
+                                - No control provisions
+                                - Simple 1-page agreement
 
-        Step 2: Build the Core. No apps. No windows. No folders. Just raw intelligence that executes instantly. No files. Just memory-based recall. No software. Just direct action. 
+                                Investment Process:
+                                1. Initial contact through secure channels
+                                2. Due diligence package provided under NDA
+                                3. Technical deep dive with core team
+                                4. Term sheet review and negotiation
+                                5. Closing within 2 weeks
 
-        Step 3: Train it. First internally. Then with early users. It must learn. It must refine itself. It must optimize its own UI based on real-world interaction.
+                                Minimum Investment: $1M
+                                Maximum Investment: $10M per investor
+                                Closing Date: Rolling basis until target reached
+                            </div>
+                        </div>
+                    </section>
 
-        Step 4: Tease It. A single video. No explanation. Just a glimpse of something that shouldn't be possible. Make people demand access.
+                    <section id="team" class="section">
+                        <div class="question">Who is the team?</div>
+                        <div class="answer">
+                            <div id="team-content" class="typewriter-content">
+                                The team is anonymous. The movement is real. We don't seek attention. We build.
+                                why anonymous? because we're a team of engineers and designers who are passionate about building a better future. we're not looking for fame or fortune. we're looking for a way to make a difference. and we're also a little bit of everything else - scared, excited, and everything in between. keep it anonymous to keep it real.
 
-        Step 5: Secure Funding Without Control. We take money, but we don't give up power. Anonymous structures. Nominee directors. Private banking. No one owns Bicycle except those who build it. 
-
-        Step 6: Release it and Watch Everything Change. We don't launch it. We unleash it. One moment, the world is normal. The next, Bicycle exists, and nothing is the same after.
-
-        Investment Details
-        We are raising $50M in a SAFE round with the following terms:
-        - Valuation Cap: $500M
-        - Discount: 20% on the next round
-        - Most Favored Nation (MFN) clause
-        - No board seats
-        - No control provisions
-        - Simple 1-page agreement
-
-        Investment Process:
-        1. Initial contact through secure channels
-        2. Due diligence package provided under NDA
-        3. Technical deep dive with core team
-        4. Term sheet review and negotiation
-        5. Closing within 2 weeks
-
-        Minimum Investment: $1M
-        Maximum Investment: $10M per investor
-        Closing Date: Rolling basis until target reached
-
-        The Team
-        The team is anonymous. The movement is real. We don't seek attention. We build.
-        why anonymous? because we're a team of engineers and designers who are passionate about building a better future. we're not looking for fame or fortune. we're looking for a way to make a difference. and we're also a little bit of everything else - scared, excited, and everything in between. keep it anonymous to keep it real.
-
-        We are raising funding, but we don't take control-based investments. Strategic capital from deep-tech investors who want to back the next computing revolution. Private funding structures to maintain independence. No traditional VC nonsense. No dilution. Just execution.
-
-        The Future is Here
-        This is not an upgrade. This is not an improvement. This is computing as it should have always been.
-
-        Bicycle is inevitable. The only question is: Will you lead the revolution, or watch it happen?
+                                We are raising funding, but we don't take control-based investments. Strategic capital from deep-tech investors who want to back the next computing revolution. Private funding structures to maintain independence. No traditional VC nonsense. No dilution. Just execution.
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <script src="typewriter.js"></script>
 </body>
-<script src="typewriter.js"></script>
 </html>
 
