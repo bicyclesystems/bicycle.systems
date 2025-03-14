@@ -38,7 +38,7 @@
             </aside>
         </div>
         <div class="view align-top box">
-            <div class="page gap-xl" id="markdown-content"></div>
+            <div class="page" id="markdown-content"></div>
         </div>
     </div>
     <under-footer></under-footer>
@@ -47,7 +47,7 @@
 <script>
 async function loadMarkdownContent() {
     try {
-        const response = await fetch('BICYCLE.MD');
+        const response = await fetch('BIKE-1.MD');
         const markdownText = await response.text();
         
         marked.setOptions({

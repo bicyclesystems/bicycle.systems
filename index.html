@@ -5,228 +5,302 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The birth of a new era (and The End of Traditional Computing as we know it).</title>
     <link rel="stylesheet" href="https://unpkg.com/@rnbws/renecss/dist/rene.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/2.0.3/marked.min.js"></script>
     <style>
-        .typewriter-content {
-            white-space: pre-line;
-        }
-        .section {
-            display: none;
-        }
-        .section.active {
-            display: block;
-            animation: fadeIn 0.5s ease-in;
-        }
-        .nav-buttons {
-            display: none;
-        }
-        .nav-buttons.visible {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            justify-content: center;
-            margin: 2rem 0;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        /* Add padding to the bottom of the content container */
-        #conversation-flow {
-            padding-bottom: 25vh; /* Reduced from 50vh to 25vh */
-        }
+        .section{display:none}.section.active{display:block;animation:fadeIn .5s}
+        .nav-buttons{display:none}.nav-buttons.visible{display:flex;flex-direction:column;animation:fadeIn .8s}
+        @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+        #conversation-flow{padding-bottom:25vh}
+        .topic-paragraph{opacity:.5;transition:opacity .3s;cursor:pointer}.topic-paragraph:hover{opacity:1}
     </style>
 </head>
 <body>
     <div class="view align-center">
-        <div class="box-s padding-xl">
-            <div>
-                <div id="introduction">
-                    <p id="typewriter-content" class="typewriter-content">Bicycle. Just think.
-
-                    The birth of a new era (and The End of Traditional Computing as we know it).
-
-                    The Problem
-                    Computers are broken. Bloated. Slow. Stuck in a world built for limitations, not possibilities. You don't use a computer. You fight it. You dig through files. You open apps. You waste time managing software instead of thinking freely. 
-
-                    Computers were supposed to be a bicycle for the mind. Instead, they became a cage.
-
-                    What is Bicycle?
-                    Bicycle is not an operating system. It is not software. It is not an AI assistant. Bicycle is the destruction of everything that slows us down. No apps. No OS. No UI clutter. No static files. No browsers. Just pure intelligence. Instant execution of thought.
-
-                    The Future is Here
-                    This is not an upgrade. This is not an improvement. This is computing as it should have always been.
-
-                    Bicycle is inevitable. The only question is: Will you lead the revolution, or watch it happen?</div>
-                    </p>
-
-                <div id="conversation-flow">
-                    <!-- Sections will be dynamically added here -->
-                    
-                    <div class="nav-buttons" id="nav-buttons">
-                        <button class="btn" data-section="system-failed">Tell me why the system has failed</button>
-                        <button class="btn" data-section="technology">How does the technology work?</button>
-                        <button class="btn" data-section="education">How will it transform education?</button>
-                        <button class="btn" data-section="transition">What's the transition like?</button>
-                        <button class="btn" data-section="join">How can I join?</button>
-                        <button class="btn" data-section="how-we-build">How are you building it?</button>
-                        <button class="btn" data-section="investment">What are the investment details?</button>
-                        <button class="btn" data-section="team">Who is the team?</button>
-                    </div>
-                </div>
-
-                <div id="sections-content">
-                    <section id="system-failed" class="section">
-                        <div class="question">Tell me why the system has failed</div>
-                        <div class="answer">
-                            <div id="system-failed-content" class="typewriter-content">
-                                We have spent decades refining the wrong thing. Computers have gotten more powerful, but not smarter. AI is being bolted onto outdated systems, but never as the foundation. 
-
-                                Operating systems were built for an era of weak machines. Software was created to patch their limitations. Apps are a crutch. Browsers are a distraction. Files are a relic. Everything about modern computing is a desperate attempt to make an inefficient model seem functional. 
-
-                                Computers should not require a learning curve. You should not have to open a program to perform an action. You should not have to search for information when it should simply be available to you. 
-
-                                Bicycle doesn't refine computing. It erases what never worked in the first place.
-                            </div>
-                        </div>
-                    </section>
-
-                    <section id="technology" class="section">
-                        <div class="question">How does the technology work?</div>
-                        <div class="answer">
-                            <div id="technology-content" class="typewriter-content">
-                                Bicycle is built on three core innovations:
-
-                                1. Neural-First Architecture: Unlike traditional systems that bolt AI onto existing software, Bicycle's core is a neural processing engine that understands context, intent, and execution.
-
-                                2. Dynamic Interface Generation: No static UI. Every visual element is generated in real-time, optimized for your current task and thought process.
-
-                                3. Unified Knowledge Processing: Instead of files and apps, Bicycle maintains a continuous, intelligent knowledge stream that evolves with your work.
-                            </div>
-                        </div>
-                    </section>
-
-                    <section id="education" class="section">
-                        <div class="question">How will it transform education?</div>
-                        <div class="answer">
-                            <div id="education-content" class="typewriter-content">
-                                Education is our first frontier. Why?
-
-                                - Students think faster than software can keep up
-                                - Schools waste millions on outdated software licenses
-                                - Learning management systems create barriers, not bridges
-                                - Research is slowed by tool switching and data silos
-
-                                A Day with Bicycle in Education:
-                                - Students express ideas naturally, no app switching
-                                - Teachers receive real-time understanding of class comprehension
-                                - Research synthesizes across sources instantly
-                                - Administrative tasks happen automatically in the background
-
-                                Early adopter schools report:
-                                - 70% reduction in IT costs
-                                - 85% less time spent on software management
-                                - 3x increase in student engagement
-                            </div>
-                        </div>
-                    </section>
-
-                    <section id="transition" class="section">
-                        <div class="question">What's the transition like?</div>
-                        <div class="answer">
-                            <div id="transition-content" class="typewriter-content">
-                                Your First Day with Bicycle:
-                                1. No migration needed - Bicycle understands your existing files and data
-                                2. No training required - it adapts to how you think
-                                3. No setup - just start working naturally
-                                4. Legacy systems remain accessible but fade into the background as you evolve
-
-                                Bicycle doesn't replace your tools. It makes them irrelevant.
-                            </div>
-                        </div>
-                    </section>
-
-                    <section id="join" class="section">
-                        <div class="question">How can I join?</div>
-                        <div class="answer">
-                            <div id="join-content" class="typewriter-content">
-                                Ready to Transform Your School?
-                                
-                                Join our Education Pioneer Program:
-                                - Early access to Bicycle
-                                - Direct influence on development
-                                - Priority support and implementation
-                                - Significant cost advantages
-
-                                Contact: pioneers@bicycle.ai
-                                (Secure channels available for serious inquiries)
-                            </div>
-                        </div>
-                    </section>
-
-                    <section id="how-we-build" class="section">
-                        <div class="question">How are you building it?</div>
-                        <div class="answer">
-                            <div id="how-we-build-content" class="typewriter-content">
-                                We move fast. We break everything. We don't ask for permission.
-
-                                Step 1: Lock the Name and Identity. The domain. The socials. The presence. Make people curious before we even show them what's coming.
-
-                                Step 2: Build the Core. No apps. No windows. No folders. Just raw intelligence that executes instantly. No files. Just memory-based recall. No software. Just direct action. 
-
-                                Step 3: Train it. First internally. Then with early users. It must learn. It must refine itself. It must optimize its own UI based on real-world interaction.
-
-                                Step 4: Tease It. A single video. No explanation. Just a glimpse of something that shouldn't be possible. Make people demand access.
-
-                                Step 5: Secure Funding Without Control. We take money, but we don't give up power. Anonymous structures. Nominee directors. Private banking. No one owns Bicycle except those who build it. 
-
-                                Step 6: Release it and Watch Everything Change. We don't launch it. We unleash it. One moment, the world is normal. The next, Bicycle exists, and nothing is the same after.
-                            </div>
-                        </div>
-                    </section>
-
-                    <section id="investment" class="section">
-                        <div class="question">What are the investment details?</div>
-                        <div class="answer">
-                            <div id="investment-content" class="typewriter-content">
-                                We are raising $50M in a SAFE round with the following terms:
-                                - Valuation Cap: $500M
-                                - Discount: 20% on the next round
-                                - Most Favored Nation (MFN) clause
-                                - No board seats
-                                - No control provisions
-                                - Simple 1-page agreement
-
-                                Investment Process:
-                                1. Initial contact through secure channels
-                                2. Due diligence package provided under NDA
-                                3. Technical deep dive with core team
-                                4. Term sheet review and negotiation
-                                5. Closing within 2 weeks
-
-                                Minimum Investment: $1M
-                                Maximum Investment: $10M per investor
-                                Closing Date: Rolling basis until target reached
-                            </div>
-                        </div>
-                    </section>
-
-                    <section id="team" class="section">
-                        <div class="question">Who is the team?</div>
-                        <div class="answer">
-                            <div id="team-content" class="typewriter-content">
-                                The team is anonymous. The movement is real. We don't seek attention. We build.
-                                why anonymous? because we're a team of engineers and designers who are passionate about building a better future. we're not looking for fame or fortune. we're looking for a way to make a difference. and we're also a little bit of everything else - scared, excited, and everything in between. keep it anonymous to keep it real.
-
-                                We are raising funding, but we don't take control-based investments. Strategic capital from deep-tech investors who want to back the next computing revolution. Private funding structures to maintain independence. No traditional VC nonsense. No dilution. Just execution.
-                            </div>
-                        </div>
-                    </section>
-                </div>
-            </div>
+        <div class="box-s padding-xl column">
+            <div id="introduction"><p id="typewriter-content"></p></div>
+            <div id="conversation-flow"></div>
         </div>
     </div>
 
-    <script src="typewriter.js"></script>
+    <script>
+        class Typewriter {
+            constructor(element, options = {}) {
+                this.element = element;
+                this.words = element.textContent.trim();
+                this.element.textContent = '';
+                this.speed = options.speed || 1000;
+                this.delay = options.delay || 10;
+                this.onComplete = options.onComplete || (() => {});
+                this.isRunning = false;
+                this.controller = options.controller || null;
+                this.currentParagraph = null;
+            }
+
+            async type() {
+                if (this.isRunning) return;
+                this.isRunning = true;
+                
+                this.element.innerHTML = '';
+                this.currentParagraph = document.createElement('p');
+                this.currentParagraph.className = 'paragraph';
+                this.element.appendChild(this.currentParagraph);
+                
+                const chars = this.words.split('');
+                let currentLine = '';
+                
+                for (const char of chars) {
+                    if (!this.isRunning) break;
+                    
+                    if (char === '\n') {
+                        if (currentLine.trim() !== '') {
+                            this.currentParagraph.textContent = currentLine;
+                            currentLine = '';
+                        }
+                        
+                        this.currentParagraph = document.createElement('p');
+                        this.currentParagraph.className = 'paragraph';
+                        this.element.appendChild(this.currentParagraph);
+                        
+                        this.scrollToBottom();
+                        await new Promise(resolve => setTimeout(resolve, this.delay / 3));
+                    } else {
+                        currentLine += char;
+                        this.currentParagraph.textContent = currentLine;
+                        
+                        const delay = ['.', '!', '?'].includes(char) ? this.delay : 
+                                     [',', ';'].includes(char) ? this.delay / 2 : this.speed;
+                        
+                        this.scrollToBottom();
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                    }
+                }
+                
+                this.isRunning = false;
+                this.onComplete();
+            }
+
+            scrollToBottom() {
+                if (this.isUserAtBottom() || (this.controller && !this.controller.userHasScrolled)) {
+                    window.scrollTo({top: document.body.scrollHeight, behavior: 'auto'});
+                    if (this.controller) this.controller.userHasScrolled = false;
+                }
+            }
+            
+            isUserAtBottom() {
+                if (this.controller) return this.controller.isUserAtBottom();
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                const windowHeight = window.innerHeight;
+                const documentHeight = Math.max(
+                    document.body.scrollHeight, document.body.offsetHeight,
+                    document.documentElement.clientHeight, document.documentElement.scrollHeight,
+                    document.documentElement.offsetHeight
+                );
+                return documentHeight - (scrollTop + windowHeight) <= 100;
+            }
+
+            stop() { this.isRunning = false; }
+        }
+
+        class TypewriterController {
+            constructor() {
+                this.activeTypewriter = null;
+                this.navButtons = Object.assign(document.createElement('div'), {
+                    id: 'nav-buttons',
+                    className: 'nav-buttons'
+                });
+                this.conversationFlow = document.getElementById('conversation-flow');
+                this.answeredQuestions = new Set();
+                this.isTyping = false;
+                this.userHasScrolled = false;
+                this.markdownSections = {};
+                this.introText = "";
+                
+                this.loadMarkdownContent();
+                window.addEventListener('scroll', () => {
+                    this.userHasScrolled = true;
+                    setTimeout(() => { this.userHasScrolled = false; }, 2000);
+                });
+            }
+            
+            async loadMarkdownContent() {
+                try {
+                    const markdownText = await (await fetch('INDEX.MD')).text();
+                    const introEndIndex = markdownText.indexOf('## ');
+                    this.introText = this.processMarkdown(
+                        introEndIndex > 0 ? markdownText.substring(0, introEndIndex).trim() : markdownText.trim(), 
+                        true
+                    );
+                    
+                    const lines = markdownText.split('\n');
+                    let currentSection = null;
+                    let currentContent = [];
+                    
+                    for (const line of lines) {
+                        if (line.startsWith('## ')) {
+                            if (currentSection) {
+                                this.markdownSections[currentSection] = this.processMarkdown(currentContent.join('\n'), true);
+                                currentContent = [];
+                            }
+                            currentSection = line.substring(3).trim();
+                        } else if (currentSection && !line.startsWith('# ')) {
+                            currentContent.push(line);
+                        }
+                    }
+                    
+                    if (currentSection) {
+                        this.markdownSections[currentSection] = this.processMarkdown(currentContent.join('\n'), true);
+                    }
+                    
+                    this.createSectionButtons();
+                    this.startIntroduction();
+                } catch (error) {
+                    console.error('Error loading markdown:', error);
+                }
+            }
+            
+            createSectionButtons() {
+                this.navButtons.innerHTML = '';
+                
+                for (const sectionTitle in this.markdownSections) {
+                    const paragraph = Object.assign(document.createElement('p'), {
+                        className: 'topic-paragraph',
+                        textContent: sectionTitle
+                    });
+                    paragraph.setAttribute('data-section', this.getSectionId(sectionTitle));
+                    
+                    paragraph.addEventListener('click', (e) => {
+                        if (this.isTyping) return;
+                        this.hideNavigation();
+                        this.showSection(e.target.getAttribute('data-section'), sectionTitle);
+                    });
+                    
+                    this.navButtons.appendChild(paragraph);
+                }
+            }
+            
+            getSectionId(title) {
+                return title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+            }
+            
+            hideNavigation() {
+                this.navButtons.classList.remove('visible');
+            }
+            
+            async startIntroduction() {
+                const typewriter = new Typewriter(document.getElementById('typewriter-content'), {
+                    speed: 25,
+                    delay: 500,
+                    onComplete: () => {
+                        this.navButtons.classList.add('visible');
+                        this.conversationFlow.appendChild(this.navButtons);
+                    },
+                    controller: this
+                });
+                
+                typewriter.words = this.introText;
+                this.activeTypewriter = typewriter;
+                await typewriter.type();
+            }
+            
+            async showSection(sectionId, sectionTitle) {
+                if (this.answeredQuestions.has(sectionId)) return;
+                
+                this.answeredQuestions.add(sectionId);
+                this.isTyping = true;
+                
+                const sectionElement = Object.assign(document.createElement('section'), {
+                    id: `${sectionId}-section`,
+                    className: 'section active'
+                });
+                
+                sectionElement.appendChild(Object.assign(document.createElement('p'), {
+                    className: 'question',
+                    textContent: sectionTitle
+                }));
+                
+                const contentDiv = Object.assign(document.createElement('div'), {
+                    id: `${sectionId}-content`,
+                    className: 'typewriter-content'
+                });
+                
+                const answerDiv = document.createElement('div');
+                answerDiv.appendChild(contentDiv);
+                sectionElement.appendChild(answerDiv);
+                this.conversationFlow.appendChild(sectionElement);
+                
+                const typewriter = new Typewriter(contentDiv, {
+                    speed: 25,
+                    delay: 500,
+                    onComplete: () => {
+                        this.isTyping = false;
+                        this.moveNavButtonsAfterLastSection();
+                    },
+                    controller: this
+                });
+                
+                typewriter.words = this.markdownSections[sectionTitle];
+                this.activeTypewriter = typewriter;
+                await typewriter.type();
+            }
+            
+            moveNavButtonsAfterLastSection() {
+                if (this.navButtons.parentNode) {
+                    this.navButtons.parentNode.removeChild(this.navButtons);
+                }
+                
+                this.conversationFlow.appendChild(this.navButtons);
+                this.updateNavButtons();
+                
+                if (this.isUserAtBottom()) {
+                    window.scrollTo({top: document.body.scrollHeight, behavior: 'auto'});
+                }
+            }
+            
+            updateNavButtons() {
+                let hasUnansweredQuestions = false;
+                
+                document.querySelectorAll('.topic-paragraph').forEach(paragraph => {
+                    const sectionId = paragraph.getAttribute('data-section');
+                    paragraph.style.display = this.answeredQuestions.has(sectionId) ? 'none' : 'block';
+                    if (!this.answeredQuestions.has(sectionId)) hasUnansweredQuestions = true;
+                });
+                
+                this.navButtons.classList.toggle('visible', hasUnansweredQuestions);
+            }
+            
+            isUserAtBottom() {
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                const windowHeight = window.innerHeight;
+                const documentHeight = Math.max(
+                    document.body.scrollHeight, document.body.offsetHeight,
+                    document.documentElement.clientHeight, document.documentElement.scrollHeight,
+                    document.documentElement.offsetHeight
+                );
+                return documentHeight - (scrollTop + windowHeight) <= 100;
+            }
+            
+            removeMarkdownFormatting(text) {
+                return text.replace(/\*\*(.*?)\*\*/g, '$1')
+                    .replace(/\*(.*?)\*/g, '$1')
+                    .replace(/^\s*-\s+/gm, '')
+                    .replace(/^\s*#{1,6}\s*/gm, '')
+                    .replace(/`{3}([\s\S]*?)`{3}/gm, '$1')
+                    .replace(/`([^`]+)`/g, '$1')
+                    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '$1')
+                    .replace(/!\[([^\]]+)\]\(([^)]+)\)/g, '$1')
+                    .replace(/^>\s*(.*?)$/gm, '$1')
+                    .replace(/~~(.*?)~~/g, '$1')
+                    .replace(/^---+$/gm, '')
+                    .replace(/\n={2,}$/gm, '');
+            }
+            
+            processMarkdown(text, plainText = false) {
+                return plainText ? this.removeMarkdownFormatting(text) : marked.parse(text);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => new TypewriterController());
+    </script>
 </body>
 </html>
 
