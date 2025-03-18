@@ -114,12 +114,17 @@
                 this.userHasScrolled = false;
                 this.markdownSections = {};
                 this.introText = "";
+                this.typewriterSpeed = 15;
+                this.typewriterDelay = 150;
                 
                 this.loadMarkdownContent();
                 window.addEventListener('scroll', () => {
                     this.userHasScrolled = true;
                     setTimeout(() => { this.userHasScrolled = false; }, 2000);
                 });
+
+                // Add hash change listener
+                window.addEventListener('hashchange', () => this.handleHashChange());
             }
             
             async loadMarkdownContent() {
@@ -152,6 +157,19 @@
                     }
                     
                     this.createSectionButtons();
+                    
+                    // Check for initial hash before starting introduction
+                    const initialHash = window.location.hash.substring(1);
+                    if (initialHash) {
+                        const sectionTitle = this.getSectionTitleFromHash(initialHash);
+                        if (sectionTitle && this.markdownSections[sectionTitle]) {
+                            // Skip introduction and show the requested section
+                            this.showSection(this.getSectionId(sectionTitle), sectionTitle);
+                            return;
+                        }
+                    }
+                    
+                    // If no valid hash or no hash at all, start with introduction
                     this.startIntroduction();
                 } catch (error) {
                     console.error('Error loading markdown:', error);
@@ -179,7 +197,9 @@
             }
             
             getSectionId(title) {
-                return title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+                return title.toUpperCase()
+                    .replace(/[^A-Z0-9]+/g, '-')
+                    .replace(/^-+|-+$/g, '');
             }
             
             hideNavigation() {
@@ -188,8 +208,8 @@
             
             async startIntroduction() {
                 const typewriter = new Typewriter(document.getElementById('typewriter-content'), {
-                    speed: 25,
-                    delay: 500,
+                    speed: this.typewriterSpeed,
+                    delay: this.typewriterDelay,
                     onComplete: () => {
                         this.navButtons.classList.add('visible');
                         this.conversationFlow.appendChild(this.navButtons);
@@ -207,6 +227,13 @@
                 
                 this.answeredQuestions.add(sectionId);
                 this.isTyping = true;
+                
+                // Update URL hash without triggering hashchange event
+                const currentHash = window.location.hash;
+                const newHash = `#${sectionId}`;
+                if (currentHash !== newHash) {
+                    window.location.hash = newHash;
+                }
                 
                 const sectionElement = Object.assign(document.createElement('section'), {
                     id: `${sectionId}-section`,
@@ -229,8 +256,8 @@
                 this.conversationFlow.appendChild(sectionElement);
                 
                 const typewriter = new Typewriter(contentDiv, {
-                    speed: 25,
-                    delay: 500,
+                    speed: this.typewriterSpeed,
+                    delay: this.typewriterDelay,
                     onComplete: () => {
                         this.isTyping = false;
                         this.moveNavButtonsAfterLastSection();
@@ -296,6 +323,24 @@
             
             processMarkdown(text, plainText = false) {
                 return plainText ? this.removeMarkdownFormatting(text) : marked.parse(text);
+            }
+
+            // Add new method to handle hash changes
+            handleHashChange() {
+                const hash = window.location.hash.substring(1);
+                if (hash) {
+                    const sectionTitle = this.getSectionTitleFromHash(hash);
+                    if (sectionTitle && this.markdownSections[sectionTitle]) {
+                        this.showSection(this.getSectionId(sectionTitle), sectionTitle);
+                    }
+                }
+            }
+
+            // Add new method to convert hash to section title
+            getSectionTitleFromHash(hash) {
+                return Object.keys(this.markdownSections).find(title => 
+                    this.getSectionId(title) === hash
+                );
             }
         }
 
