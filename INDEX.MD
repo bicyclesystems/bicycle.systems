@@ -1,9 +1,11 @@
 Computing was meant to be a bicycle for the mind. Instead, it became a cage.
 
-We don't use computers. We fight them. We dig through files. We open apps. We waste time managing software instead of thinking freely.
+We don't use computers. We fight them. We dig through files. We open apps. We waste time managing software instead of thinking freely. Everything about modern computing is a desperate attempt to make an inefficient model seem functional.
 
 Bicycle erases everything that slows us down. No apps. No OS. No files. No browsers. 
 Just pure intelligence. Instant execution of thought.
+
+Bicycle reimagines computing from first principles.
 
 This isn't computing improved. This is computing, reborn.
 
@@ -15,33 +17,9 @@ Are you ready to ride?
 
 Touch, speak, or move - Bicycle responds instantly. The screen shows exactly what you need, then fades away. As natural as picking up a pen.
 
-We don't make software. We make it disappear.
-
 Want information? Just ask. Need to create? Just start. Want to watch? Just look. Everything flows naturally, like water.
 
 Your screen changes with your needs. No buttons to learn. No menus to dig through. Just you and your ideas, moving at the speed of thought.
-
-This isn't a fancy computer. This is freedom from traditional computers.
-
-## HAVE WE BEEN SOLVING THE WRONG PROBLEM ALL ALONG?
-
-We've spent decades refining the wrong thing. Computers got more powerful, not smarter. AI is bolted onto outdated systems, never as the foundation.
-
-Operating systems were built for weak machines. Apps are a crutch. Files are a relic. Everything about modern computing is a desperate attempt to make an inefficient model seem functional.
-
-Bicycle reimagines computing from first principles.
-
-## WHAT MAKES THIS POSSIBLE NOW?
-
-Three core innovations:
-
-1. Neural-first architecture: A processing engine that understands context, intent, and execution. Unlike traditional systems that bolt AI onto existing software.
-
-2. Dynamic interface generation: Every visual element generated in real-time, optimized for your current thought process. No static UI.
-
-3. Unified knowledge processing: A continuous, intelligent knowledge stream that evolves with your work. Instead of files and apps.
-
-## SO WHAT IS BICYCLE?
 
 Bicycle is not exactly a computer. It's a fundamentally new relationship between humanity and technology - where machines serve thought, not commands.
 
@@ -49,7 +27,29 @@ We're entering an era where creativity becomes the next frontier. Not just predi
 
 Bicycle gives each person leverage. It multiplies your capabilities without multiplying your time. It lets you create wealth by solving problems once, then distributing the solution at zero marginal cost.
 
-BIKE 1.0 is a fundamentally new computing paradigm that eliminates traditional software layers in favor of direct neural processing. Key innovations include:
+## WHAT MAKES THIS POSSIBLE NOW?
+
+Three core possible innovations:
+
+1. Neural-first architecture: A processing engine that understands context, intent, and execution. Unlike traditional systems that bolt AI onto existing software.
+
+2. Dynamic interface generation: Every visual element generated in real-time, optimized for your current thought process. No static UI.
+
+3. Unified knowledge processing: A continuous, intelligent knowledge stream that evolves with your work. Instead of files and apps.
+
+These innovations converge to create a system that thinks with you, not for you. One that amplifies human potential without constraining it.
+
+The zeitgeist of time:
+
+4. Societal Revolution: Human-first computing that adapts to people, not vice versa, with built-in ethical principles respecting privacy while enabling collective evolution.
+
+5. Sustainable Intelligence: Radical efficiency minimizing energy while maximizing computational power, transforming technology valuation from licensing to capability enablement.
+
+6. Cognitive Paradigm Shift: A fundamental rethinking that makes previous interfaces obsolete—technology becoming a natural extension of human thought rather than forcing adaptation to machine logic.
+
+## WHAT'S INSIDE?
+
+A fundamentally new computing paradigm that eliminates traditional software layers in favor of direct neural processing. Key components include:
 
 Neural Intent System
 • Understands implicit intent without explicit commands
@@ -66,19 +66,14 @@ Neural Core Architecture
 • Parallel neural pathways
 • Intelligent memory with predictive caching
 
-BIKE Kernel
+BIKE "Kernel"
 • Thought stream management instead of processes
 • Neural state management instead of memory
 • Knowledge graphs instead of files
 • Direct hardware neural interface
 • Intent-based execution pipeline
+• A lot more to uncover...
 
-This isn't iterative improvement.
-This is computing reborn from first principles.
-This is technology that thinks as you think.
-This is the future we've been waiting for.
-
-[Know more](https://bicycle.systems/bike-1)
 
 ## WHY START WITH EDUCATION WHEN WE COULD CHANGE EVERYTHING?
 
@@ -103,7 +98,7 @@ Phase 1: Free for 6 months. Direct developer access. Shape the product.
 Phase 2: 50% first-year discount. Dedicated success teams. Comprehensive training.
 Phase 3: Tiered pricing by school size. Enterprise support. Custom integrations.
 
-Join us: hello@bicycle.systems
+Join us: education@bicycle.systems
 
 ## WHAT HAPPENS WHEN TECHNOLOGY FINALLY SERVES EDUCATION?
 
@@ -155,17 +150,9 @@ We move fast. We break everything. We don't ask permission.
 1. Lock the identity. Make people curious before showing what's coming.
 2. Build the core. No apps. No windows. Just raw intelligence that executes instantly.
 3. Train it internally, then with early users. It optimizes its own UI based on real interaction.
-4. Tease it. A single video. No explanation. Just a glimpse of something impossible.
 5. Secure funding without control. No one owns Bicycle except those who build it.
+4. Tease it. A single video. No explanation. Just a glimpse of something impossible.
 6. Release it and watch everything change. One moment, the world is normal. The next, Bicycle exists.
-
-## PERMISSIONLESS INNOVATION
-
-Great products don't ask for permission; they create new realities. Bicycle embodies permissionless innovation - we're not asking incumbents if we can exist. We're building what should exist.
-
-By removing gatekeepers, we unlock entirely new possibilities. The freedom to innovate without arbitrary constraints means we can pursue what actually matters - giving people tools to think better.
-
-When you solve problems without permission, you create wealth that couldn't exist otherwise.
 
 ## WHAT DOES BACKING THIS LOOK LIKE?
 
@@ -179,22 +166,30 @@ Strategic capital only. We're focused on long-term thinkers who understand that 
 
 Significant options pool to attract and retain top talent who can execute this vision.
 
-## WHAT'S THE PRICE OF FREEDOM?
+Market: $800B+ TAM across computing, enterprise, education
+• First to market with neural computing
+• Emerging markets ready for leapfrog
 
-Hardware:
-• BIKE 1.0: $299 (Early adopter price)
-• Standard retail: $399
-• Enterprise bundles: Starting at $299/unit (volume discounts)
+Perfect Storm:
+• AI enables natural interaction
+• Hardware costs plummeted
+• Market primed for revolution
+• Top talent available
 
-Potential Unit Economics:
-• Hardware COGS: ~$120 (targeting 60% gross margin)
-• Software costs: Negligible (neural processing)
-• Support costs: 5% of revenue
-• Marketing: 15% of revenue
-• R&D: 25% of revenue
-• Target net margin: 15%
+Path to Scale:
+• Direct to consumer
+• Education & enterprise pilots
+• Global OEM partnerships
 
-The economics might work because we've eliminated multiple layers of abstraction - our architecture requires fewer resources to deliver more capability. The unit cost declines significantly at scale due to our unique hardware/software integration approach.
+Revenue Mix:
+• Hardware
+• Enterprise & education
+• Ecosystem
+
+Growth:
+Year 1: Core launch. First 10 schools. Revenue. Team growth.
+Year 2: Market expansion. Enterprise adoption. Hardware development.
+Year 3: Global leadership. Purpose-built hardware. Industry dominance.
 
 ## WHO DARES CHALLENGE THE ENTIRE INDUSTRY?
 
@@ -227,7 +222,7 @@ This is about amplifying human potential, not replacing it. We're enabling new f
 
 We don't measure against competitors. We measure against possibility.
 
-This isn't metaphorical. Our architecture enables a 10x reduction in cognitive overhead, where mental context-switching diminishes to near zero. The technical implementation has no traditional OS, only a thin abstraction layer that adapts neural networks to hardware capabilities.
+This isn't metaphorical - Our architecture enables a 10x reduction in cognitive overhead, where mental context-switching diminishes to near zero. The technical implementation has no traditional OS, only a thin abstraction layer that adapts neural networks to hardware capabilities.
 
 ## HOW DO WE PROTECT WHAT MATTERS?
 
@@ -257,34 +252,9 @@ Our commitment to educational institutions:
 
 ## WHERE DO WE GO FROM HERE?
 
-Market: $800B+ TAM across computing, enterprise, education
-• First to market with neural computing
-• Emerging markets ready for leapfrog
-
-Perfect Storm:
-• AI enables natural interaction
-• Hardware costs plummeted
-• Market primed for revolution
-• Top talent available
-
-Path to Scale:
-• Direct to consumer
-• Education & enterprise pilots
-• Global OEM partnerships
-
-Revenue Mix:
-• Hardware
-• Enterprise & education
-• Developer ecosystem
-
-Growth:
-Year 1: Core launch. First 10 schools. Revenue. Team growth.
-Year 2: Market expansion. Enterprise adoption. Hardware development.
-Year 3: Global leadership. Purpose-built hardware. Industry dominance.
-
 We don't follow roadmaps. We create new destinations.
 
-Remember: The most important market is the one that doesn't exist yet. We're playing infinite games, not quarterly cycles. True wealth isn't built by optimizing for what exists, but by creating what should exist.
+Remember: Great products create new realities without permission. The most important market is the one that doesn't exist yet. We're playing infinite games, not quarterly cycles. True wealth isn't built by optimizing for what exists, but by creating what should exist.
 
 ## CONTACT US
 

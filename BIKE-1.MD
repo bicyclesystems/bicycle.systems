@@ -386,3 +386,46 @@ The system's understanding of formats operates at three levels:
 * Progressive Enhancement adds neural capabilities while ensuring legacy compatibility
 
 Format handling evolves through continuous learning, where the system discovers patterns across formats, extends capabilities automatically, and enables community-driven development—all while maintaining seamless compatibility with existing standards.
+
+## Onboarding
+
+Onboarding with Bicycle is an awakening. The system recognizes you instantly, without tutorials or steps—pure understanding emerges naturally.
+
+From first contact, Bicycle maps your cognitive signature, evolving from observation to anticipation.
+
+No accounts. No preferences. No learning curve.
+You and the system simply exist as one, deepening with each moment.
+
+### Getting Started
+
+0. Buying  
+Even before you receive it, BIKE 1.0 is learning—adapting itself based on your online presence, preferences, and interactions. It's already preparing to meet you.
+
+1. Unboxing  
+You open a sleek black box sealed with silver. Inside, the BIKE 1.0 waits, simple and ready. The card says: "Think. That's all."
+
+2. Awakening  
+You touch it—it wakes instantly. Edges softly glow, as if alive. The surface waits for your first move.
+
+3. Connecting  
+It instantly recognizes you. No setup needed; your thoughts become the key.
+
+4. First Interaction  
+Think, speak, gesture—it understands immediately. Everything feels natural, intuitive.
+
+### Everyday Use
+
+5. Calibration  
+Quickly learns your habits. Soon, it anticipates your actions effortlessly.
+
+6. Integration  
+Instantly maps your surroundings. Connects seamlessly to everything around you.
+
+7. Synchronization  
+Your digital life appears right where you need it. Everything feels perfectly placed.
+
+8. Adaptation 
+It grows with you, becoming increasingly effortless. Soon, it feels like an extension of your thoughts.
+
+Within hours, it feels familiar. Within days, old tech seems obsolete.
+
