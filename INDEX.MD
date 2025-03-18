@@ -11,7 +11,7 @@ This isn't computing improved. This is computing, reborn.
 
 Are you ready to ride?
 
-🚴💨🔥
+🚴💨🔥 
 
 ## WHAT IF YOUR COMPUTER ACTUALLY UNDERSTOOD YOU?
 
@@ -29,7 +29,7 @@ Bicycle gives each person leverage. It multiplies your capabilities without mult
 
 ## WHAT MAKES THIS POSSIBLE NOW?
 
-Three core possible innovations:
+Three core innovations:
 
 1. Neural-first architecture: A processing engine that understands context, intent, and execution. Unlike traditional systems that bolt AI onto existing software.
 
