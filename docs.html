@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Bicycle - The birth of a new era (and The End of Traditional Computing as we know it).</title>
+    <meta name="description"
+        content="Bicycle is not an OS. It is pure intelligence running directly on hardware. No apps. No UI clutter. No software. Just instant execution of intent.">
+    <meta name="keywords"
+        content="bicycle computers, AI computing, neural processing, future of computing, no apps, no software, direct hardware interaction, intelligent computing">
+    <meta property="og:title" content="Bicycle - The End of Traditional Computing">
+    <meta property="og:description"
+        content="Bicycle is not an OS. It is pure intelligence running directly on hardware. No apps. No UI clutter. No software. Just instant execution of intent.">
+    <meta property="og:type" content="website">
+    <link rel="stylesheet" href="https://unpkg.com/@rnbws/renecss/dist/rene.min.css" />
+    <link rel="icon" href="./images/faviconbicycle.svg">
+    
+    <script defer data-domain="bicycle.systems"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/2.0.3/marked.min.js"></script>
+</head>
+<body>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <div class="row">
+        <div>
+            <div class="padding-l">
+                <div class="markdown-nav column">
+                    <span class="nav-item" data-file="BIKE-0.1.MD">BIKE-0.1</span>
+                    <span class="nav-item" data-file="BIKE-1.MD">BIKE-1</span>
+                    <span class="nav-item" data-file="CYCLES.MD">CYCLES</span>
+                    <span class="nav-item" data-file="THOUGHTS.MD">THOUGHTS</span>
+                    <span class="nav-item" data-file="BICYCLE_FOR_THE_MIND.MD">BICYCLE FOR THE MIND</span>
+                </div>
+            </div>
+            
+            <aside class="column justify-stretch sticky padding-l" style="width: 15rem;">
+            </aside>
+        </div>
+        <div class="view align-top box">
+            <div class="box padding-l" id="markdown-content"></div>
+        </div>
+    </div>
+    <under-footer></under-footer>
+</body>
+
+<script>
+async function loadMarkdownContent(file='BIKE-0.1.MD'){
+    try{
+        // Update active state of nav items
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.classList.toggle('active', item.dataset.file === file);
+        });
+
+        const text = await (await fetch(file)).text();
+        marked.setOptions({headerIds:true,mangle:false});
+        const r = new marked.Renderer();
+        r.heading = (text,level) => `<h${level} id="${text.toLowerCase().replace(/\s+/g,"-")}">${text}</h${level}>`;
+        r.paragraph = text => `<p>${text}</p>`;
+        r.table = (header,body) => `<table class="border radius-s"><thead>${header}</thead><tbody>${body}</tbody></table>`;
+        r.tablerow = content => `<tr>${content}</tr>`;
+        r.tablecell = (content,flags) => `<${flags.header?'th':'td'} class="${flags.header?'padding-m background-secondary':'padding-m'}">${content}</${flags.header?'th':'td'}>`;
+        marked.setOptions({renderer:r});
+        document.getElementById('markdown-content').innerHTML = marked(text);
+        createTableOfContents();
+    }catch(e){console.error('Error:',e)}
+}
+
+function createTableOfContents(){
+    const menu = document.querySelector("aside");
+    menu.innerHTML = '';
+    const headers = document.querySelectorAll("div.row > div.view > div h1, div.row > div.view > div h2, div.row > div.view > div h3, div.row > div.view > div h4, div.row > div.view > div h5, div.row > div.view > div h6");
+    const counts = {};
+    let level = 0;
+    let stack = [];
+
+    headers.forEach(h => {
+        if(h.closest('design')!==null) return;
+        const text = h.textContent.trim();
+        let id = h.id || text.toLowerCase().replace(/\s+/g,"-");
+        if(!h.id){
+            counts[id]===undefined ? counts[id]=0 : counts[id]++;
+            if(counts[id]>0) id+=`-${counts[id]}`;
+            h.id = id;
+        }
+        const link = document.createElement("a");
+        link.href = `#${id}`;
+        link.style.display = "block";
+        link.textContent = text;
+
+        const item = document.createElement("div");
+        item.classList.add("menu-item","text-m");
+        item.appendChild(link);
+
+        const hLevel = parseInt(h.tagName.charAt(1));
+        while(stack.length>0 && stack[stack.length-1]>=hLevel){
+            stack.pop();
+            level--;
+        }
+        if(stack.length===0 || hLevel>stack[stack.length-1]){
+            level++;
+            stack.push(hLevel);
+        }
+        item.style.paddingLeft = `${(level-1)*20}px`;
+        menu.appendChild(item);
+    });
+
+    document.querySelectorAll("aside .menu-item a").forEach(link => {
+        link.addEventListener("click", e => {
+            e.preventDefault();
+            document.querySelectorAll("aside .menu-item a").forEach(a => {
+                if(a!==link){
+                    a.classList.remove("active");
+                    a.style.textDecoration = "";
+                    a.style.textDecorationThickness = "";
+                }
+            });
+            link.classList.add("active");
+            link.style.textDecoration = "underline";
+            link.style.textDecorationThickness = "1.5px";
+
+            const id = link.getAttribute("href").substring(1);
+            const el = document.getElementById(id);
+            if(el){
+                const offset = (window.innerHeight*40)/100;
+                window.scrollTo({top:el.offsetTop-offset,behavior:"smooth"});
+                history.pushState(null,null,`#${id}`);
+            }
+        });
+    });
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+    loadMarkdownContent();
+    
+    // Add click handlers for nav items
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', () => loadMarkdownContent(item.dataset.file));
+    });
+});
+</script>
+
+<style>
+
+
+.nav-item {
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+.nav-item:hover {
+    opacity: 1;
+}
+
+.nav-item.active {
+    opacity: 1;
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
+}
+</style>
+</html>

@@ -1,0 +1,586 @@
+{
+  "design": {
+    "colors": {
+      "primary": "#2563eb",
+      "secondary": "#047857",
+      "accent": "#6d28d9",
+      "background": "#f8fafc",
+      "text": "#1e293b",
+      "cardBg": "#ffffff",
+      "border": "#e2e8f0"
+    }
+  },
+  "participants": {
+    "teacher": {
+      "type": "teacher",
+      "name": "Ms. Johnson",
+      "avatar": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=80&h=80&fit=crop"
+    },
+    "bike": {
+      "type": "ai",
+      "name": "BIKE",
+      "avatar": null,
+      "avatarBgColor": "black"
+    },
+    "student1": {
+      "type": "student",
+      "name": "Student 1",
+      "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop"
+    },
+    "student2": {
+      "type": "student",
+      "name": "Student 2",
+      "avatar": "https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?w=80&h=80&fit=crop"
+    },
+    "student3": {
+      "type": "student",
+      "name": "Student 3",
+      "avatar": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop"
+    }
+  },
+  "events": [
+    {
+      "id": "lesson-planning",
+      "title": "Lesson Planning",
+      "start_time": "2023-10-08T09:30:00",
+      "end_time": "2023-10-08T10:05:00",
+      "location": "Teacher's House",
+      "description": "Planning a 45-minute lesson on computer history for 8th graders",
+      "participants": ["teacher", "bike"],
+      "content": {
+        "interactions": [
+          {
+            "id": "initial-question",
+            "speaker": "teacher",
+            "content": "I need a 45-minute lesson on computer history for my 8th graders next week.",
+            "qa": null,
+            "timestamp": "2023-10-08T09:30:00"
+          },
+          {
+            "id": "initial-response",
+            "speaker": "bike",
+            "content": "I'd be happy to help you build that lesson.",
+            "qa": null,
+            "timestamp": "2023-10-08T09:30:15"
+          },
+          {
+            "id": "calendar-scheduling",
+            "type": "module",
+            "module_type": "calendar",
+            "title": "Lesson Scheduling",
+            "content": {
+              "date": "2023-10-15",
+              "startTime": "10:00 AM",
+              "endTime": "10:45 AM",
+              "location": "Room 204",
+              "reminders": [
+                {"type": "email", "time": "1 day before"},
+                {"type": "notification", "time": "1 hour before"}
+              ]
+            },
+            "timestamp": "2023-10-08T09:31:00"
+          },
+          {
+            "id": "focus-question",
+            "speaker": "bike",
+            "content": "Would you prefer to focus on key milestones in computing history or the innovators behind them?",
+            "qa": {
+              "question": "What makes a history lesson engaging for 8th graders?",
+              "answer": "Engaging history lessons for 8th graders incorporate personal stories, visual elements, interactive activities, and connections to their lives. Focusing on the people behind events rather than just dates and facts creates lasting impressions."
+            },
+            "timestamp": "2023-10-08T09:32:30"
+          },
+          {
+            "id": "teacher-focus-choice",
+            "speaker": "teacher",
+            "content": "Let's focus on the innovators - the people behind the technology.",
+            "qa": null,
+            "timestamp": "2023-10-08T09:33:45"
+          },
+          {
+            "id": "bike-structure",
+            "speaker": "bike",
+            "content": "Great choice! I've drafted a structure: 5-minute intro, 20-minute timeline walkthrough of key innovators, 10-minute activity, and 10-minute wrap-up.",
+            "qa": {
+              "question": "How does focusing on innovators rather than technology change the narrative of computing history?",
+              "answer": "Focusing on innovators humanizes technology history, showcasing motivations, challenges, and creative thinking. This approach highlights diversity in computing history, demonstrates how different backgrounds shape innovation, and makes abstract concepts more accessible through personal stories."
+            },
+            "timestamp": "2023-10-08T09:35:10"
+          },
+          {
+            "id": "content-focus",
+            "speaker": "teacher",
+            "content": "I want to focus more on their personal stories and less on technical details.",
+            "qa": null,
+            "timestamp": "2023-10-08T09:36:30"
+          },
+          {
+            "id": "bike-adjust",
+            "speaker": "bike",
+            "content": "Adjusted! Now showing origin stories, motivations, and key decisions. Technical details are now secondary and can be expanded only if needed.",
+            "qa": {
+              "question": "How can teachers adapt content complexity while maintaining historical accuracy?",
+              "answer": "Teachers can adapt complexity by prioritizing narrative elements over technical details, using analogies to explain concepts, focusing on cause-and-effect relationships, and creating layered content that allows for differentiated learning while preserving historical accuracy."
+            },
+            "timestamp": "2023-10-08T09:37:45"
+          },
+          {
+            "id": "timeline-module",
+            "type": "module",
+            "module_type": "timeline",
+            "title": "Adjusted Timeline Content",
+            "content": {
+              "nodes": [
+                {
+                  "name": "Ada Lovelace",
+                  "image": "https://via.placeholder.com/80"
+                },
+                {
+                  "name": "Alan Turing",
+                  "image": "https://via.placeholder.com/80"
+                },
+                {
+                  "name": "Steve Jobs",
+                  "image": "https://via.placeholder.com/80"
+                }
+              ]
+            },
+            "timestamp": "2023-10-08T09:39:20"
+          },
+          {
+            "id": "hook-request",
+            "speaker": "teacher",
+            "content": "I need something that will hook them at the start of the lesson.",
+            "qa": null,
+            "timestamp": "2023-10-08T09:41:00"
+          },
+          {
+            "id": "bike-hook-options",
+            "speaker": "bike",
+            "content": "Here are some hook options to start your lesson:",
+            "qa": {
+              "question": "What makes an effective hook for a middle school history lesson?",
+              "answer": "Effective hooks create cognitive dissonance, spark curiosity, or establish relevance. For middle schoolers, visual comparisons (then vs. now), provocative questions, relatable scenarios, or brief multimedia experiences capture attention within the crucial first 3-5 minutes of class."
+            },
+            "timestamp": "2023-10-08T09:42:15"
+          },
+          {
+            "id": "hook-module",
+            "type": "module",
+            "module_type": "hook-selection",
+            "title": "Hook Selection",
+            "content": {
+              "options": [
+                {
+                  "preview": "Device Evolution",
+                  "title": "Device Evolution Visual",
+                  "selected": false
+                },
+                {
+                  "preview": "1970s vs Today",
+                  "title": "1970s vs Today Lifestyle",
+                  "selected": true
+                },
+                {
+                  "preview": "AR Experience",
+                  "title": "AR: Phone vs ENIAC",
+                  "selected": false
+                },
+                {
+                  "preview": "Moore's Law",
+                  "title": "Graph: Moore's Law",
+                  "selected": false
+                }
+              ]
+            },
+            "timestamp": "2023-10-08T09:44:30"
+          },
+          {
+            "id": "activity-request",
+            "speaker": "teacher",
+            "content": "Let's do a matching activity—people and their innovations.",
+            "qa": null,
+            "timestamp": "2023-10-08T09:46:00"
+          },
+          {
+            "id": "bike-activity",
+            "speaker": "bike",
+            "content": "I've created a matching activity that pairs each innovator with their key contribution. You can adjust the difficulty level or switch to flashcards if preferred.",
+            "qa": {
+              "question": "What learning objectives do matching activities support in history lessons?",
+              "answer": "Matching activities support knowledge consolidation, relationship identification, and conceptual organization. In history lessons, they help students recognize patterns, establish causal relationships, and reinforce key vocabulary while providing formative assessment data for teachers."
+            },
+            "timestamp": "2023-10-08T09:47:25"
+          },
+          {
+            "id": "matching-module",
+            "type": "module",
+            "module_type": "matching-activity",
+            "title": "Matching Activity",
+            "content": {
+              "column1": ["Ada Lovelace", "Alan Turing", "Steve Jobs", "Tim Berners-Lee", "Fei-Fei Li"],
+              "column2": ["First Computer Algorithm", "Enigma Machine & AI Theory", "Personal Computer Revolution", "World Wide Web", "ImageNet & Computer Vision"]
+            },
+            "timestamp": "2023-10-08T09:49:10"
+          },
+          {
+            "id": "industrial-revolution",
+            "speaker": "teacher",
+            "content": "We just covered the Industrial Revolution—can we tie it in?",
+            "qa": null,
+            "timestamp": "2023-10-08T09:51:00"
+          },
+          {
+            "id": "bike-industrial-connection",
+            "speaker": "bike",
+            "content": "I've mapped parallels between the Industrial Revolution and Computing: innovation cycles, automation, and societal transformation. Here's a knowledge graph showing the connections.",
+            "qa": {
+              "question": "Why is connecting new content to previously learned material pedagogically valuable?",
+              "answer": "Connecting to previous learning activates prior knowledge, creates cognitive frameworks for new information, builds conceptual understanding across topics, and reinforces retention through multiple exposures. These connections help students see history as interrelated patterns rather than isolated facts."
+            },
+            "timestamp": "2023-10-08T09:52:30"
+          },
+          {
+            "id": "knowledge-graph",
+            "type": "module",
+            "module_type": "knowledge-graph",
+            "title": "Knowledge Graph: Computing & Industrial Revolution",
+            "content": {
+              "nodes": [
+                {"name": "Jacquard Loom", "position": {"left": "100px", "top": "50px"}, "highlight": true},
+                {"name": "Steam Engine", "position": {"left": "50px", "top": "200px"}, "highlight": true},
+                {"name": "Ada Lovelace", "position": {"left": "250px", "top": "100px"}, "highlight": true},
+                {"name": "Computing", "position": {"left": "400px", "top": "150px"}, "highlight": false},
+                {"name": "Automation", "position": {"left": "200px", "top": "300px"}, "highlight": true}
+              ],
+              "edges": [
+                {"width": "150px", "left": "150px", "top": "100px", "rotate": "15deg"},
+                {"width": "175px", "left": "100px", "top": "250px", "rotate": "45deg"},
+                {"width": "150px", "left": "300px", "top": "150px", "rotate": "20deg"}
+              ]
+            },
+            "timestamp": "2023-10-08T09:54:15"
+          },
+          {
+            "id": "save-request",
+            "speaker": "teacher",
+            "content": "This looks good. Save it and remind me the day before the lesson.",
+            "qa": null,
+            "timestamp": "2023-10-08T09:56:00"
+          },
+          {
+            "id": "bike-save",
+            "speaker": "bike",
+            "content": "Lesson plan saved! I've set a reminder for the day before and prepared slides you can project directly from this interface. Would you like to share it with your teaching team?",
+            "qa": {
+              "question": "What preparation should teachers do the day before implementing a new lesson?",
+              "answer": "Day-before preparation includes reviewing content for familiarity, checking all technology/materials, anticipating student questions or difficulties, mentally rehearsing transitions between activities, and making any last-minute adjustments based on recent student performance or interests."
+            },
+            "timestamp": "2023-10-08T09:57:10"
+          },
+          {
+            "id": "teacher-share",
+            "speaker": "teacher",
+            "content": "Yes, share it with the 8th grade team.",
+            "qa": null,
+            "timestamp": "2023-10-08T09:58:30"
+          },
+          {
+            "id": "video-games-question",
+            "speaker": "teacher",
+            "content": "Last time, students asked about early video games. Can we prepare for tangent questions?",
+            "qa": null,
+            "timestamp": "2023-10-08T10:00:45"
+          },
+          {
+            "id": "bike-tangent",
+            "speaker": "bike",
+            "content": "I've added a tangent module about early video games that connects to our timeline. It can be deployed if students ask about it, and I'll automatically log engagement and connections.",
+            "qa": {
+              "question": "How do effective teachers balance planned curriculum with student-driven tangents?",
+              "answer": "Effective teachers anticipate common tangents, prepare concise responses that acknowledge interest without derailing the lesson, use tangents to demonstrate connections to main topics, and sometimes \"park\" questions for later exploration. The goal is honoring student curiosity while maintaining instructional coherence."
+            },
+            "timestamp": "2023-10-08T10:02:00"
+          },
+          {
+            "id": "tangent-module",
+            "type": "module",
+            "module_type": "tangent-tracker",
+            "title": "Tangent Tracker",
+            "content": {
+              "question": "Was Pong the first video game?",
+              "answer": "No, but it was one of the first commercially successful ones. Earlier games include 'Tennis for Two' (1958) and 'Spacewar!' (1962).",
+              "related_to": "Steve Jobs",
+              "engagement": "78%"
+            },
+            "timestamp": "2023-10-08T10:03:45"
+          }
+        ],
+        "attachments": [
+          {
+            "id": "lesson-plan-document",
+            "type": "document",
+            "title": "Computer History Lesson Plan",
+            "file_type": "pdf",
+            "url": "resources/lesson_plan_computer_history.pdf"
+          }
+        ],
+        "artifacts": [
+          {
+            "id": "timeline-artifact",
+            "type": "timeline",
+            "title": "Computer History Timeline",
+            "description": "Interactive timeline showing key innovators in computing history",
+            "status": "completed"
+          },
+          {
+            "id": "matching-activity-artifact",
+            "type": "activity",
+            "title": "Innovators Matching Activity",
+            "description": "Activity matching innovators to their contributions",
+            "status": "completed"
+          }
+        ]
+      }
+    },
+    {
+      "id": "actual-lesson",
+      "title": "Actual Lesson",
+      "start_time": "2023-10-15T10:00:00",
+      "end_time": "2023-10-15T10:45:00",
+      "location": "Room 204",
+      "description": "Teaching the computer history lesson to 8th graders",
+      "participants": ["teacher", "bike", "student1", "student2", "student3"],
+      "content": {
+        "interactions": [
+          {
+            "id": "class-start-student",
+            "speaker": "student1",
+            "content": "Good morning, Ms. Johnson! What are we learning about today?",
+            "qa": null,
+            "timestamp": "2023-10-15T10:00:00"
+          },
+          {
+            "id": "class-start-teacher",
+            "speaker": "teacher",
+            "content": "Good morning! Today we're going to explore the fascinating world of computer history and meet some amazing innovators who changed the world.",
+            "qa": null,
+            "timestamp": "2023-10-15T10:00:15"
+          },
+          {
+            "id": "student-pong",
+            "speaker": "student2",
+            "content": "[Another student] Are we going to learn about video games? My dad told me about Pong!",
+            "qa": null,
+            "timestamp": "2023-10-15T10:00:45"
+          },
+          {
+            "id": "lesson-intro",
+            "speaker": "teacher",
+            "content": "[Teacher starts the lesson] Let's begin with a quick question: Can you imagine a world without computers? Look at this comparison between the 1970s and today.",
+            "qa": null,
+            "timestamp": "2023-10-15T10:01:30"
+          },
+          {
+            "id": "student-comparison",
+            "speaker": "student3",
+            "content": "[Student] Wow! That's like comparing a bicycle to a spaceship!",
+            "qa": null,
+            "timestamp": "2023-10-15T10:02:15"
+          },
+          {
+            "id": "bike-tracking",
+            "speaker": "bike",
+            "content": "[BIKE activates engagement tracking] High student interest detected in technological evolution. Ready to provide additional context about early computing devices.",
+            "qa": {
+              "question": "How do visual comparisons help students understand historical context?",
+              "answer": "Visual comparisons create immediate understanding of scale and change, making abstract historical concepts concrete. They help students connect past and present, recognize patterns of innovation, and develop critical thinking about technological progress."
+            },
+            "timestamp": "2023-10-15T10:02:45"
+          },
+          {
+            "id": "lovelace-intro",
+            "speaker": "teacher",
+            "content": "Let's look at our first innovator, Ada Lovelace. She was writing computer programs before computers even existed!",
+            "qa": null,
+            "timestamp": "2023-10-15T10:05:00"
+          },
+          {
+            "id": "student-question",
+            "speaker": "student1",
+            "content": "[Student] How is that possible? Did she have a time machine?",
+            "qa": null,
+            "timestamp": "2023-10-15T10:06:15"
+          },
+          {
+            "id": "bike-lovelace",
+            "speaker": "bike",
+            "content": "[BIKE provides quick fact] She wrote algorithms for Charles Babbage's Analytical Engine, which was designed but never built. It's considered the first general-purpose computer design.",
+            "qa": {
+              "question": "How do student questions drive deeper learning?",
+              "answer": "Student questions reveal misconceptions, spark class discussions, and create opportunities for deeper exploration. They help teachers gauge understanding and adjust instruction, while encouraging critical thinking and curiosity."
+            },
+            "timestamp": "2023-10-15T10:06:45"
+          },
+          {
+            "id": "pong-question",
+            "speaker": "student1",
+            "content": "[Student raises hand] Was Pong really the first video game?",
+            "qa": null,
+            "timestamp": "2023-10-15T10:15:30"
+          },
+          {
+            "id": "bike-pong",
+            "speaker": "bike",
+            "content": "[BIKE activates tangent module] No, but it was one of the first commercially successful ones. The first video game was actually 'Tennis for Two', created by William Higinbotham in 1958. It was followed by 'Spacewar!' in 1962, which was one of the first games to run on a computer. Pong came later in 1972, but it was revolutionary because it made video games accessible to everyone through arcades and home consoles.",
+            "qa": {
+              "question": "How does this connect to our timeline?",
+              "answer": "This connects to Steve Jobs' story - he worked at Atari before founding Apple, where he helped develop the classic game Breakout. This experience influenced his vision for making technology accessible and user-friendly."
+            },
+            "timestamp": "2023-10-15T10:16:00"
+          },
+          {
+            "id": "teacher-connection",
+            "speaker": "teacher",
+            "content": "Great question! This actually ties in perfectly with what we were just discussing about innovation cycles. Just like how the Jacquard Loom led to early computing, these early games paved the way for the personal computer revolution.",
+            "qa": null,
+            "timestamp": "2023-10-15T10:17:30"
+          },
+          {
+            "id": "student-followup",
+            "speaker": "student1",
+            "content": "[Student] That's so cool! So video games helped make computers popular?",
+            "qa": null,
+            "timestamp": "2023-10-15T10:18:15"
+          },
+          {
+            "id": "bike-games-influence",
+            "speaker": "bike",
+            "content": "Exactly! Games like Pong and later titles showed people that computers could be fun and interactive, not just for calculations. This helped drive the development of better graphics, sound, and user interfaces - all things that made personal computers more appealing to everyday users.",
+            "qa": {
+              "question": "How do video games relate to educational technology?",
+              "answer": "Video games demonstrate how technology can make learning engaging and interactive. They use principles like immediate feedback, progressive difficulty, and reward systems - all of which are now being applied to educational software and platforms."
+            },
+            "timestamp": "2023-10-15T10:19:00"
+          }
+        ],
+        "attachments": [
+          {
+            "id": "slides-document",
+            "type": "presentation",
+            "title": "Computer History Slides",
+            "file_type": "slides",
+            "url": "resources/computer_history_slides.pptx"
+          },
+          {
+            "id": "handout-document",
+            "type": "document",
+            "title": "Computing Innovators Handout",
+            "file_type": "pdf",
+            "url": "resources/computing_innovators_handout.pdf"
+          }
+        ],
+        "metrics": {
+          "engagement": {
+            "overall": 85,
+            "per_student": {
+              "student1": 90,
+              "student2": 80,
+              "student3": 85
+            }
+          },
+          "questions_asked": 5,
+          "tangents_explored": 1
+        }
+      }
+    },
+    {
+      "id": "lesson-review",
+      "title": "Lesson Review",
+      "start_time": "2023-10-15T18:30:00",
+      "end_time": "2023-10-15T18:45:00",
+      "location": "Student's Home",
+      "description": "Student reviewing lesson content at home",
+      "participants": ["student1", "bike"],
+      "content": {
+        "interactions": [
+          {
+            "id": "student-review",
+            "speaker": "student1",
+            "content": "[Student at home] BIKE, show me today's class again.",
+            "qa": null,
+            "timestamp": "2023-10-15T18:30:00"
+          },
+          {
+            "id": "bike-review",
+            "speaker": "bike",
+            "content": "Here's your personalized view. Noted your interest in Lovelace.",
+            "qa": {
+              "question": "What features make educational resources effective for independent student review?",
+              "answer": "Effective review resources are personalized to student interests, organized clearly, include visual and textual information, highlight key concepts, and provide opportunities for self-assessment. Making content accessible outside class extends learning time and supports students who process information at different rates."
+            },
+            "timestamp": "2023-10-15T18:30:15"
+          },
+          {
+            "id": "student-request",
+            "speaker": "student1",
+            "content": "Connect Lovelace to the gaming thing from earlier.",
+            "qa": null,
+            "timestamp": "2023-10-15T18:32:00"
+          },
+          {
+            "id": "student-dashboard",
+            "type": "module",
+            "module_type": "student-dashboard",
+            "title": "Student Dashboard",
+            "content": {
+              "title": "Computer History Timeline",
+              "tabs": ["Notes", "Resources", "Timeline"],
+              "activeTab": "Timeline",
+              "items": [
+                {
+                  "name": "Ada Lovelace",
+                  "description": "First programmer who wrote algorithms for Babbage's Analytical Engine",
+                  "stars": 3,
+                  "notes": "Creative computing - saw beyond calculation",
+                  "highlighted": true
+                },
+                {
+                  "name": "Alan Turing",
+                  "description": "Father of theoretical computer science and AI",
+                  "stars": 1,
+                  "notes": "Class highlight: Enigma machine",
+                  "highlighted": false
+                }
+              ]
+            },
+            "timestamp": "2023-10-15T18:33:30"
+          }
+        ],
+        "attachments": [
+          {
+            "id": "review-guide",
+            "type": "document",
+            "title": "Interactive Review Guide",
+            "file_type": "html",
+            "url": "resources/review_guide_student1.html"
+          }
+        ],
+        "learning_paths": [
+          {
+            "id": "lovelace-deep-dive",
+            "title": "Ada Lovelace: Beyond the First Algorithm",
+            "status": "recommended",
+            "progress": 0
+          },
+          {
+            "id": "gaming-computing-history",
+            "title": "How Gaming Shaped Computing",
+            "status": "suggested",
+            "progress": 0
+          }
+        ]
+      }
+    }
+  ]
+} 

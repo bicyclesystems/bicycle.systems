@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIKE 0.1 Conversation Flow</title>
+    <style>
+        /* Base Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+            padding: 2rem;
+        }
+        
+        /* Participant Profiles */
+        .participant-profiles {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            z-index: 1000;
+        }
+
+        .participant-profile {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid #e2e8f0;
+            margin-right: -15px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            transform: scale(0.5);
+        }
+
+        .participant-profile.animate-in {
+            animation: profilePopIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes profilePopIn {
+            0% { opacity: 0; transform: scale(0.5); }
+            70% { opacity: 1; transform: scale(1.1); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .participant-profile:hover {
+            transform: scale(1.1);
+            z-index: 1001;
+            margin-right: 0;
+        }
+
+        .participant-profile img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .participant-profile.active {
+            border-color: #2563eb;
+        }
+        
+        /* Layout */
+        .conversation-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            min-height: 90vh;
+        }
+        
+        .message.current, .module-container.current {
+            margin: 0 auto;
+            max-width: 80%;
+        }
+        
+        .message:not(.current), .module-container:not(.current) {
+            display: none;
+        }
+
+        /* Time/Space Indicator */
+        .time-space-indicator {
+            position: fixed;
+            top: 0;
+            right: 0;
+            background-color: #ffffff;
+            border-radius: 0.375rem;
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        
+        .indicator-event {
+            font-weight: 600;
+            margin-right: 0.5rem;
+        }
+        
+        .indicator-time {
+            font-weight: 500;
+            margin-right: 0.5rem;
+        }
+        
+        .events-container, .locations-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.25rem;
+        }
+        
+        .location-badge, .event-badge {
+            font-size: 0.8rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .location-badge {
+            background-color: #e2e8f0;
+            color: #1e293b;
+        }
+        
+        .event-badge {
+            background-color: #047857;
+            color: white;
+        }
+        
+        .location-badge.active {
+            background-color: #6d28d9;
+            color: white;
+            font-weight: 500;
+        }
+        
+        .event-badge.active {
+            background-color: #2563eb;
+            color: white;
+            font-weight: 500;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+        
+        .btn.secondary {
+            background-color: transparent;
+            border: 1px solid #2563eb;
+            color: #2563eb;
+        }
+
+        /* Messages */
+        .message {
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
+            line-height: 1.6;
+            max-width: 80%;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+            position: relative;
+        }
+
+        .message-content {
+            flex: 1;
+        }
+
+        .message-profile {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            flex-shrink: 0;
+            border: 2px solid #e2e8f0;
+        }
+
+        .message-profile img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Message Types */
+        .bike-message, .ai-message {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            align-self: flex-start;
+            border-bottom-left-radius: 0.25rem;
+        }
+
+        .teacher-message, .student-message {
+            background-color: #2563eb;
+            color: white;
+            align-self: flex-end;
+            margin-left: auto;
+            border-bottom-right-radius: 0.25rem;
+        }
+
+        /* Message timestamp */
+        .message-timestamp {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            font-size: 0.7rem;
+            opacity: 0.7;
+            color: inherit;
+        }
+
+        /* Modules */
+        .module-container {
+            background-color: #ffffff;
+            border-radius: 1rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 900px;
+            min-height: 400px;
+            padding: 2rem;
+            margin: 2rem auto;
+            position: relative;
+        }
+
+        .module-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        
+        .module-timestamp {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 0.7rem;
+            opacity: 0.7;
+        }
+
+        /* Playback Controls */
+        .playback-controls {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #ffffff;
+            border-radius: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            z-index: 1000;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .play-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #2563eb;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            padding: 0;
+        }
+        
+        .play-icon {
+            font-size: 18px;
+            line-height: 1;
+        }
+
+        .playback-speed {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        #speed-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 80px;
+            height: 4px;
+            background: #e2e8f0;
+            border-radius: 2px;
+            outline: none;
+        }
+        
+        #speed-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #2563eb;
+            cursor: pointer;
+        }
+        
+        #speed-value {
+            font-weight: 600;
+            color: #2563eb;
+            width: 25px;
+            text-align: right;
+        }
+
+        /* Loading */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 400px;
+        }
+
+        .loading-spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #2563eb;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Animations */
+        .message.hidden, .module-container.hidden {
+            opacity: 0;
+            transform: scale(0.8);
+            position: relative;
+            z-index: 1;
+            pointer-events: none;
+            transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+        }
+
+        .message.appearing, .module-container.appearing {
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            position: relative;
+            z-index: 2;
+            pointer-events: auto;
+        }
+
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.8); }
+            70% { opacity: 1; transform: scale(1.03); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Fixed Position UI Elements -->
+    <div class="participant-profiles" id="participant-profiles">
+        <!-- Participant profiles will be populated by JavaScript -->
+    </div>
+
+    <div class="time-space-indicator">
+        <div>
+            <span id="current-event" class="indicator-event"></span>
+            <span id="current-time" class="indicator-time"></span>
+            <div id="events-container" class="events-container">
+                <!-- Events will be populated by JavaScript -->
+            </div>
+            <div id="locations-container" class="locations-container">
+                <!-- Locations will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <div class="playback-controls">
+        <button id="play-button" class="btn play-btn">
+            <span class="play-icon">▶</span>
+        </button>
+        <div class="playback-speed">
+            <label for="speed-slider">Speed:</label>
+            <input type="range" id="speed-slider" min="0.5" max="3" step="0.5" value="1">
+            <span id="speed-value">1x</span>
+        </div>
+        <button id="restart-button" class="btn secondary">
+            <span>⟲</span>
+        </button>
+    </div>
+
+    <!-- Main Content Container -->
+    <div class="conversation-container">
+        <div class="loading">
+            <div class="loading-spinner"></div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+    /**
+     * BIKE Conversation Flow Application - Simplified
+     */
+    
+    // Global variables
+    let isPlaying = false;
+    let playbackSpeed = 1;
+    let currentIndex = 0;
+    let playbackTimer = null;
+    
+    /**
+     * Initialize application when DOM is loaded
+     */
+    document.addEventListener('DOMContentLoaded', async function() {
+        try {
+            await loadConversationData();
+            setupEventListeners();
+            updateTimeSpaceIndicator();
+            initializePlayback();
+            initializeScrollNavigation();
+        } catch (error) {
+            console.error('Error:', error);
+            document.querySelector('.conversation-container').innerHTML = `
+                <div class="error-message">
+                    <h3>Error Loading Conversation</h3>
+                    <p>${error.message}</p>
+                </div>
+            `;
+        }
+    });
+    
+    /**
+     * Load conversation data from JSON file
+     */
+    async function loadConversationData() {
+        const response = await fetch('conversations.json');
+        if (!response.ok) {
+            throw new Error('Failed to load conversation data');
+        }
+        const data = await response.json();
+        
+        // Store the data globally for access in scroll events
+        window.conversationData = data;
+        
+        // Render the conversation
+        renderConversation(data);
+    }
+    
+    /**
+     * Render conversation content
+     */
+    function renderConversation(data) {
+        const container = document.querySelector('.conversation-container');
+        container.innerHTML = ''; // Clear container
+        
+        // Render participant profiles
+        renderParticipantProfiles(data.participants);
+        
+        // Loop through events
+        data.events.forEach((event, eventIndex) => {
+            renderEvent(event, eventIndex, container, data.participants);
+        });
+        
+        // Initialize with the first element visible
+        const elements = getAllContentElements();
+        if (elements.length > 0) {
+            elements[0].classList.remove('hidden');
+            elements[0].classList.add('current');
+            elements[0].classList.add('appearing');
+        }
+    }
+    
+    /**
+     * Render an individual event and its content
+     */
+    function renderEvent(event, eventIndex, container, participants) {
+        // Create event header
+        const eventHeader = document.createElement('div');
+        eventHeader.className = 'module-container';
+        eventHeader.style.marginTop = eventIndex > 0 ? '3rem' : '1rem';
+        eventHeader.style.marginBottom = '1.5rem';
+        
+        const eventTitle = document.createElement('h2');
+        eventTitle.className = 'module-title';
+        eventTitle.textContent = event.title;
+        eventTitle.dataset.event = event.title;
+        
+        const eventInfo = document.createElement('div');
+        eventInfo.style.display = 'flex';
+        eventInfo.style.justifyContent = 'space-between';
+        
+        const eventTimeSpan = document.createElement('span');
+        const startDate = new Date(event.start_time);
+        const endDate = new Date(event.end_time);
+        eventTimeSpan.textContent = `${formatTimestamp(startDate)} - ${formatTimestamp(endDate)}`;
+        
+        const eventLocationSpan = document.createElement('span');
+        eventLocationSpan.textContent = event.location;
+        eventLocationSpan.dataset.location = event.location;
+        
+        eventInfo.appendChild(eventTimeSpan);
+        eventInfo.appendChild(eventLocationSpan);
+        
+        const eventDescription = document.createElement('p');
+        eventDescription.textContent = event.description;
+        eventDescription.style.marginTop = '0.5rem';
+        
+        eventHeader.appendChild(eventTitle);
+        eventHeader.appendChild(eventInfo);
+        eventHeader.appendChild(eventDescription);
+        container.appendChild(eventHeader);
+        
+        // Render interactions
+        renderInteractions(event, eventIndex, container, participants);
+    }
+    
+    /**
+     * Render interactions within an event
+     */
+    function renderInteractions(event, eventIndex, container, participants) {
+        if (!event.content || !event.content.interactions) return;
+        
+        event.content.interactions.forEach((item, index) => {
+            if (item.speaker) {
+                // Render regular message
+                const messageElement = createMessageElement(item, participants);
+                
+                // Add data attributes for timestamps to help with scroll tracking
+                if (item.timestamp) {
+                    messageElement.dataset.timestamp = item.timestamp;
+                    messageElement.dataset.index = `${eventIndex}-${index}`;
+                }
+                
+                // Add event name and location
+                messageElement.dataset.event = event.title;
+                messageElement.dataset.location = event.location;
+                
+                // Initially hide messages for time navigation
+                messageElement.classList.add('hidden');
+                
+                container.appendChild(messageElement);
+            } else if (item.type === 'module') {
+                // Render module
+                renderModule(item, eventIndex, index, event, container);
+            }
+        });
+    }
+    
+    /**
+     * Render a module element
+     */
+    function renderModule(item, eventIndex, index, event, container) {
+        const moduleDiv = document.createElement('div');
+        moduleDiv.className = 'module-container';
+        
+        const moduleTitle = document.createElement('h3');
+        moduleTitle.className = 'module-title';
+        moduleTitle.textContent = item.title || item.module_type;
+        
+        const moduleDesc = document.createElement('p');
+        moduleDesc.textContent = `[${item.module_type} module]`;
+        moduleDesc.style.fontStyle = 'italic';
+        
+        // Add timestamp if available
+        if (item.timestamp) {
+            const timestampDiv = document.createElement('div');
+            timestampDiv.className = 'module-timestamp';
+            timestampDiv.textContent = formatTimestamp(item.timestamp);
+            moduleDiv.appendChild(timestampDiv);
+            
+            // Add data attributes for tracking
+            moduleDiv.dataset.timestamp = item.timestamp;
+            moduleDiv.dataset.index = `${eventIndex}-${index}`;
+            moduleDiv.dataset.event = event.title;
+            moduleDiv.dataset.location = event.location;
+        }
+        
+        moduleDiv.appendChild(moduleTitle);
+        moduleDiv.appendChild(moduleDesc);
+        
+        // Initially hide modules for time navigation
+        moduleDiv.classList.add('hidden');
+        
+        container.appendChild(moduleDiv);
+    }
+    
+    /**
+     * Create a message element from message data
+     */
+    function createMessageElement(message, participants) {
+        // Create message container
+        const messageDiv = document.createElement('div');
+        const participant = participants[message.speaker];
+        messageDiv.className = `message ${participant.type}-message`;
+        
+        // Create profile
+        const profileDiv = document.createElement('div');
+        profileDiv.className = 'message-profile';
+        
+        if (participant.avatar) {
+            const img = document.createElement('img');
+            img.src = participant.avatar;
+            img.alt = `${participant.name} Profile`;
+            profileDiv.appendChild(img);
+        } else if (participant.avatarBgColor) {
+            profileDiv.style.backgroundColor = participant.avatarBgColor;
+        }
+        
+        // Create content
+        const contentDiv = document.createElement('div');
+        contentDiv.className = 'message-content';
+        
+        // Add speaker name
+        const nameDiv = document.createElement('div');
+        nameDiv.className = 'message-name';
+        nameDiv.textContent = participant.name;
+        nameDiv.style.fontWeight = 'bold';
+        nameDiv.style.marginBottom = '0.5rem';
+        
+        contentDiv.appendChild(nameDiv);
+        
+        // Add message content
+        const messageText = document.createElement('div');
+        messageText.textContent = message.content;
+        contentDiv.appendChild(messageText);
+        
+        // Add timestamp if available
+        if (message.timestamp) {
+            const timestampDiv = document.createElement('div');
+            timestampDiv.className = 'message-timestamp';
+            timestampDiv.textContent = formatTimestamp(message.timestamp);
+            messageDiv.appendChild(timestampDiv);
+        }
+        
+        // Assemble message
+        messageDiv.appendChild(profileDiv);
+        messageDiv.appendChild(contentDiv);
+        
+        return messageDiv;
+    }
+    
+    /**
+     * Format timestamp for display
+     */
+    function formatTimestamp(timestamp) {
+        const date = new Date(timestamp);
+        return date.toLocaleString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    }
+    
+    /**
+     * Update the time/space indicator with current information
+     */
+    function updateTimeSpaceIndicator() {
+        if (!window.conversationData) return;
+        
+        const timeIndicator = document.getElementById('current-time');
+        const locationsContainer = document.getElementById('locations-container');
+        const eventsContainer = document.getElementById('events-container');
+        const eventIndicator = document.getElementById('current-event');
+        const data = window.conversationData;
+        
+        // Find the current visible element
+        const visibleElement = document.querySelector('.current');
+        
+        // Collect all unique locations from the data
+        const allLocations = new Set();
+        
+        // Collect all unique events from the data
+        const allEvents = new Set();
+        
+        // Add locations and events from all events
+        data.events.forEach(event => {
+            allLocations.add(event.location);
+            allEvents.add(event.title);
+        });
+        
+        // Get current active location and event
+        let activeLocation = '';
+        let activeEvent = '';
+        
+        if (visibleElement) {
+            if (visibleElement.dataset.timestamp) {
+                const timestamp = visibleElement.dataset.timestamp;
+                const date = new Date(timestamp);
+                
+                // Format time
+                const timeString = date.toLocaleString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                
+                // Get location and event directly from the element
+                activeLocation = visibleElement.dataset.location || '';
+                activeEvent = visibleElement.dataset.event || '';
+                
+                // Set time
+                timeIndicator.textContent = timeString;
+                eventIndicator.textContent = activeEvent || '';
+            }
+        } else {
+            // Default if no visible elements with timestamps
+            eventIndicator.textContent = '';
+            timeIndicator.textContent = 'Time unknown';
+            activeLocation = '';
+            activeEvent = '';
+        }
+        
+        // Render all events
+        renderEventBadges(eventsContainer, allEvents, activeEvent);
+        
+        // Render all locations
+        renderLocationBadges(locationsContainer, allLocations, activeLocation);
+        
+        // Update active participants based on the current event
+        updateActiveParticipants();
+    }
+    
+    /**
+     * Render event badges in the indicator
+     */
+    function renderEventBadges(container, events, activeEvent) {
+        container.innerHTML = '';
+        events.forEach(event => {
+            if (!event) return; // Skip empty events
+            
+            const eventBadge = document.createElement('span');
+            eventBadge.className = 'event-badge';
+            eventBadge.textContent = event;
+            
+            // Highlight active event
+            if (event === activeEvent) {
+                eventBadge.classList.add('active');
+            }
+            
+            // Add click handler to scroll to the event
+            eventBadge.addEventListener('click', () => scrollToEvent(event));
+            
+            container.appendChild(eventBadge);
+        });
+    }
+    
+    /**
+     * Render location badges in the indicator
+     */
+    function renderLocationBadges(container, locations, activeLocation) {
+        container.innerHTML = '';
+        locations.forEach(location => {
+            if (!location) return; // Skip empty locations
+            
+            const locationBadge = document.createElement('span');
+            locationBadge.className = 'location-badge';
+            locationBadge.textContent = location;
+            
+            // Highlight active location
+            if (location === activeLocation) {
+                locationBadge.classList.add('active');
+            }
+            
+            // Add click handler to scroll to the location
+            locationBadge.addEventListener('click', () => scrollToLocation(location));
+            
+            container.appendChild(locationBadge);
+        });
+    }
+    
+    /**
+     * Scroll to a location
+     */
+    function scrollToLocation(location) {
+        const elements = getAllContentElements();
+        
+        // Find the first element with this location
+        let targetIndex = -1;
+        for (let i = 0; i < elements.length; i++) {
+            if (elements[i].dataset.location === location) {
+                targetIndex = i;
+                break;
+            }
+        }
+        
+        if (targetIndex >= 0) {
+            // Update global index
+            currentIndex = targetIndex;
+            
+            // Display the target element
+            displayElement(elements, currentIndex);
+            
+            // If currently playing, restart from the new position
+            if (isPlaying) {
+                pausePlayback();
+                startPlayback();
+            }
+        }
+    }
+    
+    /**
+     * Scroll to an event
+     */
+    function scrollToEvent(event) {
+        const elements = getAllContentElements();
+        
+        // Find the first element with this event
+        let targetIndex = -1;
+        for (let i = 0; i < elements.length; i++) {
+            if (elements[i].dataset.event === event) {
+                targetIndex = i;
+                break;
+            }
+        }
+        
+        if (targetIndex >= 0) {
+            // Update global index
+            currentIndex = targetIndex;
+            
+            // Display the target element
+            displayElement(elements, currentIndex);
+            
+            // If currently playing, restart from the new position
+            if (isPlaying) {
+                pausePlayback();
+                startPlayback();
+            }
+        }
+    }
+    
+    /**
+     * Setup event listeners for user interaction
+     */
+    function setupEventListeners() {
+        // Update time/space indicator on scroll
+        window.addEventListener('scroll', function() {
+            updateTimeSpaceIndicator();
+        });
+        
+        // Update on window resize (in case elements shift)
+        window.addEventListener('resize', function() {
+            updateTimeSpaceIndicator();
+        });
+    }
+    
+    /**
+     * Initialize playback functionality
+     */
+    function initializePlayback() {
+        // Setup play button
+        const playButton = document.getElementById('play-button');
+        const playIcon = playButton.querySelector('.play-icon');
+        
+        playButton.addEventListener('click', function() {
+            if (isPlaying) {
+                // Pause playback
+                pausePlayback();
+                playIcon.textContent = '▶';
+            } else {
+                // Start or resume playback
+                startPlayback();
+                playIcon.textContent = '⏸';
+            }
+        });
+        
+        // Setup restart button
+        const restartButton = document.getElementById('restart-button');
+        restartButton.addEventListener('click', function() {
+            // Reset playback and start from beginning
+            pausePlayback();
+            resetToFirstMessage();
+            setTimeout(() => {
+                startPlayback();
+                playButton.querySelector('.play-icon').textContent = '⏸';
+            }, 300);
+        });
+        
+        // Setup speed slider
+        const speedSlider = document.getElementById('speed-slider');
+        const speedValue = document.getElementById('speed-value');
+        
+        speedSlider.addEventListener('input', function() {
+            playbackSpeed = parseFloat(this.value);
+            speedValue.textContent = `${playbackSpeed}x`;
+            
+            // If already playing, update the playback timing
+            if (isPlaying) {
+                pausePlayback();
+                startPlayback();
+            }
+        });
+    }
+    
+    /**
+     * Get all content elements with timestamps, sorted chronologically
+     */
+    function getAllContentElements() {
+        // Get all messages and modules with timestamps
+        const elements = document.querySelectorAll('.message[data-timestamp], .module-container[data-timestamp]');
+        
+        // Convert to array and sort by timestamp
+        const elementsArray = Array.from(elements);
+        elementsArray.sort((a, b) => {
+            const timeA = new Date(a.dataset.timestamp).getTime();
+            const timeB = new Date(b.dataset.timestamp).getTime();
+            return timeA - timeB;
+        });
+        
+        return elementsArray;
+    }
+    
+    /**
+     * Start playback from current position
+     */
+    function startPlayback() {
+        if (isPlaying) return;
+        
+        isPlaying = true;
+        
+        const elements = getAllContentElements();
+        
+        // If all elements have been played or none exist, reset
+        if (currentIndex >= elements.length || elements.length === 0) {
+            currentIndex = 0;
+            
+            // Reset all elements to hidden
+            elements.forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('appearing');
+                el.classList.remove('current');
+            });
+            
+            // Show the first element immediately
+            if (elements.length > 0) {
+                elements[0].classList.remove('hidden');
+                elements[0].classList.add('appearing');
+                elements[0].classList.add('current');
+                currentIndex = 1;
+            }
+        } else {
+            // If we're starting from a specific point (after clicking event/location/scrolling)
+            // We need to make sure the current element is visible and we start from the next one
+            currentIndex++; // Move to the next element for playback
+            if (currentIndex >= elements.length) {
+                currentIndex = elements.length - 1; // Stay at the last element if we're at the end
+            }
+        }
+        
+        // Play the conversation from current index
+        playNextElement(elements);
+    }
+    
+    /**
+     * Pause playback
+     */
+    function pausePlayback() {
+        isPlaying = false;
+        clearTimeout(playbackTimer);
+    }
+    
+    /**
+     * Play the next element in sequence
+     */
+    function playNextElement(elements) {
+        if (!isPlaying || currentIndex >= elements.length) {
+            // End of playback or paused
+            if (currentIndex >= elements.length) {
+                // Reset play button when finished
+                const playButton = document.getElementById('play-button');
+                const playIcon = playButton.querySelector('.play-icon');
+                playIcon.textContent = '▶';
+                isPlaying = false;
+            }
+            return;
+        }
+        
+        // Display the current element
+        displayElement(elements, currentIndex);
+        
+        // Calculate delay for the next message
+        let delay = calculateDelayForElement(elements[currentIndex]);
+        
+        // Apply speed adjustment
+        delay = delay / playbackSpeed;
+        
+        // Schedule the next element
+        currentIndex++;
+        playbackTimer = setTimeout(() => playNextElement(elements), delay);
+    }
+    
+    /**
+     * Calculate appropriate delay for an element based on its type and content
+     */
+    function calculateDelayForElement(element) {
+        // Simple delay calculation
+        if (element.classList.contains('message')) {
+            const messageContent = element.querySelector('.message-content');
+            if (messageContent) {
+                // Calculate delay based on text length (more text = more time to read)
+                const contentLength = messageContent.textContent.length;
+                return Math.max(1500, Math.min(4000, contentLength * 20)); // Between 1.5-4 seconds
+            }
+        }
+        
+        // Default delay for modules
+        return 2000;
+    }
+    
+    /**
+     * Display an element at the given index
+     */
+    function displayElement(elements, index) {
+        if (index < 0 || index >= elements.length) return;
+        
+        // Remove current class from all elements
+        document.querySelectorAll('.current').forEach(el => {
+            el.classList.remove('current');
+            el.classList.remove('appearing');
+            el.classList.add('hidden');
+        });
+        
+        // Make the element visible with animation
+        const element = elements[index];
+        element.classList.remove('hidden');
+        element.classList.add('current');
+        element.classList.add('appearing');
+        
+        // Update time/space indicator
+        updateTimeSpaceIndicator();
+    }
+    
+    /**
+     * Reset to first message for new navigation
+     */
+    function resetToFirstMessage() {
+        const elements = getAllContentElements();
+        currentIndex = 0;
+        
+        // Display the first element
+        displayElement(elements, 0);
+    }
+    
+    /**
+     * Initialize scroll-based time navigation
+     */
+    function initializeScrollNavigation() {
+        let lastScrollTime = 0;
+        const scrollCooldown = 250; // Cooldown to slow down scroll speed
+        let scrollTimeout;
+        let isAnimating = false; // Flag to track animation state
+        
+        // Get all elements with timestamps
+        const elements = getAllContentElements();
+        
+        // Initialize with the first element visible
+        if (elements.length > 0) {
+            displayElement(elements, 0);
+        }
+        
+        // Listen for scroll events
+        window.addEventListener('wheel', function(event) {
+            // If already animating, don't process more scroll events
+            if (isAnimating) {
+                event.preventDefault();
+                return;
+            }
+            
+            const now = Date.now();
+            
+            // Skip if scrolled recently (debounce)
+            if (now - lastScrollTime < scrollCooldown) {
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(() => {
+                    handleScroll(event);
+                }, scrollCooldown);
+                event.preventDefault();
+                return;
+            }
+            
+            lastScrollTime = now;
+            handleScroll(event);
+            event.preventDefault();
+        });
+        
+        // Handle keyboard navigation
+        document.addEventListener('keydown', function(event) {
+            // If already animating, don't process more events
+            if (isAnimating) {
+                event.preventDefault();
+                return;
+            }
+            
+            if (event.key === 'ArrowDown' || event.key === 'ArrowRight') {
+                // Don't do anything if we're at the end
+                if (currentIndex === elements.length - 1) return;
+                
+                // Move forward in time
+                navigateTime(1);
+                event.preventDefault();
+            } else if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') {
+                // Don't do anything if we're at the beginning
+                if (currentIndex === 0) return;
+                
+                // Move backward in time
+                navigateTime(-1);
+                event.preventDefault();
+            }
+        });
+        
+        /**
+         * Handle scroll event for time navigation
+         */
+        function handleScroll(event) {
+            // Don't do anything if we're at the beginning and scrolling up or at the end and scrolling down
+            if ((currentIndex === 0 && event.deltaY < 0) || (currentIndex === elements.length - 1 && event.deltaY > 0)) {
+                return;
+            }
+            
+            // Set animating flag to prevent multiple rapid changes
+            isAnimating = true;
+            
+            // Calculate new index based on scroll direction
+            if (event.deltaY > 0) {
+                // Scrolling down - move forward in time
+                currentIndex = Math.min(currentIndex + 1, elements.length - 1);
+            } else {
+                // Scrolling up - move backward in time
+                currentIndex = Math.max(currentIndex - 1, 0);
+            }
+            
+            // Display the current element
+            displayElement(elements, currentIndex);
+            
+            // If currently playing, pause it since we're manually navigating
+            if (isPlaying) {
+                pausePlayback();
+                const playButton = document.getElementById('play-button');
+                const playIcon = playButton.querySelector('.play-icon');
+                playIcon.textContent = '▶';
+            }
+            
+            // Reset animation flag after the animation duration
+            setTimeout(() => {
+                isAnimating = false;
+            }, 600); // Match with CSS animation duration
+        }
+        
+        /**
+         * Navigate through time (used by keyboard navigation)
+         */
+        function navigateTime(direction) {
+            // Set animating flag to prevent multiple rapid changes
+            isAnimating = true;
+            
+            // Calculate new index
+            if (direction > 0) {
+                // Move forward in time
+                currentIndex = Math.min(currentIndex + 1, elements.length - 1);
+            } else {
+                // Move backward in time
+                currentIndex = Math.max(currentIndex - 1, 0);
+            }
+            
+            // Display the current element
+            displayElement(elements, currentIndex);
+            
+            // If currently playing, pause it since we're manually navigating
+            if (isPlaying) {
+                pausePlayback();
+                const playButton = document.getElementById('play-button');
+                const playIcon = playButton.querySelector('.play-icon');
+                playIcon.textContent = '▶';
+            }
+            
+            // Reset animation flag after the animation duration
+            setTimeout(() => {
+                isAnimating = false;
+            }, 600); // Match with CSS animation duration
+        }
+    }
+    
+    /**
+     * Render participant profiles in the UI
+     */
+    function renderParticipantProfiles(participants) {
+        const profilesContainer = document.getElementById('participant-profiles');
+        profilesContainer.innerHTML = ''; // Clear container
+        
+        // Don't render if there's only one participant
+        if (Object.keys(participants).length <= 1) {
+            profilesContainer.style.display = 'none';
+            return;
+        }
+        
+        // Create profile for each participant
+        Object.entries(participants).forEach(([id, participant]) => {
+            const profileDiv = document.createElement('div');
+            profileDiv.className = 'participant-profile';
+            profileDiv.dataset.speaker = id; // Use the participant ID/key as speaker identifier
+            
+            if (participant.avatar) {
+                const img = document.createElement('img');
+                img.src = participant.avatar;
+                img.alt = `${participant.name} Profile`;
+                profileDiv.appendChild(img);
+            } else if (participant.avatarBgColor) {
+                profileDiv.style.backgroundColor = participant.avatarBgColor;
+            }
+            
+            // Add title with participant name
+            profileDiv.title = participant.name;
+            
+            // Set initial state for animation
+            profileDiv.style.opacity = '0';
+            profileDiv.style.transform = 'scale(0.5)';
+            
+            profilesContainer.appendChild(profileDiv);
+        });
+        
+        // Initially hide profiles until an event is active
+        profilesContainer.style.display = 'flex';
+    }
+    
+    /**
+     * Update active participants based on current event
+     */
+    function updateActiveParticipants() {
+        // Find the current visible element
+        const visibleElement = document.querySelector('.current');
+        if (!visibleElement || !visibleElement.dataset.event) return;
+        
+        const currentEvent = visibleElement.dataset.event;
+        const data = window.conversationData;
+        
+        // Find the current event in the data
+        const event = data.events.find(e => e.title === currentEvent);
+        if (!event || !event.content || !event.content.interactions) return;
+        
+        // Get the participants container
+        const profilesContainer = document.getElementById('participant-profiles');
+        
+        // Get all participants profiles
+        const profiles = document.querySelectorAll('.participant-profile');
+        
+        // First hide all profiles and remove animation classes
+        profiles.forEach(profile => {
+            profile.style.display = 'none';
+            profile.classList.remove('active');
+        });
+        
+        // Collect all speakers in this event
+        const eventSpeakers = new Set();
+        event.content.interactions.forEach(item => {
+            if (item.speaker && item.speaker !== 'bike') { // Exclude 'bike' participant
+                eventSpeakers.add(item.speaker);
+            }
+        });
+        
+        // If there are 0 or 1 active participants (excluding bike), hide the entire container
+        if (eventSpeakers.size <= 1) {
+            profilesContainer.style.display = 'none';
+            return;
+        }
+        
+        // Otherwise, show the container
+        profilesContainer.style.display = 'flex';
+        
+        // Show only profiles for speakers in this event with staggered animation
+        const newActiveProfiles = [];
+        profiles.forEach(profile => {
+            const speaker = profile.dataset.speaker;
+            // Skip the 'bike' participant
+            if (speaker === 'bike') {
+                return;
+            }
+            
+            if (eventSpeakers.has(speaker)) {
+                profile.style.display = 'flex';
+                profile.classList.add('active');
+                
+                // Check if this profile has been animated before
+                if (!profile.dataset.animated) {
+                    newActiveProfiles.push(profile);
+                }
+            }
+        });
+        
+        // Apply staggered animation only to newly active profiles
+        newActiveProfiles.forEach((profile, index) => {
+            setTimeout(() => {
+                profile.classList.add('animate-in');
+                // Mark as animated so we don't animate it again
+                profile.dataset.animated = 'true';
+            }, index * 150); // 150ms delay between each profile pop-in
+        });
+    }
+    </script>
+</body>
+</html> 

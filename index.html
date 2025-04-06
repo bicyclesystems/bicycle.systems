@@ -15,7 +15,8 @@
     </style>
 </head>
 <body>
-    <div class="view align-center">
+    <div class="view column align-center">
+        <img src="images/bicycle.png" alt="Bicycle" class="bicycle-image">
         <div class="box-s padding-xl column">
             <div id="introduction"><p id="typewriter-content"></p></div>
             <div id="conversation-flow"></div>
@@ -129,7 +130,7 @@
             
             async loadMarkdownContent() {
                 try {
-                    const markdownText = await (await fetch('INDEX.MD')).text();
+                    const markdownText = await (await fetch('BICYCLE_FOR_THE_MIND.MD')).text();
                     const introEndIndex = markdownText.indexOf('## ');
                     this.introText = this.processMarkdown(
                         introEndIndex > 0 ? markdownText.substring(0, introEndIndex).trim() : markdownText.trim(), 
