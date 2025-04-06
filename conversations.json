@@ -42,13 +42,39 @@
     {
       "id": "lesson-planning",
       "title": "Lesson Planning",
-      "start_time": "2023-10-08T09:30:00",
+      "start_time": "2023-10-08T09:29:00",
       "end_time": "2023-10-08T10:05:00",
       "location": "Teacher's House",
       "description": "Planning a 45-minute lesson on computer history for 8th graders",
       "participants": ["teacher", "bike"],
       "content": {
         "interactions": [
+          {
+            "id": "greeting-teacher",
+            "speaker": "teacher",
+            "content": "Hello, BIKE.",
+            "qa": null,
+            "timestamp": "2023-10-08T09:29:00"
+          },
+          {
+            "id": "greeting-module",
+            "type": "module",
+            "module_type": "hello",
+            "title": "Greeting",
+            "content": {
+              "greeting": "Hello Ms. Johnson",
+              "time_of_day": "morning",
+              "last_interaction": "3 days ago"
+            },
+            "timestamp": "2023-10-08T09:29:15"
+          },
+          {
+            "id": "greeting-response",
+            "speaker": "bike",
+            "content": "Hey Ms. Johnson, how can I help?",
+            "qa": null,
+            "timestamp": "2023-10-08T09:29:30"
+          },
           {
             "id": "initial-question",
             "speaker": "teacher",
@@ -354,6 +380,18 @@
       "content": {
         "interactions": [
           {
+            "id": "hello-module-lesson",
+            "type": "module",
+            "module_type": "hello",
+            "title": "Greeting",
+            "content": {
+              "greeting": "Welcome to class",
+              "time_of_day": "morning",
+              "last_interaction": "7 days ago"
+            },
+            "timestamp": "2023-10-15T09:59:45"
+          },
+          {
             "id": "class-start-student",
             "speaker": "student1",
             "content": "Good morning, Ms. Johnson! What are we learning about today?",
@@ -504,6 +542,18 @@
       "participants": ["student1", "bike"],
       "content": {
         "interactions": [
+          {
+            "id": "hello-module-review",
+            "type": "module",
+            "module_type": "hello",
+            "title": "Greeting",
+            "content": {
+              "greeting": "Hello Student 1",
+              "time_of_day": "evening",
+              "last_interaction": "8 hours ago"
+            },
+            "timestamp": "2023-10-15T18:29:45"
+          },
           {
             "id": "student-review",
             "speaker": "student1",

@@ -167,16 +167,12 @@
                 this.introText = "";
                 this.typewriterSpeed = 15;
                 this.typewriterDelay = 150;
-                this.currentSectionIndex = -1;
                 
                 this.loadMarkdownContent();
                 window.addEventListener('scroll', () => {
                     this.userHasScrolled = true;
                     setTimeout(() => { this.userHasScrolled = false; }, 2000);
                 });
-
-                // Add keyboard navigation
-                window.addEventListener('keydown', (e) => this.handleKeyNavigation(e));
 
                 // Add hash change listener
                 window.addEventListener('hashchange', () => this.handleHashChange());
@@ -459,64 +455,6 @@
                 return Object.keys(this.markdownSections).find(title => 
                     this.getSectionId(title) === hash
                 );
-            }
-
-            // Add keyboard navigation handler
-            handleKeyNavigation(e) {
-                if (this.isTyping) return;
-                
-                // Get all sections that have been created
-                const sectionElements = Array.from(document.querySelectorAll('.section'));
-                if (sectionElements.length === 0) return;
-                
-                // Find the currently active section
-                const activeIndex = sectionElements.findIndex(el => el.classList.contains('active'));
-                let newIndex = activeIndex;
-                
-                switch (e.key) {
-                    case 'ArrowRight':
-                    case 'ArrowDown':
-                    case 'PageDown':
-                        newIndex = activeIndex < sectionElements.length - 1 ? activeIndex + 1 : activeIndex;
-                        break;
-                    case 'ArrowLeft':
-                    case 'ArrowUp':
-                    case 'PageUp':
-                        newIndex = activeIndex > 0 ? activeIndex - 1 : activeIndex;
-                        break;
-                    case 'Home':
-                        newIndex = 0;
-                        break;
-                    case 'End':
-                        newIndex = sectionElements.length - 1;
-                        break;
-                    default:
-                        return; // Exit if not a navigation key
-                }
-                
-                // If the index changed, navigate to that section
-                if (newIndex !== activeIndex && newIndex >= 0 && newIndex < sectionElements.length) {
-                    e.preventDefault(); // Prevent default scroll behavior
-                    
-                    // Get section ID from the element
-                    const sectionId = sectionElements[newIndex].id.replace('-section', '');
-                    
-                    // Find the section title for this ID
-                    const sectionTitle = this.getSectionTitleFromHash(sectionId);
-                    
-                    if (sectionTitle) {
-                        // Update all section visibility
-                        document.querySelectorAll('.section.active').forEach(s => s.classList.remove('active'));
-                        sectionElements[newIndex].classList.add('active');
-                        
-                        // Update URL hash and move nav buttons
-                        window.history.replaceState(null, '', `#${sectionId}`);
-                        this.moveNavButtonsAfterSection(sectionElements[newIndex]);
-                        
-                        // Scroll to make the section visible
-                        sectionElements[newIndex].scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }
-                }
             }
         }
     </script>

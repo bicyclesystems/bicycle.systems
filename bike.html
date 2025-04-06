@@ -72,11 +72,16 @@
             max-width: 1200px;
             margin: 0 auto;
             min-height: 90vh;
+            padding-top: 160px;
         }
         
         .message.current, .module-container.current {
-            margin: 0 auto;
+            position: fixed;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
             max-width: 80%;
+            z-index: 100;
         }
         
         .message:not(.current), .module-container:not(.current) {
@@ -230,17 +235,49 @@
             color: inherit;
         }
 
-        /* Modules */
+        /* Full Screen Module Styles */
         .module-container {
-            background-color: #ffffff;
-            border-radius: 1rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            max-width: 900px;
-            min-height: 400px;
+            height: 100%;
+            background-color: #f8fafc;
+            border-radius: 0;
+            box-shadow: none;
+            padding: 5rem 2rem 2rem;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: -1;
+            overflow: auto;
+        }
+
+        .module-container.current {
+            margin: 0;
+            max-width: 100%;
+            z-index: 10;
+            display: flex;
+            top: 0;
+            left: 0;
+            transform: none;
+        }
+
+        .module-container:not(.current) {
+            display: none;
+        }
+
+        .module-content {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 1rem;
             padding: 2rem;
-            margin: 2rem auto;
+            max-width: 800px;
+            width: 90%;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             position: relative;
+            z-index: 1;
         }
 
         .module-title {
@@ -249,14 +286,31 @@
             margin-bottom: 1.5rem;
             padding-bottom: 0.75rem;
             border-bottom: 2px solid #e2e8f0;
+            text-align: center;
         }
-        
+
         .module-timestamp {
             position: absolute;
             top: 10px;
             right: 15px;
             font-size: 0.7rem;
             opacity: 0.7;
+            z-index: 2;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+        }
+
+        /* Event Header Styles */
+        .event-header {
+            position: relative;
+            z-index: 5;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin: 180px auto 2rem;
+            max-width: 80%;
         }
 
         /* Playback Controls */
@@ -350,8 +404,10 @@
         /* Animations */
         .message.hidden, .module-container.hidden {
             opacity: 0;
-            transform: scale(0.8);
-            position: relative;
+            transform: translate(-50%, -30px) scale(0.8);
+            position: fixed;
+            top: 100px;
+            left: 50%;
             z-index: 1;
             pointer-events: none;
             transition: opacity 0.3s ease-out, transform 0.3s ease-out;
@@ -359,15 +415,17 @@
 
         .message.appearing, .module-container.appearing {
             animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-            position: relative;
+            position: fixed;
+            top: 100px;
+            left: 50%;
             z-index: 2;
             pointer-events: auto;
         }
 
         @keyframes popIn {
-            0% { opacity: 0; transform: scale(0.8); }
-            70% { opacity: 1; transform: scale(1.03); }
-            100% { opacity: 1; transform: scale(1); }
+            0% { opacity: 0; transform: translate(-50%, -30px) scale(0.8); }
+            70% { opacity: 1; transform: translate(-50%, 0) scale(1.03); }
+            100% { opacity: 1; transform: translate(-50%, 0) scale(1); }
         }
     </style>
 </head>
@@ -482,6 +540,7 @@
             elements[0].classList.remove('hidden');
             elements[0].classList.add('current');
             elements[0].classList.add('appearing');
+            currentIndex = 0;
         }
     }
     
@@ -489,43 +548,7 @@
      * Render an individual event and its content
      */
     function renderEvent(event, eventIndex, container, participants) {
-        // Create event header
-        const eventHeader = document.createElement('div');
-        eventHeader.className = 'module-container';
-        eventHeader.style.marginTop = eventIndex > 0 ? '3rem' : '1rem';
-        eventHeader.style.marginBottom = '1.5rem';
-        
-        const eventTitle = document.createElement('h2');
-        eventTitle.className = 'module-title';
-        eventTitle.textContent = event.title;
-        eventTitle.dataset.event = event.title;
-        
-        const eventInfo = document.createElement('div');
-        eventInfo.style.display = 'flex';
-        eventInfo.style.justifyContent = 'space-between';
-        
-        const eventTimeSpan = document.createElement('span');
-        const startDate = new Date(event.start_time);
-        const endDate = new Date(event.end_time);
-        eventTimeSpan.textContent = `${formatTimestamp(startDate)} - ${formatTimestamp(endDate)}`;
-        
-        const eventLocationSpan = document.createElement('span');
-        eventLocationSpan.textContent = event.location;
-        eventLocationSpan.dataset.location = event.location;
-        
-        eventInfo.appendChild(eventTimeSpan);
-        eventInfo.appendChild(eventLocationSpan);
-        
-        const eventDescription = document.createElement('p');
-        eventDescription.textContent = event.description;
-        eventDescription.style.marginTop = '0.5rem';
-        
-        eventHeader.appendChild(eventTitle);
-        eventHeader.appendChild(eventInfo);
-        eventHeader.appendChild(eventDescription);
-        container.appendChild(eventHeader);
-        
-        // Render interactions
+        // Skip creating event headers entirely - only render interactions
         renderInteractions(event, eventIndex, container, participants);
     }
     
@@ -1029,15 +1052,46 @@
     function displayElement(elements, index) {
         if (index < 0 || index >= elements.length) return;
         
-        // Remove current class from all elements
-        document.querySelectorAll('.current').forEach(el => {
-            el.classList.remove('current');
-            el.classList.remove('appearing');
-            el.classList.add('hidden');
-        });
+        const element = elements[index];
+        
+        // Check if the current element is a module
+        const isModule = element.classList.contains('module-container');
+        
+        // Determine if it's an event header (has no 'module_type')
+        // Event headers are created in renderEvent and have an index that ends with "-0"
+        const isEventHeader = isModule && element.dataset.index && element.dataset.index.endsWith('-0');
+        
+        // Find currently visible module that's not an event header
+        const currentContentModule = document.querySelector('.module-container.current:not([data-index$="-0"])');
+        
+        // Handle different display cases
+        if (isModule) {
+            if (isEventHeader) {
+                // If it's an event header, hide all current elements
+                document.querySelectorAll('.current').forEach(el => {
+                    el.classList.remove('current');
+                    el.classList.remove('appearing');
+                    el.classList.add('hidden');
+                });
+            } else {
+                // If it's a content module, hide all other elements including any visible event headers
+                document.querySelectorAll('.current').forEach(el => {
+                    el.classList.remove('current');
+                    el.classList.remove('appearing');
+                    el.classList.add('hidden');
+                });
+            }
+        } else {
+            // If we're displaying a message
+            // Hide other messages and event headers, but keep content modules visible
+            document.querySelectorAll('.message.current, .module-container.current[data-index$="-0"]').forEach(el => {
+                el.classList.remove('current');
+                el.classList.remove('appearing');
+                el.classList.add('hidden');
+            });
+        }
         
         // Make the element visible with animation
-        const element = elements[index];
         element.classList.remove('hidden');
         element.classList.add('current');
         element.classList.add('appearing');
@@ -1069,9 +1123,10 @@
         // Get all elements with timestamps
         const elements = getAllContentElements();
         
-        // Initialize with the first element visible
+        // Initialize with the first element
         if (elements.length > 0) {
             displayElement(elements, 0);
+            currentIndex = 0;
         }
         
         // Listen for scroll events
