@@ -1,4 +1,4 @@
-    # BICYCLE FOR THE MIND
+# BICYCLE FOR THE MIND
 
 Computing was meant to be a bicycle for the mind. Instead, it became a cage.
 
