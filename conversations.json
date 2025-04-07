@@ -36,6 +36,24 @@
       "type": "student",
       "name": "Student 3",
       "avatar": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop"
+    },
+    "remote_student1": {
+      "type": "remote_student",
+      "name": "Remote Student 1",
+      "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&h=80&fit=crop",
+      "location": "Hospital"
+    },
+    "remote_student2": {
+      "type": "remote_student",
+      "name": "Remote Student 2",
+      "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop",
+      "location": "Home"
+    },
+    "remote_student3": {
+      "type": "remote_student",
+      "name": "Remote Student 3",
+      "avatar": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=80&h=80&fit=crop",
+      "location": "Library"
     }
   },
   "events": [
@@ -50,13 +68,6 @@
       "content": {
         "interactions": [
           {
-            "id": "greeting-teacher",
-            "speaker": "teacher",
-            "content": "Hello, BIKE.",
-            "qa": null,
-            "timestamp": "2023-10-08T09:29:00"
-          },
-          {
             "id": "greeting-module",
             "type": "module",
             "module_type": "hello",
@@ -66,28 +77,40 @@
               "time_of_day": "morning",
               "last_interaction": "3 days ago"
             },
-            "timestamp": "2023-10-08T09:29:15"
+            "timestamp": "2023-10-08T09:29:00",
+            "location": "Teacher's House"
+          },
+          {
+            "id": "greeting-teacher",
+            "speaker": "teacher",
+            "content": "Hello, BIKE.",
+            "qa": null,
+            "timestamp": "2023-10-08T09:29:15",
+            "location": "Teacher's House"
           },
           {
             "id": "greeting-response",
             "speaker": "bike",
             "content": "Hey Ms. Johnson, how can I help?",
             "qa": null,
-            "timestamp": "2023-10-08T09:29:30"
+            "timestamp": "2023-10-08T09:29:30",
+            "location": "Teacher's House"
           },
           {
             "id": "initial-question",
             "speaker": "teacher",
             "content": "I need a 45-minute lesson on computer history for my 8th graders next week.",
             "qa": null,
-            "timestamp": "2023-10-08T09:30:00"
+            "timestamp": "2023-10-08T09:30:00",
+            "location": "Teacher's House"
           },
           {
             "id": "initial-response",
             "speaker": "bike",
             "content": "I'd be happy to help you build that lesson.",
             "qa": null,
-            "timestamp": "2023-10-08T09:30:15"
+            "timestamp": "2023-10-08T09:30:15",
+            "location": "Teacher's House"
           },
           {
             "id": "calendar-scheduling",
@@ -104,7 +127,8 @@
                 {"type": "notification", "time": "1 hour before"}
               ]
             },
-            "timestamp": "2023-10-08T09:31:00"
+            "timestamp": "2023-10-08T09:31:00",
+            "location": "Teacher's House"
           },
           {
             "id": "focus-question",
@@ -114,14 +138,16 @@
               "question": "What makes a history lesson engaging for 8th graders?",
               "answer": "Engaging history lessons for 8th graders incorporate personal stories, visual elements, interactive activities, and connections to their lives. Focusing on the people behind events rather than just dates and facts creates lasting impressions."
             },
-            "timestamp": "2023-10-08T09:32:30"
+            "timestamp": "2023-10-08T09:32:30",
+            "location": "Teacher's House"
           },
           {
             "id": "teacher-focus-choice",
             "speaker": "teacher",
             "content": "Let's focus on the innovators - the people behind the technology.",
             "qa": null,
-            "timestamp": "2023-10-08T09:33:45"
+            "timestamp": "2023-10-08T09:33:45",
+            "location": "Teacher's House"
           },
           {
             "id": "bike-structure",
@@ -131,14 +157,16 @@
               "question": "How does focusing on innovators rather than technology change the narrative of computing history?",
               "answer": "Focusing on innovators humanizes technology history, showcasing motivations, challenges, and creative thinking. This approach highlights diversity in computing history, demonstrates how different backgrounds shape innovation, and makes abstract concepts more accessible through personal stories."
             },
-            "timestamp": "2023-10-08T09:35:10"
+            "timestamp": "2023-10-08T09:35:10",
+            "location": "Teacher's House"
           },
           {
             "id": "content-focus",
             "speaker": "teacher",
             "content": "I want to focus more on their personal stories and less on technical details.",
             "qa": null,
-            "timestamp": "2023-10-08T09:36:30"
+            "timestamp": "2023-10-08T09:36:30",
+            "location": "Teacher's House"
           },
           {
             "id": "bike-adjust",
@@ -148,7 +176,8 @@
               "question": "How can teachers adapt content complexity while maintaining historical accuracy?",
               "answer": "Teachers can adapt complexity by prioritizing narrative elements over technical details, using analogies to explain concepts, focusing on cause-and-effect relationships, and creating layered content that allows for differentiated learning while preserving historical accuracy."
             },
-            "timestamp": "2023-10-08T09:37:45"
+            "timestamp": "2023-10-08T09:37:45",
+            "location": "Teacher's House"
           },
           {
             "id": "timeline-module",
@@ -171,14 +200,40 @@
                 }
               ]
             },
-            "timestamp": "2023-10-08T09:39:20"
+            "timestamp": "2023-10-08T09:39:20",
+            "location": "Teacher's House"
+          },
+          {
+            "id": "location-change-note",
+            "speaker": "teacher",
+            "content": "I need to head to the school now. Let's continue our planning in the teachers' room.",
+            "qa": null,
+            "timestamp": "2023-10-08T09:40:00",
+            "location": "Teacher's House"
+          },
+          {
+            "id": "location-change-response",
+            "speaker": "bike",
+            "content": "No problem. Let's continue when you arrive at the teachers' room.",
+            "qa": null,
+            "timestamp": "2023-10-08T09:40:15",
+            "location": "Teacher's House"
+          },
+          {
+            "id": "location-arrival",
+            "speaker": "teacher",
+            "content": "I'm at the teachers' room now. Let's continue our planning.",
+            "qa": null,
+            "timestamp": "2023-10-08T09:40:45",
+            "location": "Teachers' Room"
           },
           {
             "id": "hook-request",
             "speaker": "teacher",
             "content": "I need something that will hook them at the start of the lesson.",
             "qa": null,
-            "timestamp": "2023-10-08T09:41:00"
+            "timestamp": "2023-10-08T09:41:00",
+            "location": "Teachers' Room"
           },
           {
             "id": "bike-hook-options",
@@ -188,7 +243,8 @@
               "question": "What makes an effective hook for a middle school history lesson?",
               "answer": "Effective hooks create cognitive dissonance, spark curiosity, or establish relevance. For middle schoolers, visual comparisons (then vs. now), provocative questions, relatable scenarios, or brief multimedia experiences capture attention within the crucial first 3-5 minutes of class."
             },
-            "timestamp": "2023-10-08T09:42:15"
+            "timestamp": "2023-10-08T09:42:15",
+            "location": "Teachers' Room"
           },
           {
             "id": "hook-module",
@@ -219,14 +275,35 @@
                 }
               ]
             },
-            "timestamp": "2023-10-08T09:44:30"
+            "timestamp": "2023-10-08T09:44:30",
+            "location": "Teachers' Room"
+          },
+          {
+            "id": "gdrive-request",
+            "speaker": "teacher",
+            "content": "BIKE, could you please retrieve the student assessment file from my Google Drive? It's in the 'Class Materials' folder.",
+            "qa": null,
+            "timestamp": "2023-10-08T09:45:15",
+            "location": "Teachers' Room"
+          },
+          {
+            "id": "gdrive-response",
+            "speaker": "bike",
+            "content": "Of course, I'll access your Google Drive and retrieve the student assessment file from the 'Class Materials' folder. Would you like me to display it or analyze the data in any particular way?",
+            "qa": {
+              "question": "How can AI assistants securely access teacher files while maintaining privacy?",
+              "answer": "AI assistants can securely access teacher files through authorized API connections with strict permission scopes, temporary access tokens, end-to-end encryption, and clear user consent workflows. They should maintain audit logs, minimize data retention, and comply with educational privacy regulations like FERPA."
+            },
+            "timestamp": "2023-10-08T09:45:40",
+            "location": "Teachers' Room"
           },
           {
             "id": "activity-request",
             "speaker": "teacher",
             "content": "Let's do a matching activity—people and their innovations.",
             "qa": null,
-            "timestamp": "2023-10-08T09:46:00"
+            "timestamp": "2023-10-08T09:46:00",
+            "location": "Teachers' Room"
           },
           {
             "id": "bike-activity",
@@ -236,7 +313,8 @@
               "question": "What learning objectives do matching activities support in history lessons?",
               "answer": "Matching activities support knowledge consolidation, relationship identification, and conceptual organization. In history lessons, they help students recognize patterns, establish causal relationships, and reinforce key vocabulary while providing formative assessment data for teachers."
             },
-            "timestamp": "2023-10-08T09:47:25"
+            "timestamp": "2023-10-08T09:47:25",
+            "location": "Teachers' Room"
           },
           {
             "id": "matching-module",
@@ -247,14 +325,16 @@
               "column1": ["Ada Lovelace", "Alan Turing", "Steve Jobs", "Tim Berners-Lee", "Fei-Fei Li"],
               "column2": ["First Computer Algorithm", "Enigma Machine & AI Theory", "Personal Computer Revolution", "World Wide Web", "ImageNet & Computer Vision"]
             },
-            "timestamp": "2023-10-08T09:49:10"
+            "timestamp": "2023-10-08T09:49:10",
+            "location": "Teachers' Room"
           },
           {
             "id": "industrial-revolution",
             "speaker": "teacher",
             "content": "We just covered the Industrial Revolution—can we tie it in?",
             "qa": null,
-            "timestamp": "2023-10-08T09:51:00"
+            "timestamp": "2023-10-08T09:51:00",
+            "location": "Teachers' Room"
           },
           {
             "id": "bike-industrial-connection",
@@ -264,7 +344,8 @@
               "question": "Why is connecting new content to previously learned material pedagogically valuable?",
               "answer": "Connecting to previous learning activates prior knowledge, creates cognitive frameworks for new information, builds conceptual understanding across topics, and reinforces retention through multiple exposures. These connections help students see history as interrelated patterns rather than isolated facts."
             },
-            "timestamp": "2023-10-08T09:52:30"
+            "timestamp": "2023-10-08T09:52:30",
+            "location": "Teachers' Room"
           },
           {
             "id": "knowledge-graph",
@@ -285,14 +366,16 @@
                 {"width": "150px", "left": "300px", "top": "150px", "rotate": "20deg"}
               ]
             },
-            "timestamp": "2023-10-08T09:54:15"
+            "timestamp": "2023-10-08T09:54:15",
+            "location": "Teachers' Room"
           },
           {
             "id": "save-request",
             "speaker": "teacher",
             "content": "This looks good. Save it and remind me the day before the lesson.",
             "qa": null,
-            "timestamp": "2023-10-08T09:56:00"
+            "timestamp": "2023-10-08T09:56:00",
+            "location": "Teachers' Room"
           },
           {
             "id": "bike-save",
@@ -302,21 +385,24 @@
               "question": "What preparation should teachers do the day before implementing a new lesson?",
               "answer": "Day-before preparation includes reviewing content for familiarity, checking all technology/materials, anticipating student questions or difficulties, mentally rehearsing transitions between activities, and making any last-minute adjustments based on recent student performance or interests."
             },
-            "timestamp": "2023-10-08T09:57:10"
+            "timestamp": "2023-10-08T09:57:10",
+            "location": "Teachers' Room"
           },
           {
             "id": "teacher-share",
             "speaker": "teacher",
             "content": "Yes, share it with the 8th grade team.",
             "qa": null,
-            "timestamp": "2023-10-08T09:58:30"
+            "timestamp": "2023-10-08T09:58:30",
+            "location": "Teachers' Room"
           },
           {
             "id": "video-games-question",
             "speaker": "teacher",
             "content": "Last time, students asked about early video games. Can we prepare for tangent questions?",
             "qa": null,
-            "timestamp": "2023-10-08T10:00:45"
+            "timestamp": "2023-10-08T10:00:45",
+            "location": "Teachers' Room"
           },
           {
             "id": "bike-tangent",
@@ -326,7 +412,8 @@
               "question": "How do effective teachers balance planned curriculum with student-driven tangents?",
               "answer": "Effective teachers anticipate common tangents, prepare concise responses that acknowledge interest without derailing the lesson, use tangents to demonstrate connections to main topics, and sometimes \"park\" questions for later exploration. The goal is honoring student curiosity while maintaining instructional coherence."
             },
-            "timestamp": "2023-10-08T10:02:00"
+            "timestamp": "2023-10-08T10:02:00",
+            "location": "Teachers' Room"
           },
           {
             "id": "tangent-module",
@@ -339,7 +426,8 @@
               "related_to": "Steve Jobs",
               "engagement": "78%"
             },
-            "timestamp": "2023-10-08T10:03:45"
+            "timestamp": "2023-10-08T10:03:45",
+            "location": "Teachers' Room"
           }
         ],
         "attachments": [
@@ -376,7 +464,7 @@
       "end_time": "2023-10-15T10:45:00",
       "location": "Room 204",
       "description": "Teaching the computer history lesson to 8th graders",
-      "participants": ["teacher", "bike", "student1", "student2", "student3"],
+      "participants": ["teacher", "bike", "student1", "student2", "student3", "remote_student1", "remote_student2", "remote_student3"],
       "content": {
         "interactions": [
           {
@@ -390,6 +478,26 @@
               "last_interaction": "7 days ago"
             },
             "timestamp": "2023-10-15T09:59:45"
+          },
+          {
+            "id": "remote-connection-module",
+            "type": "module",
+            "module_type": "remote-learning",
+            "title": "Remote Students Connection",
+            "content": {
+              "connected_students": [
+                {"id": "remote_student1", "name": "Remote Student 1", "location": "Hospital", "connection_quality": "excellent"},
+                {"id": "remote_student2", "name": "Remote Student 2", "location": "Home", "connection_quality": "good"},
+                {"id": "remote_student3", "name": "Remote Student 3", "location": "Library", "connection_quality": "excellent"}
+              ],
+              "features_enabled": ["chat", "raise-hand", "reactions", "polls", "breakout-rooms"],
+              "accessibility_settings": {
+                "closed_captions": true,
+                "transcript": true,
+                "screen_reader_support": true
+              }
+            },
+            "timestamp": "2023-10-15T09:59:50"
           },
           {
             "id": "class-start-student",
@@ -442,6 +550,45 @@
             "content": "Let's look at our first innovator, Ada Lovelace. She was writing computer programs before computers even existed!",
             "qa": null,
             "timestamp": "2023-10-15T10:05:00"
+          },
+          {
+            "id": "remote-hand-raise-module",
+            "type": "module",
+            "module_type": "remote-interaction",
+            "title": "Remote Hand Raise",
+            "content": {
+              "student": "remote_student1",
+              "action": "raise-hand",
+              "timestamp": "2023-10-15T10:05:20",
+              "status": "acknowledged",
+              "location": "Hospital"
+            },
+            "timestamp": "2023-10-15T10:05:20"
+          },
+          {
+            "id": "teacher-acknowledge-remote",
+            "speaker": "teacher",
+            "content": "I see a hand raised from our remote student in the hospital. Go ahead with your question.",
+            "qa": null,
+            "timestamp": "2023-10-15T10:05:30"
+          },
+          {
+            "id": "remote-student-question",
+            "speaker": "remote_student1",
+            "content": "[Remote Student from Hospital] I read that Ada Lovelace was Lord Byron's daughter. Did being the daughter of a famous poet influence her work?",
+            "qa": null,
+            "timestamp": "2023-10-15T10:05:45",
+            "location": "Hospital"
+          },
+          {
+            "id": "bike-ada-poetry",
+            "speaker": "bike",
+            "content": "Great observation! Ada called her approach to computing 'poetical science.' She inherited her father's creativity but applied it to mathematics. She saw beauty and poetry in mathematics that others missed.",
+            "qa": {
+              "question": "How does diverse thinking influence scientific innovation?",
+              "answer": "Diverse thinking brings together different perspectives, approaches, and ways of seeing the world. In science and technology, this cognitive diversity leads to more creative solutions, identification of overlooked problems, and novel applications that might not emerge from more homogeneous thinking."
+            },
+            "timestamp": "2023-10-15T10:06:00"
           },
           {
             "id": "student-question",
@@ -500,6 +647,179 @@
               "answer": "Video games demonstrate how technology can make learning engaging and interactive. They use principles like immediate feedback, progressive difficulty, and reward systems - all of which are now being applied to educational software and platforms."
             },
             "timestamp": "2023-10-15T10:19:00"
+          },
+          {
+            "id": "transition-to-activity",
+            "speaker": "teacher",
+            "content": "Now that we've learned about some key innovators, let's play a game to see if you can match them to their contributions to computer history!",
+            "qa": null,
+            "timestamp": "2023-10-15T10:22:00"
+          },
+          {
+            "id": "matching-game-module",
+            "type": "module",
+            "module_type": "interactive-game",
+            "title": "Innovators Matching Game",
+            "content": {
+              "game_type": "drag-and-drop",
+              "instructions": "Drag each innovator to their matching contribution",
+              "timer": 180,
+              "pairs": [
+                {"innovator": "Ada Lovelace", "contribution": "First Computer Algorithm", "image": "https://via.placeholder.com/120", "fact": "Was the daughter of poet Lord Byron"},
+                {"innovator": "Alan Turing", "contribution": "Enigma Machine & AI Theory", "image": "https://via.placeholder.com/120", "fact": "His work shortened WWII by years"},
+                {"innovator": "Steve Jobs", "contribution": "Personal Computer Revolution", "image": "https://via.placeholder.com/120", "fact": "Started Apple in a garage"},
+                {"innovator": "Tim Berners-Lee", "contribution": "World Wide Web", "image": "https://via.placeholder.com/120", "fact": "Made the web free for everyone to use"},
+                {"innovator": "Fei-Fei Li", "contribution": "ImageNet & Computer Vision", "image": "https://via.placeholder.com/120", "fact": "Created database that revolutionized AI vision"}
+              ],
+              "leaderboard": {
+                "enabled": true,
+                "anonymous": true
+              },
+              "completion_message": "Great job connecting innovators to their contributions!"
+            },
+            "timestamp": "2023-10-15T10:23:00"
+          },
+          {
+            "id": "remote-chat-module",
+            "type": "module",
+            "module_type": "remote-interaction",
+            "title": "Remote Chat Message",
+            "content": {
+              "student": "remote_student3",
+              "action": "chat-message",
+              "message": "I can't drag and drop with my screen reader. Is there an accessible version?",
+              "visibility": "teacher-only",
+              "location": "Library"
+            },
+            "timestamp": "2023-10-15T10:24:15"
+          },
+          {
+            "id": "bike-accessibility",
+            "speaker": "bike",
+            "content": "[BIKE to teacher] Detected accessibility need from remote student at the library. Enabling alternative matching interface with keyboard navigation.",
+            "qa": {
+              "question": "How can teachers ensure equitable participation across in-person and remote learners?",
+              "answer": "Equitable participation requires proactive monitoring of engagement across all learning environments, offering multiple participation modes (verbal, chat, reactions), ensuring technology accommodations for accessibility needs, and intentionally calling on remote students to prevent them from becoming invisible participants."
+            },
+            "timestamp": "2023-10-15T10:24:30"
+          },
+          {
+            "id": "teacher-accessibility-response",
+            "speaker": "teacher",
+            "content": "Thank you for letting us know. We're enabling an accessible version that works with your screen reader. Everyone can choose whichever interface works best for them.",
+            "qa": null,
+            "timestamp": "2023-10-15T10:24:45"
+          },
+          {
+            "id": "student-game-reaction",
+            "speaker": "student2",
+            "content": "This is fun! I didn't know Tim Berners-Lee created the World Wide Web!",
+            "qa": null,
+            "timestamp": "2023-10-15T10:26:30"
+          },
+          {
+            "id": "teacher-connection-explanation",
+            "speaker": "teacher",
+            "content": "Exactly! The punch cards used to program patterns in the Jacquard Loom inspired early computing. This shows how innovations build on each other across different eras.",
+            "qa": null,
+            "timestamp": "2023-10-15T10:34:30"
+          },
+          {
+            "id": "lesson-summary",
+            "speaker": "teacher",
+            "content": "Today we've explored the amazing journey of computing from mechanical calculators to modern smartphones. We've met inventors, mathematicians, and entrepreneurs who changed our world. Remember that innovation often comes from unlikely places and unexpected connections.",
+            "qa": null,
+            "timestamp": "2023-10-15T10:34:30"
+          },
+          {
+            "id": "remote-reaction-module",
+            "type": "module",
+            "module_type": "remote-interaction",
+            "title": "Remote Reaction",
+            "content": {
+              "student": "remote_student2",
+              "action": "reaction",
+              "reaction_type": "lightbulb",
+              "message": "I see the connection now!",
+              "visible_to_all": true,
+              "location": "Home"
+            },
+            "timestamp": "2023-10-15T10:35:15"
+          },
+          {
+            "id": "remote-student-insight",
+            "speaker": "remote_student2",
+            "content": "[Remote Student from Home] I just realized something! The Jacquard Loom was using binary patterns with holes in punch cards, just like early computers used binary code with 1s and 0s!",
+            "qa": null,
+            "timestamp": "2023-10-15T10:36:00",
+            "location": "Home"
+          },
+          {
+            "id": "teacher-praise",
+            "speaker": "teacher",
+            "content": "That's an excellent observation! You've made a really important connection between mechanical technology and digital computing. Binary patterns are indeed the foundation of all computing systems, even today.",
+            "qa": null,
+            "timestamp": "2023-10-15T10:36:30"
+          },
+          {
+            "id": "lesson-summary-module",
+            "type": "module",
+            "module_type": "participation-summary",
+            "title": "Lesson Participation Summary",
+            "content": {
+              "participants": [
+                {"name": "Ms. Johnson", "role": "teacher", "contribution_level": "high"},
+                {"name": "Student 1", "role": "student", "contribution_level": "very high", "questions_asked": 3},
+                {"name": "Student 2", "role": "student", "contribution_level": "medium", "questions_asked": 1},
+                {"name": "Student 3", "role": "student", "contribution_level": "medium", "questions_asked": 1},
+                {"name": "Remote Student 1", "role": "remote_student", "contribution_level": "high", "questions_asked": 1, "location": "Hospital"},
+                {"name": "Remote Student 2", "role": "remote_student", "contribution_level": "medium", "questions_asked": 1, "location": "Home"},
+                {"name": "Remote Student 3", "role": "remote_student", "contribution_level": "medium", "questions_asked": 0, "location": "Library", "accessibility_needs": true}
+              ],
+              "metrics_update": {
+                "engagement": {
+                  "overall": 92,
+                  "per_student": {
+                    "student1": 94,
+                    "student2": 90,
+                    "student3": 88,
+                    "remote_student1": 93,
+                    "remote_student2": 89,
+                    "remote_student3": 85
+                  }
+                },
+                "questions_asked": 11,
+                "tangents_explored": 1,
+                "key_concepts_covered": 7,
+                "discussion_quality": "high",
+                "activities_completed": 2,
+                "historical_connections_made": 3,
+                "remote_participation": {
+                  "quality": "excellent",
+                  "technical_issues": "minimal",
+                  "participation_equity": 90,
+                  "feature_usage": {
+                    "raise-hand": 1,
+                    "chat": 1,
+                    "reactions": 1
+                  }
+                },
+                "location_breakdown": {
+                  "classroom": 24,
+                  "hospital": 1,
+                  "home": 1,
+                  "library": 1
+                },
+                "notable_moments": [
+                  "High engagement during matching game",
+                  "Strong historical connections with Industrial Revolution",
+                  "Effective use of visual knowledge graph",
+                  "Seamless integration of remote and in-person students",
+                  "Rapid adaptation to accessibility needs"
+                ]
+              }
+            },
+            "timestamp": "2023-10-15T10:44:30"
           }
         ],
         "attachments": [
@@ -520,15 +840,38 @@
         ],
         "metrics": {
           "engagement": {
-            "overall": 85,
+            "overall": 92,
             "per_student": {
-              "student1": 90,
-              "student2": 80,
-              "student3": 85
+              "student1": 94,
+              "student2": 90,
+              "student3": 88,
+              "remote_student1": 93,
+              "remote_student2": 89,
+              "remote_student3": 85
             }
           },
-          "questions_asked": 5,
-          "tangents_explored": 1
+          "questions_asked": 11,
+          "tangents_explored": 1,
+          "key_concepts_covered": 7,
+          "discussion_quality": "high",
+          "activities_completed": 2,
+          "historical_connections_made": 3,
+          "remote_participation": {
+            "quality": "excellent",
+            "technical_issues": "minimal",
+            "participation_equity": 90,
+            "feature_usage": {
+              "raise-hand": 1,
+              "chat": 1,
+              "reactions": 1
+            }
+          },
+          "location_breakdown": {
+            "classroom": 24,
+            "hospital": 1,
+            "home": 1,
+            "library": 1
+          }
         }
       }
     },
@@ -630,6 +973,354 @@
             "progress": 0
           }
         ]
+      }
+    },
+    {
+      "id": "teacher-analytics",
+      "title": "Lesson Analytics Review",
+      "start_time": "2023-10-15T20:00:00",
+      "end_time": "2023-10-15T20:30:00",
+      "location": "Teacher's House",
+      "description": "Teacher reviewing student interaction data and analytics from the lesson",
+      "participants": ["teacher", "bike"],
+      "content": {
+        "interactions": [
+          {
+            "id": "hello-module-analytics",
+            "type": "module",
+            "module_type": "hello",
+            "title": "Greeting",
+            "content": {
+              "greeting": "Good evening Ms. Johnson",
+              "time_of_day": "evening",
+              "last_interaction": "9 hours ago"
+            },
+            "timestamp": "2023-10-15T20:00:00",
+            "location": "Teacher's House"
+          },
+          {
+            "id": "teacher-analytics-request",
+            "speaker": "teacher",
+            "content": "BIKE, show me the student interaction data from today's lesson.",
+            "qa": null,
+            "timestamp": "2023-10-15T20:01:15",
+            "location": "Teacher's House"
+          },
+          {
+            "id": "analytics-dashboard-module",
+            "type": "module",
+            "module_type": "analytics-dashboard",
+            "title": "Lesson Analytics Dashboard",
+            "content": {
+              "overview": {
+                "lesson_title": "Computer History: The Innovators",
+                "date": "2023-10-15",
+                "duration": "45 minutes",
+                "students_present": 24,
+                "engagement_score": 92
+              },
+              "engagement_metrics": {
+                "overall_trend": [
+                  {"time": "10:00", "value": 85},
+                  {"time": "10:10", "value": 90},
+                  {"time": "10:20", "value": 95},
+                  {"time": "10:30", "value": 93},
+                  {"time": "10:40", "value": 88}
+                ],
+                "by_activity": [
+                  {"activity": "Introduction", "value": 85},
+                  {"activity": "Timeline", "value": 87},
+                  {"activity": "Matching Game", "value": 96},
+                  {"activity": "Knowledge Graph", "value": 93},
+                  {"activity": "Wrap-up", "value": 88}
+                ],
+                "by_student_group": [
+                  {"group": "High performers", "value": 94},
+                  {"group": "Middle performers", "value": 89},
+                  {"group": "Struggling students", "value": 87}
+                ]
+              },
+              "participation_data": {
+                "questions_asked": {
+                  "total": 14,
+                  "by_type": {
+                    "clarification": 5,
+                    "conceptual": 7,
+                    "application": 2
+                  },
+                  "top_contributors": [
+                    {"name": "Student 1", "count": 3},
+                    {"name": "Student 12", "count": 2},
+                    {"name": "Student 7", "count": 2}
+                  ]
+                },
+                "activity_completion": {
+                  "matching_game": {
+                    "completion_rate": 97,
+                    "average_score": 88,
+                    "time_distribution": [
+                      {"range": "< 1 min", "percentage": 12},
+                      {"range": "1-2 min", "percentage": 65},
+                      {"range": "2-3 min", "percentage": 23}
+                    ]
+                  }
+                }
+              },
+              "concept_mastery": {
+                "key_concepts": [
+                  {"concept": "Early Computing Pioneers", "mastery": 92},
+                  {"concept": "Innovation Timeline", "mastery": 85},
+                  {"concept": "Industrial Revolution Connection", "mastery": 79},
+                  {"concept": "Personal Computing Revolution", "mastery": 88}
+                ],
+                "misconceptions": [
+                  {"concept": "Lovelace's Role", "frequency": "low", "notes": "Some students confused timeline"},
+                  {"concept": "ENIAC purpose", "frequency": "medium", "notes": "Mixed with UNIVAC in discussion"}
+                ]
+              },
+              "attention_heatmap": {
+                "classroom_layout": {
+                  "rows": 5,
+                  "columns": 5,
+                  "data": [
+                    [90, 87, 85, 84, 81],
+                    [92, 95, 93, 92, 84],
+                    [89, 96, 98, 95, 87],
+                    [88, 93, 94, 89, 83],
+                    [85, 88, 85, 82, 80]
+                  ]
+                }
+              }
+            },
+            "timestamp": "2023-10-15T20:02:30",
+            "location": "Teacher's House"
+          },
+          {
+            "id": "teacher-engagement-question",
+            "speaker": "teacher",
+            "content": "What was the peak engagement moment during the lesson?",
+            "qa": null,
+            "timestamp": "2023-10-15T20:05:45",
+            "location": "Teacher's House"
+          },
+          {
+            "id": "bike-engagement-analysis",
+            "speaker": "bike",
+            "content": "The matching game activity had the highest engagement at 96%. Students were particularly excited about connecting innovators to their contributions, with completion rate at 97%.",
+            "qa": {
+              "question": "How can engagement data inform future lesson planning?",
+              "answer": "Engagement data helps identify successful instructional methods, optimal pacing, and content that resonates with students. It allows teachers to replicate highly engaging activities, adjust less successful elements, and personalize instruction based on student interest patterns."
+            },
+            "timestamp": "2023-10-15T20:06:15",
+            "location": "Teacher's House"
+          },
+          {
+            "id": "heat-map-module",
+            "type": "module",
+            "module_type": "attention-heatmap",
+            "title": "Classroom Attention Map",
+            "content": {
+              "visualization": "heatmap",
+              "seating_chart": true,
+              "peak_times": [
+                {"time": "10:23:45", "description": "During matching game introduction"},
+                {"time": "10:32:10", "description": "Knowledge graph revelation sequence"}
+              ],
+              "annotations": [
+                {"position": {"row": 2, "column": 2}, "note": "Center of classroom consistently highest engagement"},
+                {"position": {"row": 4, "column": 4}, "note": "Back corner shows lower engagement during timeline"}
+              ]
+            },
+            "timestamp": "2023-10-15T20:07:30",
+            "location": "Teacher's House"
+          },
+          {
+            "id": "teacher-improvement",
+            "speaker": "teacher",
+            "content": "Where could I improve for next time? Which students might need extra support?",
+            "qa": null,
+            "timestamp": "2023-10-15T20:10:00",
+            "location": "Teacher's House"
+          },
+          {
+            "id": "recommendations-module",
+            "type": "module",
+            "module_type": "teacher-recommendations",
+            "title": "Lesson Improvement Recommendations",
+            "content": {
+              "teaching_insights": [
+                {
+                  "area": "Content Delivery",
+                  "observation": "Industrial Revolution connection showed lower concept mastery (79%)",
+                  "recommendation": "Provide more visual supports connecting historical periods"
+                },
+                {
+                  "area": "Student Engagement",
+                  "observation": "Back row engagement averaged 84%, compared to 95% in center",
+                  "recommendation": "Consider rotating seating or using proximity during key explanations"
+                },
+                {
+                  "area": "Learning Activities",
+                  "observation": "Matching game was highly successful (96% engagement)",
+                  "recommendation": "Incorporate similar interactive elements in future lessons"
+                }
+              ],
+              "individual_support": [
+                {
+                  "student": "Student 15",
+                  "area": "Concept Mastery",
+                  "observation": "Struggled with historical timeline connections",
+                  "recommendation": "Provide timeline visualization aid for personal reference"
+                },
+                {
+                  "student": "Student 8",
+                  "observation": "High interest but minimal verbal participation",
+                  "recommendation": "Offer alternative participation methods like digital responses"
+                },
+                {
+                  "student": "Student 21",
+                  "observation": "Disengaged during knowledge graph activity",
+                  "recommendation": "Check for prerequisite knowledge on Industrial Revolution"
+                }
+              ],
+              "curriculum_connections": [
+                {
+                  "upcoming_unit": "Digital Citizenship",
+                  "connection": "Build on Berners-Lee's vision of an open internet",
+                  "opportunity": "Connect historical principles to modern ethical questions"
+                }
+              ]
+            },
+            "timestamp": "2023-10-15T20:12:45",
+            "location": "Teacher's House"
+          },
+          {
+            "id": "student-progress-module",
+            "type": "module",
+            "module_type": "student-progress",
+            "title": "Individual Student Progress",
+            "content": {
+              "highest_engagement": [
+                {"name": "Student 1", "score": 94, "notes": "Asked insightful questions, completed all activities"},
+                {"name": "Student 7", "score": 93, "notes": "Strong interest in video games connection"},
+                {"name": "Student 12", "score": 92, "notes": "Helped explain concepts to peers"}
+              ],
+              "needs_attention": [
+                {"name": "Student 21", "score": 72, "notes": "Appeared distracted during latter half of lesson"},
+                {"name": "Student 15", "score": 75, "notes": "Confusion on timeline sequence identified"},
+                {"name": "Student 19", "score": 78, "notes": "Limited participation in discussions"}
+              ],
+              "learning_preferences": {
+                "visual": ["Student 4", "Student 9", "Student 15", "Student 21"],
+                "auditory": ["Student 1", "Student 7", "Student 12"],
+                "kinesthetic": ["Student 2", "Student 5", "Student 18"],
+                "reading/writing": ["Student 3", "Student 8", "Student 11"]
+              },
+              "follow_up_recommendations": [
+                {
+                  "type": "Additional resources",
+                  "for": ["Student 15", "Student 19", "Student 21"],
+                  "description": "Interactive timeline with knowledge check"
+                },
+                {
+                  "type": "Extension activity",
+                  "for": ["Student 1", "Student 7", "Student 12"],
+                  "description": "Research project on computing pioneer of choice"
+                }
+              ]
+            },
+            "timestamp": "2023-10-15T20:18:30",
+            "location": "Teacher's House"
+          },
+          {
+            "id": "teacher-save-request",
+            "speaker": "teacher",
+            "content": "Thanks for this analysis, BIKE. Please save it to my teaching portfolio and remind me to review these insights before our next history lesson.",
+            "qa": null,
+            "timestamp": "2023-10-15T20:23:45",
+            "location": "Teacher's House"
+          },
+          {
+            "id": "bike-save-confirm",
+            "speaker": "bike",
+            "content": "Analytics saved to your teaching portfolio. I've set a reminder to review these insights before your next history lesson. Would you like to create any differentiated follow-up assignments based on today's data?",
+            "qa": {
+              "question": "How does data-informed teaching impact student outcomes?",
+              "answer": "Data-informed teaching leads to more targeted interventions, personalized learning experiences, and efficient use of instructional time. Research shows improved academic outcomes, higher engagement, and reduced achievement gaps when teachers systematically use performance data to guide instruction."
+            },
+            "timestamp": "2023-10-15T20:24:30",
+            "location": "Teacher's House"
+          },
+          {
+            "id": "export-module",
+            "type": "module",
+            "module_type": "export-options",
+            "title": "Analytics Export Options",
+            "content": {
+              "formats": [
+                {"type": "PDF", "selected": true},
+                {"type": "Interactive dashboard", "selected": false},
+                {"type": "Presentation", "selected": false},
+                {"type": "Raw data (CSV)", "selected": false}
+              ],
+              "sections": [
+                {"name": "Engagement Overview", "include": true},
+                {"name": "Individual Student Data", "include": true},
+                {"name": "Teaching Recommendations", "include": true},
+                {"name": "Attention Heatmap", "include": true},
+                {"name": "Concept Mastery Analysis", "include": true}
+              ],
+              "sharing_options": [
+                {"recipient": "Department Head", "permission": "view"},
+                {"recipient": "Teaching Team", "permission": "view"},
+                {"recipient": "Student Guardians", "permission": "none"}
+              ],
+              "scheduled_reports": {
+                "enabled": true,
+                "frequency": "weekly",
+                "next_delivery": "2023-10-22"
+              }
+            },
+            "timestamp": "2023-10-15T20:27:15",
+            "location": "Teacher's House"
+          }
+        ],
+        "attachments": [
+          {
+            "id": "analytics-report",
+            "type": "document",
+            "title": "Computer History Lesson Analytics",
+            "file_type": "pdf",
+            "url": "resources/lesson_analytics_report.pdf"
+          },
+          {
+            "id": "student-recommendations",
+            "type": "document",
+            "title": "Student Support Recommendations",
+            "file_type": "pdf",
+            "url": "resources/student_support_recommendations.pdf"
+          }
+        ],
+        "metrics": {
+          "teacher_insights": {
+            "strengths": [
+              "Interactive element design",
+              "Question handling",
+              "Content personalization"
+            ],
+            "growth_areas": [
+              "Whole-class engagement",
+              "Supporting struggling students",
+              "Connection clarity"
+            ]
+          },
+          "instructional_impact": {
+            "knowledge_retention": 87,
+            "engagement_average": 92,
+            "participation_equity": 83,
+            "conceptual_understanding": 85
+          }
+        }
       }
     }
   ]
