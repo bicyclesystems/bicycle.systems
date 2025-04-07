@@ -3,15 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BIKE 0.1 Conversation Flow</title>
+    <title>BIKE Conversation Flow</title>
     <style>
-        /* Base Styles */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
+        /* Base styles */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background-color: #f8fafc;
@@ -19,7 +14,15 @@
             padding: 2rem;
         }
         
-        /* Participant Profiles */
+        /* Layout */
+        .conversation-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            min-height: 90vh;
+            padding-top: 160px;
+        }
+        
+        /* UI Elements */
         .participant-profiles {
             position: fixed;
             top: 20px;
@@ -27,7 +30,7 @@
             display: flex;
             z-index: 1000;
         }
-
+        
         .participant-profile {
             width: 40px;
             height: 40px;
@@ -40,56 +43,21 @@
             opacity: 0;
             transform: scale(0.5);
         }
-
+        
         .participant-profile.animate-in {
             animation: profilePopIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
-
-        @keyframes profilePopIn {
-            0% { opacity: 0; transform: scale(0.5); }
-            70% { opacity: 1; transform: scale(1.1); }
-            100% { opacity: 1; transform: scale(1); }
-        }
-
-        .participant-profile:hover {
-            transform: scale(1.1);
-            z-index: 1001;
-            margin-right: 0;
-        }
-
+        
         .participant-profile img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-
-        .participant-profile.active {
-            border-color: #2563eb;
-        }
         
-        /* Layout */
-        .conversation-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            min-height: 90vh;
-            padding-top: 160px;
-        }
+        .participant-profile.active { border-color: #2563eb; }
         
-        .message.current, .module-container.current {
-            position: fixed;
-            top: 100px;
-            left: 50%;
-            transform: translateX(-50%);
-            max-width: 80%;
-            z-index: 100;
-        }
-        
-        .message:not(.current), .module-container:not(.current) {
-            display: none;
-        }
-
-        /* Time/Space Indicator */
-        .time-space-indicator {
+        /* Status Bar */
+        .status-bar {
             position: fixed;
             top: 0;
             right: 0;
@@ -105,15 +73,8 @@
             align-items: center;
         }
         
-        .indicator-event {
-            font-weight: 600;
-            margin-right: 0.5rem;
-        }
-        
-        .indicator-time {
-            font-weight: 500;
-            margin-right: 0.5rem;
-        }
+        .current-event { font-weight: 600; margin-right: 0.5rem; }
+        .current-time { font-weight: 500; margin-right: 0.5rem; }
         
         .events-container, .locations-container {
             display: flex;
@@ -122,7 +83,7 @@
             margin-top: 0.25rem;
         }
         
-        .location-badge, .event-badge {
+        .event-badge, .location-badge {
             font-size: 0.8rem;
             padding: 0.2rem 0.5rem;
             border-radius: 0.25rem;
@@ -130,14 +91,20 @@
             transition: all 0.2s ease;
         }
         
+        .event-badge {
+            background-color: #047857;
+            color: white;
+        }
+        
         .location-badge {
             background-color: #e2e8f0;
             color: #1e293b;
         }
         
-        .event-badge {
-            background-color: #047857;
+        .event-badge.active {
+            background-color: #2563eb;
             color: white;
+            font-weight: 500;
         }
         
         .location-badge.active {
@@ -146,173 +113,6 @@
             font-weight: 500;
         }
         
-        .event-badge.active {
-            background-color: #2563eb;
-            color: white;
-            font-weight: 500;
-        }
-
-        /* Buttons */
-        .btn {
-            padding: 0.5rem 1rem;
-            border-radius: 0.375rem;
-            background-color: #2563eb;
-            color: white;
-            border: none;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        
-        .btn:hover {
-            opacity: 0.9;
-            transform: translateY(-1px);
-        }
-        
-        .btn.secondary {
-            background-color: transparent;
-            border: 1px solid #2563eb;
-            color: #2563eb;
-        }
-
-        /* Messages */
-        .message {
-            padding: 1.5rem;
-            border-radius: 0.75rem;
-            margin-bottom: 1.5rem;
-            font-size: 1.25rem;
-            line-height: 1.6;
-            max-width: 80%;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            display: flex;
-            gap: 1rem;
-            align-items: flex-start;
-            position: relative;
-        }
-
-        .message-content {
-            flex: 1;
-        }
-
-        .message-profile {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            overflow: hidden;
-            flex-shrink: 0;
-            border: 2px solid #e2e8f0;
-        }
-
-        .message-profile img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        /* Message Types */
-        .bike-message, .ai-message {
-            background-color: #ffffff;
-            border: 1px solid #e2e8f0;
-            align-self: flex-start;
-            border-bottom-left-radius: 0.25rem;
-        }
-
-        .teacher-message, .student-message {
-            background-color: #2563eb;
-            color: white;
-            align-self: flex-end;
-            margin-left: auto;
-            border-bottom-right-radius: 0.25rem;
-        }
-
-        /* Message timestamp */
-        .message-timestamp {
-            position: absolute;
-            top: 5px;
-            right: 10px;
-            font-size: 0.7rem;
-            opacity: 0.7;
-            color: inherit;
-        }
-
-        /* Full Screen Module Styles */
-        .module-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #f8fafc;
-            border-radius: 0;
-            box-shadow: none;
-            padding: 5rem 2rem 2rem;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: -1;
-            overflow: auto;
-        }
-
-        .module-container.current {
-            margin: 0;
-            max-width: 100%;
-            z-index: 10;
-            display: flex;
-            top: 0;
-            left: 0;
-            transform: none;
-        }
-
-        .module-container:not(.current) {
-            display: none;
-        }
-
-        .module-content {
-            background-color: rgba(255, 255, 255, 0.9);
-            border-radius: 1rem;
-            padding: 2rem;
-            max-width: 800px;
-            width: 90%;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            position: relative;
-            z-index: 1;
-        }
-
-        .module-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            padding-bottom: 0.75rem;
-            border-bottom: 2px solid #e2e8f0;
-            text-align: center;
-        }
-
-        .module-timestamp {
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            font-size: 0.7rem;
-            opacity: 0.7;
-            z-index: 2;
-            background-color: rgba(255, 255, 255, 0.8);
-            padding: 0.25rem 0.5rem;
-            border-radius: 0.25rem;
-        }
-
-        /* Event Header Styles */
-        .event-header {
-            position: relative;
-            z-index: 5;
-            background-color: rgba(255, 255, 255, 0.95);
-            border-radius: 0.75rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            padding: 1.5rem;
-            margin: 180px auto 2rem;
-            max-width: 80%;
-        }
-
         /* Playback Controls */
         .playback-controls {
             position: fixed;
@@ -338,19 +138,31 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            padding: 0;
+            border: none;
+            color: white;
+            cursor: pointer;
         }
         
-        .play-icon {
-            font-size: 18px;
-            line-height: 1;
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
         }
-
-        .playback-speed {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.9rem;
+        
+        .btn.secondary {
+            background-color: transparent;
+            border: 1px solid #2563eb;
+            color: #2563eb;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
         }
         
         #speed-slider {
@@ -379,7 +191,154 @@
             width: 25px;
             text-align: right;
         }
-
+        
+        /* Messages */
+        .message {
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
+            line-height: 1.6;
+            max-width: 80%;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+            position: relative;
+        }
+        
+        .message.current, .module-container.current {
+            position: fixed;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            max-width: 80%;
+            z-index: 100;
+        }
+        
+        .message:not(.current), .module-container:not(.current) {
+            display: none;
+        }
+        
+        .message-content {
+            flex: 1;
+        }
+        
+        .message-profile {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            flex-shrink: 0;
+            border: 2px solid #e2e8f0;
+        }
+        
+        .message-profile img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .message-timestamp {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            font-size: 0.7rem;
+            opacity: 0.7;
+            color: inherit;
+        }
+        
+        /* Message Types */
+        .ai-message, .bike-message {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            align-self: flex-start;
+            border-bottom-left-radius: 0.25rem;
+        }
+        
+        .teacher-message, .student-message {
+            background-color: #2563eb;
+            color: white;
+            align-self: flex-end;
+            margin-left: auto;
+            border-bottom-right-radius: 0.25rem;
+        }
+        
+        .remote_student-message {
+            background-color: #6d28d9;
+            color: white;
+            align-self: flex-end;
+            margin-left: auto;
+            border-bottom-right-radius: 0.25rem;
+        }
+        
+        /* Modules */
+        .module-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #f8fafc;
+            padding: 5rem 2rem 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: -1;
+            overflow: auto;
+        }
+        
+        .module-container.remote-module {
+            background-color: #f0e7ff;
+        }
+        
+        .module-container.current {
+            margin: 0;
+            max-width: 100%;
+            z-index: 10;
+            display: flex;
+            top: 0;
+            left: 0;
+            transform: none;
+        }
+        
+        .module-content {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 1rem;
+            padding: 2rem;
+            max-width: 800px;
+            width: 90%;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .remote-module .module-content {
+            border-left: 5px solid #6d28d9;
+        }
+        
+        .module-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid #e2e8f0;
+            text-align: center;
+        }
+        
+        .module-timestamp {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 0.7rem;
+            opacity: 0.7;
+            z-index: 2;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+        }
+        
         /* Loading */
         .loading {
             display: flex;
@@ -387,7 +346,7 @@
             align-items: center;
             min-height: 400px;
         }
-
+        
         .loading-spinner {
             border: 4px solid rgba(0, 0, 0, 0.1);
             border-left-color: #2563eb;
@@ -396,12 +355,18 @@
             height: 40px;
             animation: spin 1s linear infinite;
         }
-
+        
+        /* Animations */
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
         
-        /* Animations */
+        @keyframes profilePopIn {
+            0% { opacity: 0; transform: scale(0.5); }
+            70% { opacity: 1; transform: scale(1.1); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        
         .message.hidden, .module-container.hidden {
             opacity: 0;
             transform: translate(-50%, -30px) scale(0.8);
@@ -412,7 +377,7 @@
             pointer-events: none;
             transition: opacity 0.3s ease-out, transform 0.3s ease-out;
         }
-
+        
         .message.appearing, .module-container.appearing {
             animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
             position: fixed;
@@ -421,7 +386,7 @@
             z-index: 2;
             pointer-events: auto;
         }
-
+        
         @keyframes popIn {
             0% { opacity: 0; transform: translate(-50%, -30px) scale(0.8); }
             70% { opacity: 1; transform: translate(-50%, 0) scale(1.03); }
@@ -430,26 +395,20 @@
     </style>
 </head>
 <body>
-    <!-- Fixed Position UI Elements -->
-    <div class="participant-profiles" id="participant-profiles">
-        <!-- Participant profiles will be populated by JavaScript -->
-    </div>
+    <!-- Fixed UI Elements -->
+    <div class="participant-profiles" id="participant-profiles"></div>
 
-    <div class="time-space-indicator">
+    <div class="status-bar">
         <div>
-            <span id="current-event" class="indicator-event"></span>
-            <span id="current-time" class="indicator-time"></span>
-            <div id="events-container" class="events-container">
-                <!-- Events will be populated by JavaScript -->
-            </div>
-            <div id="locations-container" class="locations-container">
-                <!-- Locations will be populated by JavaScript -->
-            </div>
+            <span id="current-event" class="current-event"></span>
+            <span id="current-time" class="current-time"></span>
+            <div id="events-container" class="events-container"></div>
+            <div id="locations-container" class="locations-container"></div>
         </div>
     </div>
 
     <div class="playback-controls">
-        <button id="play-button" class="btn play-btn">
+        <button id="play-button" class="play-btn">
             <span class="play-icon">▶</span>
         </button>
         <div class="playback-speed">
@@ -462,6 +421,59 @@
         </button>
     </div>
 
+    <!-- Define the HelloModule web component template -->
+    <template id="hello-module-template">
+        <style>
+            :host {
+                display: block;
+                width: 100%;
+                height: 100%;
+            }
+            .hello-module {
+                background-color: #f8f9ff;
+                border-radius: 1rem;
+                padding: 2rem;
+                max-width: 800px;
+                width: 90%;
+                box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+                margin: 0 auto;
+                text-align: center;
+                border-left: 5px solid #4f46e5;
+                position: relative;
+            }
+            .hello-title {
+                font-size: 2.5rem;
+                font-weight: 700;
+                margin-bottom: 1rem;
+                color: #4f46e5;
+            }
+            .hello-name {
+                font-size: 3rem;
+                font-weight: 800;
+                background: linear-gradient(135deg, #6366f1, #8b5cf6, #d946ef);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                margin-bottom: 1.5rem;
+            }
+            .hello-module-timestamp {
+                position: absolute;
+                top: 10px;
+                right: 15px;
+                font-size: 0.7rem;
+                opacity: 0.7;
+                z-index: 2;
+                background-color: rgba(255, 255, 255, 0.8);
+                padding: 0.25rem 0.5rem;
+                border-radius: 0.25rem;
+            }
+        </style>
+        <div class="hello-module">
+            <div class="hello-module-timestamp"></div>
+            <div class="hello-title">Hello,</div>
+            <div class="hello-name"></div>
+        </div>
+    </template>
+
     <!-- Main Content Container -->
     <div class="conversation-container">
         <div class="loading">
@@ -471,9 +483,38 @@
 
     <!-- JavaScript -->
     <script>
-    /**
-     * BIKE Conversation Flow Application - Simplified
-     */
+    // Define the HelloModule web component
+    class HelloModule extends HTMLElement {
+        constructor() {
+            super();
+            const template = document.getElementById('hello-module-template');
+            const shadowRoot = this.attachShadow({ mode: 'open' });
+            shadowRoot.appendChild(template.content.cloneNode(true));
+        }
+        
+        connectedCallback() {
+            // Initialize with default values
+            this.updateName('Friend');
+            this.updateTimestamp('');
+        }
+        
+        updateName(name) {
+            const nameElement = this.shadowRoot.querySelector('.hello-name');
+            if (nameElement) {
+                nameElement.textContent = name;
+            }
+        }
+        
+        updateTimestamp(timestamp) {
+            const timestampElement = this.shadowRoot.querySelector('.hello-module-timestamp');
+            if (timestampElement) {
+                timestampElement.textContent = timestamp;
+            }
+        }
+    }
+    
+    // Register the web component
+    customElements.define('hello-module', HelloModule);
     
     // Global variables
     let isPlaying = false;
@@ -481,206 +522,328 @@
     let currentIndex = 0;
     let playbackTimer = null;
     
-    /**
-     * Initialize application when DOM is loaded
-     */
+    // Initialize app when DOM is loaded
     document.addEventListener('DOMContentLoaded', async function() {
         try {
-            await loadConversationData();
-            setupEventListeners();
-            updateTimeSpaceIndicator();
-            initializePlayback();
-            initializeScrollNavigation();
+            await loadData();
+            setupControls();
+            updateStatusBar();
+            setupNavigation();
         } catch (error) {
             console.error('Error:', error);
-            document.querySelector('.conversation-container').innerHTML = `
-                <div class="error-message">
-                    <h3>Error Loading Conversation</h3>
+            document.querySelector('.conversation-container').innerHTML = 
+                `<div class="error-message">
+                    <h3>Error Loading Data</h3>
                     <p>${error.message}</p>
-                </div>
-            `;
+                </div>`;
         }
     });
     
-    /**
-     * Load conversation data from JSON file
-     */
-    async function loadConversationData() {
+    // Load conversation data
+    async function loadData() {
         const response = await fetch('conversations.json');
-        if (!response.ok) {
-            throw new Error('Failed to load conversation data');
-        }
-        const data = await response.json();
+        if (!response.ok) throw new Error('Failed to load conversation data');
         
-        // Store the data globally for access in scroll events
+        const data = await response.json();
         window.conversationData = data;
         
-        // Render the conversation
         renderConversation(data);
     }
     
-    /**
-     * Render conversation content
-     */
+    // Render conversation
     function renderConversation(data) {
         const container = document.querySelector('.conversation-container');
-        container.innerHTML = ''; // Clear container
+        container.innerHTML = '';
         
-        // Render participant profiles
-        renderParticipantProfiles(data.participants);
+        renderParticipants(data.participants);
         
-        // Loop through events
-        data.events.forEach((event, eventIndex) => {
-            renderEvent(event, eventIndex, container, data.participants);
-        });
+        // Flatten all interactions across events for simpler navigation
+        const allElements = [];
         
-        // Initialize with the first element visible
-        const elements = getAllContentElements();
-        if (elements.length > 0) {
-            elements[0].classList.remove('hidden');
-            elements[0].classList.add('current');
-            elements[0].classList.add('appearing');
-            currentIndex = 0;
-        }
-    }
-    
-    /**
-     * Render an individual event and its content
-     */
-    function renderEvent(event, eventIndex, container, participants) {
-        // Skip creating event headers entirely - only render interactions
-        renderInteractions(event, eventIndex, container, participants);
-    }
-    
-    /**
-     * Render interactions within an event
-     */
-    function renderInteractions(event, eventIndex, container, participants) {
-        if (!event.content || !event.content.interactions) return;
-        
-        event.content.interactions.forEach((item, index) => {
-            if (item.speaker) {
-                // Render regular message
-                const messageElement = createMessageElement(item, participants);
-                
-                // Add data attributes for timestamps to help with scroll tracking
-                if (item.timestamp) {
-                    messageElement.dataset.timestamp = item.timestamp;
-                    messageElement.dataset.index = `${eventIndex}-${index}`;
-                }
-                
-                // Add event name and location
-                messageElement.dataset.event = event.title;
-                messageElement.dataset.location = event.location;
-                
-                // Initially hide messages for time navigation
-                messageElement.classList.add('hidden');
-                
-                container.appendChild(messageElement);
-            } else if (item.type === 'module') {
-                // Render module
-                renderModule(item, eventIndex, index, event, container);
-            }
-        });
-    }
-    
-    /**
-     * Render a module element
-     */
-    function renderModule(item, eventIndex, index, event, container) {
-        const moduleDiv = document.createElement('div');
-        moduleDiv.className = 'module-container';
-        
-        const moduleTitle = document.createElement('h3');
-        moduleTitle.className = 'module-title';
-        moduleTitle.textContent = item.title || item.module_type;
-        
-        const moduleDesc = document.createElement('p');
-        moduleDesc.textContent = `[${item.module_type} module]`;
-        moduleDesc.style.fontStyle = 'italic';
-        
-        // Add timestamp if available
-        if (item.timestamp) {
-            const timestampDiv = document.createElement('div');
-            timestampDiv.className = 'module-timestamp';
-            timestampDiv.textContent = formatTimestamp(item.timestamp);
-            moduleDiv.appendChild(timestampDiv);
+        data.events.forEach(event => {
+            if (!event.content || !event.content.interactions) return;
             
-            // Add data attributes for tracking
-            moduleDiv.dataset.timestamp = item.timestamp;
-            moduleDiv.dataset.index = `${eventIndex}-${index}`;
-            moduleDiv.dataset.event = event.title;
-            moduleDiv.dataset.location = event.location;
+            event.content.interactions.forEach(item => {
+                if (item.speaker) {
+                    const messageEl = createMessage(item, data.participants);
+                    
+                    // Add metadata
+                    messageEl.dataset.timestamp = item.timestamp || '';
+                    messageEl.dataset.event = event.title || '';
+                    messageEl.dataset.location = item.location || event.location || '';
+                    
+                    // Hide initially
+                    messageEl.classList.add('hidden');
+                    container.appendChild(messageEl);
+                    allElements.push(messageEl);
+                } 
+                else if (item.type === 'module') {
+                    const moduleEl = createModule(item, event.location, event.title);
+                    
+                    // Add metadata
+                    moduleEl.dataset.timestamp = item.timestamp || '';
+                    moduleEl.dataset.event = event.title || '';
+                    moduleEl.dataset.location = item.location || event.location || '';
+                    
+                    // Hide initially
+                    moduleEl.classList.add('hidden');
+                    container.appendChild(moduleEl);
+                    allElements.push(moduleEl);
+                }
+            });
+        });
+        
+        // Sort elements by timestamp
+        allElements.sort((a, b) => {
+            const timeA = a.dataset.timestamp ? new Date(a.dataset.timestamp).getTime() : 0;
+            const timeB = b.dataset.timestamp ? new Date(b.dataset.timestamp).getTime() : 0;
+            return timeA - timeB;
+        });
+        
+        // Show first element
+        if (allElements.length > 0) {
+            allElements[0].classList.remove('hidden');
+            allElements[0].classList.add('current', 'appearing');
         }
-        
-        moduleDiv.appendChild(moduleTitle);
-        moduleDiv.appendChild(moduleDesc);
-        
-        // Initially hide modules for time navigation
-        moduleDiv.classList.add('hidden');
-        
-        container.appendChild(moduleDiv);
     }
     
-    /**
-     * Create a message element from message data
-     */
-    function createMessageElement(message, participants) {
-        // Create message container
-        const messageDiv = document.createElement('div');
-        const participant = participants[message.speaker];
-        messageDiv.className = `message ${participant.type}-message`;
+    // Create message element
+    function createMessage(message, participants) {
+        const participant = participants[message.speaker] || {};
         
-        // Create profile
-        const profileDiv = document.createElement('div');
-        profileDiv.className = 'message-profile';
+        // Create elements
+        const messageEl = document.createElement('div');
+        messageEl.className = `message ${participant.type || 'unknown'}-message`;
+        
+        const profileEl = document.createElement('div');
+        profileEl.className = 'message-profile';
         
         if (participant.avatar) {
             const img = document.createElement('img');
             img.src = participant.avatar;
             img.alt = `${participant.name} Profile`;
-            profileDiv.appendChild(img);
+            profileEl.appendChild(img);
         } else if (participant.avatarBgColor) {
-            profileDiv.style.backgroundColor = participant.avatarBgColor;
+            profileEl.style.backgroundColor = participant.avatarBgColor;
         }
         
-        // Create content
-        const contentDiv = document.createElement('div');
-        contentDiv.className = 'message-content';
+        const contentEl = document.createElement('div');
+        contentEl.className = 'message-content';
         
         // Add speaker name
-        const nameDiv = document.createElement('div');
-        nameDiv.className = 'message-name';
-        nameDiv.textContent = participant.name;
-        nameDiv.style.fontWeight = 'bold';
-        nameDiv.style.marginBottom = '0.5rem';
+        const nameEl = document.createElement('div');
+        nameEl.style.fontWeight = 'bold';
+        nameEl.style.marginBottom = '0.5rem';
+        nameEl.textContent = participant.name || 'Unknown';
         
-        contentDiv.appendChild(nameDiv);
+        // Add location for remote students
+        if (participant.type === 'remote_student' && message.location) {
+            const locationSpan = document.createElement('span');
+            locationSpan.style.marginLeft = '0.5rem';
+            locationSpan.style.fontSize = '0.8em';
+            locationSpan.style.opacity = '0.8';
+            locationSpan.textContent = `(${message.location})`;
+            nameEl.appendChild(locationSpan);
+        }
+        
+        contentEl.appendChild(nameEl);
         
         // Add message content
         const messageText = document.createElement('div');
-        messageText.textContent = message.content;
-        contentDiv.appendChild(messageText);
+        messageText.textContent = message.content || '';
+        contentEl.appendChild(messageText);
         
-        // Add timestamp if available
+        // Add critical thinking content if available
+        if (message.qa && message.qa.question && message.qa.answer) {
+            const qaEl = document.createElement('div');
+            qaEl.style.marginTop = '0.75rem';
+            qaEl.style.borderLeft = '2px solid #2563eb';
+            qaEl.style.paddingLeft = '0.75rem';
+            qaEl.style.opacity = '0.85';
+            
+            const questionEl = document.createElement('div');
+            questionEl.style.fontWeight = 'bold';
+            questionEl.style.marginBottom = '0.25rem';
+            questionEl.style.fontSize = '0.9em';
+            questionEl.style.cursor = 'pointer';
+            questionEl.style.display = 'flex';
+            questionEl.style.alignItems = 'center';
+            questionEl.style.justifyContent = 'space-between';
+            
+            const questionText = document.createElement('span');
+            questionText.textContent = message.qa.question;
+            
+            const toggleIndicator = document.createElement('span');
+            toggleIndicator.textContent = '▼';
+            toggleIndicator.style.fontSize = '0.7em';
+            toggleIndicator.style.marginLeft = '0.5rem';
+            toggleIndicator.style.transition = 'transform 0.2s ease';
+            
+            questionEl.appendChild(questionText);
+            questionEl.appendChild(toggleIndicator);
+            
+            const answerEl = document.createElement('div');
+            answerEl.style.fontSize = '0.85em';
+            answerEl.style.display = 'none';
+            answerEl.style.transition = 'max-height 0.3s ease-out';
+            answerEl.style.overflow = 'hidden';
+            answerEl.textContent = message.qa.answer;
+            
+            // Toggle visibility on click
+            questionEl.addEventListener('click', () => {
+                if (answerEl.style.display === 'none') {
+                    answerEl.style.display = 'block';
+                    toggleIndicator.style.transform = 'rotate(180deg)';
+                } else {
+                    answerEl.style.display = 'none';
+                    toggleIndicator.style.transform = 'rotate(0deg)';
+                }
+            });
+            
+            qaEl.appendChild(questionEl);
+            qaEl.appendChild(answerEl);
+            contentEl.appendChild(qaEl);
+        }
+        
+        // Add timestamp
         if (message.timestamp) {
-            const timestampDiv = document.createElement('div');
-            timestampDiv.className = 'message-timestamp';
-            timestampDiv.textContent = formatTimestamp(message.timestamp);
-            messageDiv.appendChild(timestampDiv);
+            const timestampEl = document.createElement('div');
+            timestampEl.className = 'message-timestamp';
+            timestampEl.textContent = formatTime(message.timestamp);
+            messageEl.appendChild(timestampEl);
         }
         
         // Assemble message
-        messageDiv.appendChild(profileDiv);
-        messageDiv.appendChild(contentDiv);
+        messageEl.appendChild(profileEl);
+        messageEl.appendChild(contentEl);
         
-        return messageDiv;
+        return messageEl;
     }
     
-    /**
-     * Format timestamp for display
-     */
-    function formatTimestamp(timestamp) {
+    // Create module element
+    function createModule(item, eventLocation, eventTitle) {
+        // Check if this is a hello module
+        if (item.module_type === 'hello') {
+            const moduleEl = document.createElement('div');
+            moduleEl.className = 'module-container';
+            
+            // Create the hello module web component
+            const helloModule = document.createElement('hello-module');
+            
+            // Set name from data
+            if (item.content && item.content.name) {
+                helloModule.updateName(item.content.name);
+            }
+            
+            // Add timestamp
+            if (item.timestamp) {
+                helloModule.updateTimestamp(formatTime(item.timestamp));
+            }
+            
+            // Add metadata
+            moduleEl.dataset.timestamp = item.timestamp || '';
+            moduleEl.dataset.event = eventTitle || '';
+            moduleEl.dataset.location = item.location || eventLocation || '';
+            
+            moduleEl.appendChild(helloModule);
+            return moduleEl;
+        }
+        
+        // Regular module creation for other module types
+        const moduleEl = document.createElement('div');
+        moduleEl.className = 'module-container';
+        
+        // Add special class for remote interaction modules
+        if (item.module_type === 'remote-interaction' || item.module_type === 'remote-learning') {
+            moduleEl.classList.add('remote-module');
+        }
+        
+        const moduleContent = document.createElement('div');
+        moduleContent.className = 'module-content';
+        
+        const titleEl = document.createElement('h3');
+        titleEl.className = 'module-title';
+        titleEl.textContent = item.title || item.module_type || 'Module';
+        
+        // For remote interactions, add context to the title
+        if (item.module_type === 'remote-interaction' && item.content && item.content.student) {
+            // Create a context badge next to the title
+            const contextBadge = document.createElement('span');
+            contextBadge.style.fontSize = '0.7rem';
+            contextBadge.style.padding = '0.25rem 0.5rem';
+            contextBadge.style.borderRadius = '0.25rem';
+            contextBadge.style.marginLeft = '0.5rem';
+            contextBadge.style.backgroundColor = '#e2e8f0';
+            contextBadge.style.fontWeight = 'normal';
+            contextBadge.textContent = eventLocation || 'Unknown location';
+            titleEl.appendChild(contextBadge);
+        }
+        
+        const descEl = document.createElement('p');
+        descEl.textContent = `[${item.module_type} module]`;
+        descEl.style.fontStyle = 'italic';
+        
+        // Show student info for remote interactions
+        if (item.module_type === 'remote-interaction' && item.content && item.content.student) {
+            const studentInfo = document.createElement('div');
+            studentInfo.style.marginTop = '1rem';
+            studentInfo.style.padding = '0.5rem';
+            studentInfo.style.backgroundColor = '#f0e7ff';
+            studentInfo.style.borderRadius = '0.5rem';
+            
+            // Create container for locations with visual indication
+            const locationsContainer = document.createElement('div');
+            locationsContainer.style.display = 'flex';
+            locationsContainer.style.justifyContent = 'space-between';
+            locationsContainer.style.marginBottom = '0.5rem';
+            locationsContainer.style.padding = '0.5rem';
+            locationsContainer.style.borderRadius = '0.25rem';
+            locationsContainer.style.backgroundColor = 'rgba(109, 40, 217, 0.1)';
+            
+            // Add teacher location on left
+            if (eventLocation) {
+                const teacherLocationInfo = document.createElement('div');
+                teacherLocationInfo.innerHTML = `<strong>Teacher:</strong> ${eventLocation}`;
+                locationsContainer.appendChild(teacherLocationInfo);
+            }
+            
+            // Add student location on right
+            if (item.content.location) {
+                const studentLocationInfo = document.createElement('div');
+                studentLocationInfo.innerHTML = `<strong>Student:</strong> ${item.content.location}`;
+                locationsContainer.appendChild(studentLocationInfo);
+            }
+            
+            studentInfo.appendChild(locationsContainer);
+            
+            const studentName = document.createElement('div');
+            studentName.style.fontWeight = 'bold';
+            studentName.textContent = `Remote Student: ${item.content.student.replace('remote_', '')}`;
+            
+            const actionInfo = document.createElement('div');
+            actionInfo.textContent = `Action: ${item.content.action || 'interaction'}`;
+            
+            studentInfo.appendChild(studentName);
+            studentInfo.appendChild(actionInfo);
+            moduleContent.appendChild(studentInfo);
+        }
+        
+        if (item.timestamp) {
+            const timestampEl = document.createElement('div');
+            timestampEl.className = 'module-timestamp';
+            timestampEl.textContent = formatTime(item.timestamp);
+            moduleEl.appendChild(timestampEl);
+        }
+        
+        moduleContent.appendChild(titleEl);
+        moduleContent.appendChild(descEl);
+        moduleEl.appendChild(moduleContent);
+        
+        return moduleEl;
+    }
+    
+    // Format timestamp
+    function formatTime(timestamp) {
         const date = new Date(timestamp);
         return date.toLocaleString('en-US', {
             month: 'short',
@@ -690,256 +853,11 @@
         });
     }
     
-    /**
-     * Update the time/space indicator with current information
-     */
-    function updateTimeSpaceIndicator() {
-        if (!window.conversationData) return;
-        
-        const timeIndicator = document.getElementById('current-time');
-        const locationsContainer = document.getElementById('locations-container');
-        const eventsContainer = document.getElementById('events-container');
-        const eventIndicator = document.getElementById('current-event');
-        const data = window.conversationData;
-        
-        // Find the current visible element
-        const visibleElement = document.querySelector('.current');
-        
-        // Collect all unique locations from the data
-        const allLocations = new Set();
-        
-        // Collect all unique events from the data
-        const allEvents = new Set();
-        
-        // Add locations and events from all events
-        data.events.forEach(event => {
-            allLocations.add(event.location);
-            allEvents.add(event.title);
-        });
-        
-        // Get current active location and event
-        let activeLocation = '';
-        let activeEvent = '';
-        
-        if (visibleElement) {
-            if (visibleElement.dataset.timestamp) {
-                const timestamp = visibleElement.dataset.timestamp;
-                const date = new Date(timestamp);
-                
-                // Format time
-                const timeString = date.toLocaleString('en-US', {
-                    month: 'short',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                });
-                
-                // Get location and event directly from the element
-                activeLocation = visibleElement.dataset.location || '';
-                activeEvent = visibleElement.dataset.event || '';
-                
-                // Set time
-                timeIndicator.textContent = timeString;
-                eventIndicator.textContent = activeEvent || '';
-            }
-        } else {
-            // Default if no visible elements with timestamps
-            eventIndicator.textContent = '';
-            timeIndicator.textContent = 'Time unknown';
-            activeLocation = '';
-            activeEvent = '';
-        }
-        
-        // Render all events
-        renderEventBadges(eventsContainer, allEvents, activeEvent);
-        
-        // Render all locations
-        renderLocationBadges(locationsContainer, allLocations, activeLocation);
-        
-        // Update active participants based on the current event
-        updateActiveParticipants();
-    }
-    
-    /**
-     * Render event badges in the indicator
-     */
-    function renderEventBadges(container, events, activeEvent) {
-        container.innerHTML = '';
-        events.forEach(event => {
-            if (!event) return; // Skip empty events
-            
-            const eventBadge = document.createElement('span');
-            eventBadge.className = 'event-badge';
-            eventBadge.textContent = event;
-            
-            // Highlight active event
-            if (event === activeEvent) {
-                eventBadge.classList.add('active');
-            }
-            
-            // Add click handler to scroll to the event
-            eventBadge.addEventListener('click', () => scrollToEvent(event));
-            
-            container.appendChild(eventBadge);
-        });
-    }
-    
-    /**
-     * Render location badges in the indicator
-     */
-    function renderLocationBadges(container, locations, activeLocation) {
-        container.innerHTML = '';
-        locations.forEach(location => {
-            if (!location) return; // Skip empty locations
-            
-            const locationBadge = document.createElement('span');
-            locationBadge.className = 'location-badge';
-            locationBadge.textContent = location;
-            
-            // Highlight active location
-            if (location === activeLocation) {
-                locationBadge.classList.add('active');
-            }
-            
-            // Add click handler to scroll to the location
-            locationBadge.addEventListener('click', () => scrollToLocation(location));
-            
-            container.appendChild(locationBadge);
-        });
-    }
-    
-    /**
-     * Scroll to a location
-     */
-    function scrollToLocation(location) {
-        const elements = getAllContentElements();
-        
-        // Find the first element with this location
-        let targetIndex = -1;
-        for (let i = 0; i < elements.length; i++) {
-            if (elements[i].dataset.location === location) {
-                targetIndex = i;
-                break;
-            }
-        }
-        
-        if (targetIndex >= 0) {
-            // Update global index
-            currentIndex = targetIndex;
-            
-            // Display the target element
-            displayElement(elements, currentIndex);
-            
-            // If currently playing, restart from the new position
-            if (isPlaying) {
-                pausePlayback();
-                startPlayback();
-            }
-        }
-    }
-    
-    /**
-     * Scroll to an event
-     */
-    function scrollToEvent(event) {
-        const elements = getAllContentElements();
-        
-        // Find the first element with this event
-        let targetIndex = -1;
-        for (let i = 0; i < elements.length; i++) {
-            if (elements[i].dataset.event === event) {
-                targetIndex = i;
-                break;
-            }
-        }
-        
-        if (targetIndex >= 0) {
-            // Update global index
-            currentIndex = targetIndex;
-            
-            // Display the target element
-            displayElement(elements, currentIndex);
-            
-            // If currently playing, restart from the new position
-            if (isPlaying) {
-                pausePlayback();
-                startPlayback();
-            }
-        }
-    }
-    
-    /**
-     * Setup event listeners for user interaction
-     */
-    function setupEventListeners() {
-        // Update time/space indicator on scroll
-        window.addEventListener('scroll', function() {
-            updateTimeSpaceIndicator();
-        });
-        
-        // Update on window resize (in case elements shift)
-        window.addEventListener('resize', function() {
-            updateTimeSpaceIndicator();
-        });
-    }
-    
-    /**
-     * Initialize playback functionality
-     */
-    function initializePlayback() {
-        // Setup play button
-        const playButton = document.getElementById('play-button');
-        const playIcon = playButton.querySelector('.play-icon');
-        
-        playButton.addEventListener('click', function() {
-            if (isPlaying) {
-                // Pause playback
-                pausePlayback();
-                playIcon.textContent = '▶';
-            } else {
-                // Start or resume playback
-                startPlayback();
-                playIcon.textContent = '⏸';
-            }
-        });
-        
-        // Setup restart button
-        const restartButton = document.getElementById('restart-button');
-        restartButton.addEventListener('click', function() {
-            // Reset playback and start from beginning
-            pausePlayback();
-            resetToFirstMessage();
-            setTimeout(() => {
-                startPlayback();
-                playButton.querySelector('.play-icon').textContent = '⏸';
-            }, 300);
-        });
-        
-        // Setup speed slider
-        const speedSlider = document.getElementById('speed-slider');
-        const speedValue = document.getElementById('speed-value');
-        
-        speedSlider.addEventListener('input', function() {
-            playbackSpeed = parseFloat(this.value);
-            speedValue.textContent = `${playbackSpeed}x`;
-            
-            // If already playing, update the playback timing
-            if (isPlaying) {
-                pausePlayback();
-                startPlayback();
-            }
-        });
-    }
-    
-    /**
-     * Get all content elements with timestamps, sorted chronologically
-     */
-    function getAllContentElements() {
-        // Get all messages and modules with timestamps
+    // Get all content elements ordered by time
+    function getAllElements() {
         const elements = document.querySelectorAll('.message[data-timestamp], .module-container[data-timestamp]');
-        
-        // Convert to array and sort by timestamp
         const elementsArray = Array.from(elements);
+        
         elementsArray.sort((a, b) => {
             const timeA = new Date(a.dataset.timestamp).getTime();
             const timeB = new Date(b.dataset.timestamp).getTime();
@@ -949,422 +867,449 @@
         return elementsArray;
     }
     
-    /**
-     * Start playback from current position
-     */
-    function startPlayback() {
-        if (isPlaying) return;
-        
-        isPlaying = true;
-        
-        const elements = getAllContentElements();
-        
-        // If all elements have been played or none exist, reset
-        if (currentIndex >= elements.length || elements.length === 0) {
-            currentIndex = 0;
-            
-            // Reset all elements to hidden
-            elements.forEach(el => {
-                el.classList.add('hidden');
-                el.classList.remove('appearing');
-                el.classList.remove('current');
-            });
-            
-            // Show the first element immediately
-            if (elements.length > 0) {
-                elements[0].classList.remove('hidden');
-                elements[0].classList.add('appearing');
-                elements[0].classList.add('current');
-                currentIndex = 1;
-            }
-        } else {
-            // If we're starting from a specific point (after clicking event/location/scrolling)
-            // We need to make sure the current element is visible and we start from the next one
-            currentIndex++; // Move to the next element for playback
-            if (currentIndex >= elements.length) {
-                currentIndex = elements.length - 1; // Stay at the last element if we're at the end
-            }
-        }
-        
-        // Play the conversation from current index
-        playNextElement(elements);
-    }
-    
-    /**
-     * Pause playback
-     */
-    function pausePlayback() {
-        isPlaying = false;
-        clearTimeout(playbackTimer);
-    }
-    
-    /**
-     * Play the next element in sequence
-     */
-    function playNextElement(elements) {
-        if (!isPlaying || currentIndex >= elements.length) {
-            // End of playback or paused
-            if (currentIndex >= elements.length) {
-                // Reset play button when finished
-                const playButton = document.getElementById('play-button');
-                const playIcon = playButton.querySelector('.play-icon');
-                playIcon.textContent = '▶';
-                isPlaying = false;
-            }
-            return;
-        }
-        
-        // Display the current element
-        displayElement(elements, currentIndex);
-        
-        // Calculate delay for the next message
-        let delay = calculateDelayForElement(elements[currentIndex]);
-        
-        // Apply speed adjustment
-        delay = delay / playbackSpeed;
-        
-        // Schedule the next element
-        currentIndex++;
-        playbackTimer = setTimeout(() => playNextElement(elements), delay);
-    }
-    
-    /**
-     * Calculate appropriate delay for an element based on its type and content
-     */
-    function calculateDelayForElement(element) {
-        // Simple delay calculation
-        if (element.classList.contains('message')) {
-            const messageContent = element.querySelector('.message-content');
-            if (messageContent) {
-                // Calculate delay based on text length (more text = more time to read)
-                const contentLength = messageContent.textContent.length;
-                return Math.max(1500, Math.min(4000, contentLength * 20)); // Between 1.5-4 seconds
-            }
-        }
-        
-        // Default delay for modules
-        return 2000;
-    }
-    
-    /**
-     * Display an element at the given index
-     */
-    function displayElement(elements, index) {
+    // Display an element
+    function displayElement(index) {
+        const elements = getAllElements();
         if (index < 0 || index >= elements.length) return;
         
+        // Hide current elements
+        document.querySelectorAll('.current').forEach(el => {
+            el.classList.remove('current', 'appearing');
+            el.classList.add('hidden');
+        });
+        
+        // Show new element
         const element = elements[index];
-        
-        // Check if the current element is a module
-        const isModule = element.classList.contains('module-container');
-        
-        // Determine if it's an event header (has no 'module_type')
-        // Event headers are created in renderEvent and have an index that ends with "-0"
-        const isEventHeader = isModule && element.dataset.index && element.dataset.index.endsWith('-0');
-        
-        // Find currently visible module that's not an event header
-        const currentContentModule = document.querySelector('.module-container.current:not([data-index$="-0"])');
-        
-        // Handle different display cases
-        if (isModule) {
-            if (isEventHeader) {
-                // If it's an event header, hide all current elements
-                document.querySelectorAll('.current').forEach(el => {
-                    el.classList.remove('current');
-                    el.classList.remove('appearing');
-                    el.classList.add('hidden');
-                });
-            } else {
-                // If it's a content module, hide all other elements including any visible event headers
-                document.querySelectorAll('.current').forEach(el => {
-                    el.classList.remove('current');
-                    el.classList.remove('appearing');
-                    el.classList.add('hidden');
-                });
-            }
-        } else {
-            // If we're displaying a message
-            // Hide other messages and event headers, but keep content modules visible
-            document.querySelectorAll('.message.current, .module-container.current[data-index$="-0"]').forEach(el => {
-                el.classList.remove('current');
-                el.classList.remove('appearing');
-                el.classList.add('hidden');
-            });
-        }
-        
-        // Make the element visible with animation
         element.classList.remove('hidden');
-        element.classList.add('current');
-        element.classList.add('appearing');
+        element.classList.add('current', 'appearing');
         
-        // Update time/space indicator
-        updateTimeSpaceIndicator();
+        // Ensure UI is updated in the correct sequence
+        // First update the status bar
+        updateStatusBar();
+        
+        // Then update participant profiles with a slight delay to ensure data is ready
+        setTimeout(() => {
+            updateParticipantProfiles();
+        }, 10);
     }
     
-    /**
-     * Reset to first message for new navigation
-     */
-    function resetToFirstMessage() {
-        const elements = getAllContentElements();
-        currentIndex = 0;
+    // Update status bar
+    function updateStatusBar() {
+        const currentElement = document.querySelector('.current');
+        if (!currentElement) return;
         
-        // Display the first element
-        displayElement(elements, 0);
+        const timeIndicator = document.getElementById('current-time');
+        const eventIndicator = document.getElementById('current-event');
+        
+        // Get current metadata
+        const timestamp = currentElement.dataset.timestamp;
+        const eventName = currentElement.dataset.event;
+        const location = currentElement.dataset.location;
+        
+        // Update indicators
+        timeIndicator.textContent = timestamp ? formatTime(timestamp) : '';
+        eventIndicator.textContent = eventName || '';
+        
+        // Update events and locations
+        updateEventBadges(eventName);
+        updateLocationBadges(eventName, location);
     }
     
-    /**
-     * Initialize scroll-based time navigation
-     */
-    function initializeScrollNavigation() {
-        let lastScrollTime = 0;
-        const scrollCooldown = 250; // Cooldown to slow down scroll speed
-        let scrollTimeout;
-        let isAnimating = false; // Flag to track animation state
+    // Update event badges
+    function updateEventBadges(activeEvent) {
+        const container = document.getElementById('events-container');
+        container.innerHTML = '';
         
-        // Get all elements with timestamps
-        const elements = getAllContentElements();
+        if (!window.conversationData) return;
         
-        // Initialize with the first element
-        if (elements.length > 0) {
-            displayElement(elements, 0);
-            currentIndex = 0;
-        }
-        
-        // Listen for scroll events
-        window.addEventListener('wheel', function(event) {
-            // If already animating, don't process more scroll events
-            if (isAnimating) {
-                event.preventDefault();
-                return;
-            }
-            
-            const now = Date.now();
-            
-            // Skip if scrolled recently (debounce)
-            if (now - lastScrollTime < scrollCooldown) {
-                clearTimeout(scrollTimeout);
-                scrollTimeout = setTimeout(() => {
-                    handleScroll(event);
-                }, scrollCooldown);
-                event.preventDefault();
-                return;
-            }
-            
-            lastScrollTime = now;
-            handleScroll(event);
-            event.preventDefault();
+        // Collect unique events
+        const events = new Set();
+        window.conversationData.events.forEach(event => {
+            if (event.title) events.add(event.title);
         });
         
-        // Handle keyboard navigation
-        document.addEventListener('keydown', function(event) {
-            // If already animating, don't process more events
-            if (isAnimating) {
-                event.preventDefault();
-                return;
-            }
+        // Create badges
+        events.forEach(event => {
+            if (!event) return;
             
-            if (event.key === 'ArrowDown' || event.key === 'ArrowRight') {
-                // Don't do anything if we're at the end
-                if (currentIndex === elements.length - 1) return;
+            const badge = document.createElement('span');
+            badge.className = 'event-badge';
+            badge.textContent = event;
+            
+            if (event === activeEvent) badge.classList.add('active');
+            
+            // Use a safer navigation method
+            badge.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                navigateToEvent(event);
+            });
+            
+            container.appendChild(badge);
+        });
+    }
+    
+    // Update location badges
+    function updateLocationBadges(eventName, activeLocation) {
+        const container = document.getElementById('locations-container');
+        container.innerHTML = '';
+        
+        if (!eventName) return;
+        
+        // Get locations for this event
+        const locations = getEventLocations(eventName);
+        
+        locations.forEach(location => {
+            if (!location) return;
+            
+            const badge = document.createElement('span');
+            badge.className = 'location-badge';
+            badge.textContent = location;
+            
+            if (location === activeLocation) badge.classList.add('active');
+            
+            // Use a safer navigation method
+            badge.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                navigateToLocation(location);
+            });
+            
+            container.appendChild(badge);
+        });
+    }
+    
+    // Get locations for an event
+    function getEventLocations(eventName) {
+        const elements = getAllElements();
+        const locations = new Map();
+        
+        elements.filter(el => el.dataset.event === eventName).forEach(el => {
+            const location = el.dataset.location;
+            const timestamp = el.dataset.timestamp;
+            
+            if (location && timestamp) {
+                const time = new Date(timestamp).getTime();
                 
-                // Move forward in time
-                navigateTime(1);
-                event.preventDefault();
-            } else if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') {
-                // Don't do anything if we're at the beginning
-                if (currentIndex === 0) return;
-                
-                // Move backward in time
-                navigateTime(-1);
-                event.preventDefault();
+                if (!locations.has(location) || time < locations.get(location)) {
+                    locations.set(location, time);
+                }
             }
         });
         
-        /**
-         * Handle scroll event for time navigation
-         */
-        function handleScroll(event) {
-            // Don't do anything if we're at the beginning and scrolling up or at the end and scrolling down
-            if ((currentIndex === 0 && event.deltaY < 0) || (currentIndex === elements.length - 1 && event.deltaY > 0)) {
-                return;
-            }
-            
-            // Set animating flag to prevent multiple rapid changes
-            isAnimating = true;
-            
-            // Calculate new index based on scroll direction
-            if (event.deltaY > 0) {
-                // Scrolling down - move forward in time
-                currentIndex = Math.min(currentIndex + 1, elements.length - 1);
-            } else {
-                // Scrolling up - move backward in time
-                currentIndex = Math.max(currentIndex - 1, 0);
-            }
-            
-            // Display the current element
-            displayElement(elements, currentIndex);
-            
-            // If currently playing, pause it since we're manually navigating
-            if (isPlaying) {
-                pausePlayback();
-                const playButton = document.getElementById('play-button');
-                const playIcon = playButton.querySelector('.play-icon');
-                playIcon.textContent = '▶';
-            }
-            
-            // Reset animation flag after the animation duration
-            setTimeout(() => {
-                isAnimating = false;
-            }, 600); // Match with CSS animation duration
-        }
+        return Array.from(locations.keys());
+    }
+    
+    // Navigate to event
+    function navigateToEvent(eventName) {
+        if (isPlaying) pausePlayback();
         
-        /**
-         * Navigate through time (used by keyboard navigation)
-         */
-        function navigateTime(direction) {
-            // Set animating flag to prevent multiple rapid changes
-            isAnimating = true;
-            
-            // Calculate new index
-            if (direction > 0) {
-                // Move forward in time
-                currentIndex = Math.min(currentIndex + 1, elements.length - 1);
-            } else {
-                // Move backward in time
-                currentIndex = Math.max(currentIndex - 1, 0);
+        const elements = getAllElements();
+        
+        for (let i = 0; i < elements.length; i++) {
+            if (elements[i].dataset.event === eventName) {
+                currentIndex = i;
+                // Call displayElement which will update both status bar and profiles
+                displayElement(currentIndex);
+                
+                // Force a refresh of participant profiles to ensure sync
+                setTimeout(() => {
+                    updateParticipantProfiles();
+                }, 50);
+                
+                break;
             }
-            
-            // Display the current element
-            displayElement(elements, currentIndex);
-            
-            // If currently playing, pause it since we're manually navigating
-            if (isPlaying) {
-                pausePlayback();
-                const playButton = document.getElementById('play-button');
-                const playIcon = playButton.querySelector('.play-icon');
-                playIcon.textContent = '▶';
-            }
-            
-            // Reset animation flag after the animation duration
-            setTimeout(() => {
-                isAnimating = false;
-            }, 600); // Match with CSS animation duration
         }
     }
     
-    /**
-     * Render participant profiles in the UI
-     */
-    function renderParticipantProfiles(participants) {
-        const profilesContainer = document.getElementById('participant-profiles');
-        profilesContainer.innerHTML = ''; // Clear container
+    // Navigate to location
+    function navigateToLocation(location) {
+        if (isPlaying) pausePlayback();
         
-        // Don't render if there's only one participant
-        if (Object.keys(participants).length <= 1) {
-            profilesContainer.style.display = 'none';
+        const elements = getAllElements();
+        
+        for (let i = 0; i < elements.length; i++) {
+            if (elements[i].dataset.location === location) {
+                currentIndex = i;
+                // Call displayElement which will update both status bar and profiles
+                displayElement(currentIndex);
+                
+                // Force a refresh of participant profiles to ensure sync
+                setTimeout(() => {
+                    updateParticipantProfiles();
+                }, 50);
+                
+                break;
+            }
+        }
+    }
+    
+    // Render participant profiles
+    function renderParticipants(participants) {
+        const container = document.getElementById('participant-profiles');
+        container.innerHTML = '';
+        
+        if (!participants || Object.keys(participants).length <= 1) {
+            container.style.display = 'none';
             return;
         }
         
-        // Create profile for each participant
         Object.entries(participants).forEach(([id, participant]) => {
-            const profileDiv = document.createElement('div');
-            profileDiv.className = 'participant-profile';
-            profileDiv.dataset.speaker = id; // Use the participant ID/key as speaker identifier
+            const profileEl = document.createElement('div');
+            profileEl.className = 'participant-profile';
+            profileEl.dataset.speaker = id;
+            profileEl.dataset.type = participant.type || 'unknown';
             
             if (participant.avatar) {
                 const img = document.createElement('img');
                 img.src = participant.avatar;
                 img.alt = `${participant.name} Profile`;
-                profileDiv.appendChild(img);
+                profileEl.appendChild(img);
             } else if (participant.avatarBgColor) {
-                profileDiv.style.backgroundColor = participant.avatarBgColor;
+                profileEl.style.backgroundColor = participant.avatarBgColor;
             }
             
-            // Add title with participant name
-            profileDiv.title = participant.name;
+            profileEl.title = participant.name;
             
-            // Set initial state for animation
-            profileDiv.style.opacity = '0';
-            profileDiv.style.transform = 'scale(0.5)';
+            // Add location indicator for remote students
+            if (participant.type === 'remote_student' && participant.location) {
+                profileEl.title += ` (${participant.location})`;
+                
+                const locationIndicator = document.createElement('span');
+                locationIndicator.className = 'location-indicator';
+                locationIndicator.textContent = '🌐';
+                locationIndicator.style.position = 'absolute';
+                locationIndicator.style.bottom = '-2px';
+                locationIndicator.style.right = '-2px';
+                locationIndicator.style.fontSize = '10px';
+                locationIndicator.style.backgroundColor = '#6d28d9';
+                locationIndicator.style.color = 'white';
+                locationIndicator.style.width = '16px';
+                locationIndicator.style.height = '16px';
+                locationIndicator.style.borderRadius = '50%';
+                locationIndicator.style.display = 'flex';
+                locationIndicator.style.alignItems = 'center';
+                locationIndicator.style.justifyContent = 'center';
+                locationIndicator.style.border = '1px solid white';
+                
+                profileEl.appendChild(locationIndicator);
+            }
             
-            profilesContainer.appendChild(profileDiv);
+            container.appendChild(profileEl);
         });
-        
-        // Initially hide profiles until an event is active
-        profilesContainer.style.display = 'flex';
     }
     
-    /**
-     * Update active participants based on current event
-     */
-    function updateActiveParticipants() {
-        // Find the current visible element
-        const visibleElement = document.querySelector('.current');
-        if (!visibleElement || !visibleElement.dataset.event) return;
+    // Update participant profiles based on current event
+    function updateParticipantProfiles() {
+        const currentElement = document.querySelector('.current');
+        if (!currentElement || !currentElement.dataset.event) return;
         
-        const currentEvent = visibleElement.dataset.event;
+        const eventName = currentElement.dataset.event;
         const data = window.conversationData;
         
-        // Find the current event in the data
-        const event = data.events.find(e => e.title === currentEvent);
-        if (!event || !event.content || !event.content.interactions) return;
+        // Find current event
+        const event = data.events.find(e => e.title === eventName);
+        if (!event || !event.participants) return;
         
-        // Get the participants container
-        const profilesContainer = document.getElementById('participant-profiles');
-        
-        // Get all participants profiles
+        // Get profiles container
+        const container = document.getElementById('participant-profiles');
         const profiles = document.querySelectorAll('.participant-profile');
         
-        // First hide all profiles and remove animation classes
+        // Reset all profiles first
         profiles.forEach(profile => {
             profile.style.display = 'none';
             profile.classList.remove('active');
         });
         
-        // Collect all speakers in this event
-        const eventSpeakers = new Set();
-        event.content.interactions.forEach(item => {
-            if (item.speaker && item.speaker !== 'bike') { // Exclude 'bike' participant
-                eventSpeakers.add(item.speaker);
-            }
-        });
-        
-        // If there are 0 or 1 active participants (excluding bike), hide the entire container
-        if (eventSpeakers.size <= 1) {
-            profilesContainer.style.display = 'none';
+        // Exit if not enough participants
+        if (event.participants.length <= 1) {
+            container.style.display = 'none';
             return;
         }
         
-        // Otherwise, show the container
-        profilesContainer.style.display = 'flex';
+        // Make sure the container is visible
+        container.style.display = 'flex';
         
-        // Show only profiles for speakers in this event with staggered animation
-        const newActiveProfiles = [];
+        // Track which profiles need animation
+        const newProfiles = [];
+        
+        // Process each profile based on event participants
         profiles.forEach(profile => {
             const speaker = profile.dataset.speaker;
-            // Skip the 'bike' participant
-            if (speaker === 'bike') {
-                return;
-            }
             
-            if (eventSpeakers.has(speaker)) {
+            // Check if this profile should be shown for the current event
+            if (event.participants.includes(speaker)) {
+                // Make profile visible
                 profile.style.display = 'flex';
                 profile.classList.add('active');
                 
-                // Check if this profile has been animated before
+                // Track new profiles for animation
                 if (!profile.dataset.animated) {
-                    newActiveProfiles.push(profile);
+                    newProfiles.push(profile);
                 }
             }
         });
         
-        // Apply staggered animation only to newly active profiles
-        newActiveProfiles.forEach((profile, index) => {
+        // Animate new profiles with staggered timing
+        newProfiles.forEach((profile, index) => {
             setTimeout(() => {
                 profile.classList.add('animate-in');
-                // Mark as animated so we don't animate it again
                 profile.dataset.animated = 'true';
-            }, index * 150); // 150ms delay between each profile pop-in
+            }, index * 150);
         });
+    }
+    
+    // Setup playback controls
+    function setupControls() {
+        // Play button
+        const playButton = document.getElementById('play-button');
+        const playIcon = playButton.querySelector('.play-icon');
+        
+        playButton.addEventListener('click', () => {
+            if (isPlaying) {
+                pausePlayback();
+                playIcon.textContent = '▶';
+            } else {
+                startPlayback();
+                playIcon.textContent = '⏸';
+            }
+        });
+        
+        // Restart button
+        const restartButton = document.getElementById('restart-button');
+        restartButton.addEventListener('click', () => {
+            pausePlayback();
+            currentIndex = 0;
+            displayElement(currentIndex);
+            setTimeout(() => {
+                startPlayback();
+                playIcon.textContent = '⏸';
+            }, 300);
+        });
+        
+        // Speed slider
+        const speedSlider = document.getElementById('speed-slider');
+        const speedValue = document.getElementById('speed-value');
+        
+        speedSlider.addEventListener('input', function() {
+            playbackSpeed = parseFloat(this.value);
+            speedValue.textContent = `${playbackSpeed}x`;
+            
+            if (isPlaying) {
+                pausePlayback();
+                startPlayback();
+            }
+        });
+    }
+    
+    // Setup navigation
+    function setupNavigation() {
+        // Keyboard navigation
+        document.addEventListener('keydown', event => {
+            if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+                navigateNext();
+                event.preventDefault();
+            } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+                navigatePrevious();
+                event.preventDefault();
+            }
+        });
+        
+        // Mouse wheel navigation
+        let isScrolling = false;
+        window.addEventListener('wheel', event => {
+            if (isScrolling) return;
+            isScrolling = true;
+            
+            if (event.deltaY > 0) {
+                navigateNext();
+            } else {
+                navigatePrevious();
+            }
+            
+            event.preventDefault();
+            
+            setTimeout(() => {
+                isScrolling = false;
+            }, 300);
+        }, { passive: false });
+    }
+    
+    // Navigate to next element
+    function navigateNext() {
+        if (isPlaying) pausePlayback();
+        
+        const elements = getAllElements();
+        if (currentIndex >= elements.length - 1) return;
+        
+        currentIndex++;
+        displayElement(currentIndex);
+    }
+    
+    // Navigate to previous element
+    function navigatePrevious() {
+        if (isPlaying) pausePlayback();
+        
+        if (currentIndex <= 0) return;
+        
+        currentIndex--;
+        displayElement(currentIndex);
+    }
+    
+    // Start playback
+    function startPlayback() {
+        if (isPlaying) return;
+        isPlaying = true;
+        
+        const elements = getAllElements();
+        
+        if (currentIndex >= elements.length - 1) {
+            currentIndex = 0;
+            displayElement(currentIndex);
+        }
+        
+        playNextElement();
+    }
+    
+    // Pause playback
+    function pausePlayback() {
+        isPlaying = false;
+        clearTimeout(playbackTimer);
+    }
+    
+    // Play next element
+    function playNextElement() {
+        if (!isPlaying) return;
+        
+        const elements = getAllElements();
+        
+        // Stop at the end
+        if (currentIndex >= elements.length - 1) {
+            pausePlayback();
+            document.querySelector('.play-icon').textContent = '▶';
+            return;
+        }
+        
+        currentIndex++;
+        displayElement(currentIndex);
+        
+        // Calculate delay based on content
+        const element = elements[currentIndex];
+        let delay = 2000; // Default delay
+        
+        if (element.classList.contains('message')) {
+            const content = element.querySelector('.message-content');
+            if (content) {
+                const length = content.textContent.length;
+                delay = Math.max(1500, Math.min(4000, length * 20));
+            }
+        }
+        
+        // Apply speed adjustment
+        delay = delay / playbackSpeed;
+        
+        // Schedule next element
+        playbackTimer = setTimeout(playNextElement, delay);
     }
     </script>
 </body>
