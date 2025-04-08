@@ -1049,12 +1049,22 @@
         const container = document.getElementById('participant-profiles');
         container.innerHTML = '';
         
-        if (!participants || Object.keys(participants).length <= 1) {
+        // Filter out the bike and count remaining participants
+        const activeParticipants = Object.entries(participants).filter(([id, participant]) => {
+            return id !== 'bike' && participant.type !== 'bike';
+        });
+        
+        // Only show profiles if there are 2 or more non-bike participants
+        if (activeParticipants.length < 2) {
             container.style.display = 'none';
             return;
         }
         
-        Object.entries(participants).forEach(([id, participant]) => {
+        // Show the container since we have multiple participants
+        container.style.display = 'flex';
+        
+        // Render each non-bike participant
+        activeParticipants.forEach(([id, participant]) => {
             const profileEl = document.createElement('div');
             profileEl.className = 'participant-profile';
             profileEl.dataset.speaker = id;
@@ -1121,8 +1131,14 @@
             profile.classList.remove('active');
         });
         
-        // Exit if not enough participants
-        if (event.participants.length <= 1) {
+        // Filter out bike from event participants
+        const activeEventParticipants = event.participants.filter(participantId => {
+            const participant = data.participants[participantId];
+            return participantId !== 'bike' && participant && participant.type !== 'bike';
+        });
+        
+        // Exit if not enough non-bike participants
+        if (activeEventParticipants.length < 2) {
             container.style.display = 'none';
             return;
         }
@@ -1138,7 +1154,7 @@
             const speaker = profile.dataset.speaker;
             
             // Check if this profile should be shown for the current event
-            if (event.participants.includes(speaker)) {
+            if (activeEventParticipants.includes(speaker)) {
                 // Make profile visible
                 profile.style.display = 'flex';
                 profile.classList.add('active');

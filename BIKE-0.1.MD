@@ -1,20 +1,18 @@
 # BICYCLE: AI-Native Educational Computer
 
-## Vision & Core Concepts
-
 Bicycle is an AI-native computer designed specifically for education that fundamentally transforms how students and teachers interact with technology.
 
 Bicycle is about realization - making ideas real. Like a bicycle transforms energy into motion, Bicycle transforms thought into reality. Direct, immediate, true to nature. No abstraction layers between thought and action.
 
 ### Key Principles
-- **TIME SPACE DOCUMENTS (NOT FILES)** - Replacing traditional file systems with a fluid, contextual system where AI automatically organizes all content
-- **Simplicity with depth** - "Low floor, high ceiling" approach to accessibility and capability
-- **Context-driven experience** - Context built from multiple sources: audio, 360° camera, 2D/3D environments, browser frames
-- **Dynamic interfaces** - Content defines UI appearance and behavior, adapting in real-time
-- **Redefined human-machine relationship** - New boundaries with greater creative freedom
-- **Sensory interfaces** - Our interfaces need senses: see, hear, talk, show - sensing is realizing
-- **Realization through sensing** - Direct perception and interaction without abstraction layers
-- **Critical Thinking First** - Every interaction designed to foster analytical and evaluative thinking
+- Replacing traditional file systems with a fluid, contextual system where AI automatically organizes all content
+- Simplicity with depth - "Low floor, high ceiling" approach to accessibility and capability
+- Context-driven experience - Context built from multiple sources: audio, 360° camera, 2D/3D environments, browser frames
+- Dynamic interfaces - Content defines UI appearance and behavior, adapting in real-time
+- Redefined human-machine relationship - New boundaries with greater creative freedom
+- Sensory interfaces - Our interfaces need senses: see, hear, talk, show - sensing is realizing
+- Realization through sensing - Direct perception and interaction without abstraction layers
+- Critical Thinking First - Every interaction designed to foster analytical and evaluative thinking
 
 ### Core Experience
 - No files, no apps, no menus, no folders—just AI-powered learning experiences
@@ -24,6 +22,15 @@ Bicycle is about realization - making ideas real. Like a bicycle transforms ener
 - Critical thinking embedded in every learning interaction
 
 ## User Experience Design
+
+### Conversation Flow Visualization
+- Interactive timeline-based navigation through educational content
+- Dynamic participant profiles showing active participants in each context
+- Event and location-based filtering for focused learning experiences
+- Playback controls with adjustable speed for flexible pacing
+- Visual distinction between different participant types (teacher, student, remote student)
+- Critical thinking components embedded within conversation flows
+- Remote student interactions with location context
 
 ### Teacher Workflow
 - Organize lessons in a "Time & Space" calendar-like structure
@@ -66,7 +73,7 @@ Bicycle is about realization - making ideas real. Like a bicycle transforms ener
 - Socratic questioning and reasoning prompts
 
 ### Learning Mode
-- **AI as a Thinking Partner**
+- AI as a Thinking Partner
   - Guides students through reasoning processes
   - Prompts deeper thinking via Socratic questioning
   - Highlights core concepts and key principles
@@ -76,26 +83,26 @@ Bicycle is about realization - making ideas real. Like a bicycle transforms ener
   - Critical thinking assessment and development tracking
 
 ### Key Teacher Use Cases
-- **Lesson Planning Assistant**
+- Lesson Planning Assistant
   - Create and adapt lesson plans with AI assistance
   - Activity suggestions based on learning objectives
   - Relevant educational resource recommendations
   - Content adaptation for different student levels
 
-- **Student Progress Tracking**
+- Student Progress Tracking
   - Analytics on student performance
   - Learning gap identification
   - Personalized intervention recommendations
   - Automated progress reporting
 
-- **Classroom Management**
+- Classroom Management
   - Collaboration tools for group activities
   - Assessment creation and management
   - Resource sharing and organization
   - Assignment distribution and collection
 
 ## Design System
-- **Color Palette**
+- Color Palette
   - Primary: #2563eb (blue)
   - Secondary: #047857 (green)
   - Accent: #6d28d9 (purple)
@@ -105,18 +112,18 @@ Bicycle is about realization - making ideas real. Like a bicycle transforms ener
   - Border: #e2e8f0
   - Shadow: 0 4px 12px rgba(0, 0, 0, 0.1)
 
-- **Typography**
+- Typography
   - System UI stack for clean, modern look
   - Responsive font sizing
   - Clear hierarchy with consistent spacing
 
-- **Component Library**
-  - Cards
-  - Buttons
-  - Timeline nodes
-  - Calendar grid
-  - Knowledge graph
-  - Matching activity interface
+- Component Library
+  - Conversation messages
+  - Participant profiles
+  - Event and location badges
+  - Playback controls
+  - Module containers
+  - Critical thinking components
 
 ## Philosophy: "Start lean, move fast, and own the future"
 

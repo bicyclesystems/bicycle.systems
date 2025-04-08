@@ -480,26 +480,6 @@
             "timestamp": "2023-10-15T09:59:45"
           },
           {
-            "id": "remote-connection-module",
-            "type": "module",
-            "module_type": "remote-learning",
-            "title": "Remote Students Connection",
-            "content": {
-              "connected_students": [
-                {"id": "remote_student1", "name": "Remote Student 1", "location": "Hospital", "connection_quality": "excellent"},
-                {"id": "remote_student2", "name": "Remote Student 2", "location": "Home", "connection_quality": "good"},
-                {"id": "remote_student3", "name": "Remote Student 3", "location": "Library", "connection_quality": "excellent"}
-              ],
-              "features_enabled": ["chat", "raise-hand", "reactions", "polls", "breakout-rooms"],
-              "accessibility_settings": {
-                "closed_captions": true,
-                "transcript": true,
-                "screen_reader_support": true
-              }
-            },
-            "timestamp": "2023-10-15T09:59:50"
-          },
-          {
             "id": "class-start-student",
             "speaker": "student1",
             "content": "Good morning, Ms. Johnson! What are we learning about today?",

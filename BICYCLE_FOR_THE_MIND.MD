@@ -1,6 +1,6 @@
-# BICYCLE FOR THE MIND
+# BICYCLE, JUST THINK
 
-Computing was meant to be a bicycle for the mind. Instead, it became a cage.
+Computing was meant to help us think "different". Instead, it became a cage.
 
 We don't use computers. We fight them. We dig through files. We open apps. We waste time managing software instead of thinking freely. Everything about modern computing is a desperate attempt to make an inefficient model seem functional.
 
@@ -48,6 +48,8 @@ AI-Graphic Interface
 • No UI until you need it
 • Anticipates needs before you ask
 • Information appears exactly when relevant
+• UI adapts to context - the message is the medium
+• Form follows function - non-negotiable
 
 Neural Core
 • Quantum-level thought processing
@@ -296,6 +298,7 @@ Remember: Great products create new realities without permission. The most impor
 ## WHO ARE WE LOOKING FOR?
 
 We're assembling an elite team.
+2 Engineers. 1 Designer. 1 Growth lead. 1 Ops person.
 
 Currently looking:
 
