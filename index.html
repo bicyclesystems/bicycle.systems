@@ -3,376 +3,540 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The birth of a new era (and The End of Traditional Computing as we know it).</title>
+    <title>Bicycle. Just think</title>
     <link rel="icon" href="./images/favicon.png" type="image/png">
-    <link rel="stylesheet" href="https://unpkg.com/@rnbws/renecss/dist/rene.min.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/2.0.3/marked.min.js"></script>
     <script defer data-domain="bicycle.systems" src="https://plausible.io/js/script.js"></script>
     <style>
-        /* Base styling */
-        #conversation-flow {padding-bottom:25vh; position:relative;}
-        .bicycle-image {opacity:0; animation:fadeIn 3s forwards;}
-        @keyframes fadeIn {from{opacity:0} to{opacity:1}}
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            font-family: 'Times New Roman', Times, serif;
+            line-height: 1.6; 
+            color: #333; 
+        }
         
-        /* Section styling - modules now properly stack */
+        h1, h2, h3, h4, h5, h6 { font-weight: 500; line-height: 1.2; margin-bottom: 0.5em; }
+        h5 { font-size: 1.8rem; margin-bottom: 1rem; }
+        
+        .view { min-height: 100vh; width: 100%; padding: 1rem; }
+        .container { max-width: 800px; width: 100%; padding: 2rem; margin: 0 auto; }
+        #conversation-flow { padding-bottom: 25vh; position: relative; }
+        
+        .bicycle-image { 
+            width: 100vw; 
+            margin-bottom: 2rem; 
+            opacity: 1;
+            transition: opacity 2s;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .bicycle-image.fade-out { opacity: 0; pointer-events: none; }
+        
+        .background-image-container {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            background-color: rgba(255, 255, 255, 0.97);
+        }
+        
+        .background-image {
+            position: absolute;
+            display: none;
+            mix-blend-mode: multiply;
+            filter: contrast(1.05) brightness(1.1) saturate(0.9);
+            max-height: 40vh;
+            max-width: 40vw;
+            object-fit: contain;
+        }
+        
+        .background-image.active { display: block; }
+        
+        /* Position classes */
+        .top-left { top: 40px; left: 40px; }
+        .top-right { top: 40px; right: 40px; }
+        .bottom-left { bottom: 40px; left: 40px; }
+        .bottom-right { bottom: 40px; right: 40px; }
+        .top-center { top: 40px; left: 50%; transform: translateX(-50%); }
+        .bottom-center { bottom: 40px; left: 50%; transform: translateX(-50%); }
+        .left-center { top: 50%; left: 40px; transform: translateY(-50%); }
+        .right-center { top: 50%; right: 40px; transform: translateY(-50%); }
+        
         .section {
             opacity: 0;
             height: 0;
             overflow: hidden;
             pointer-events: none;
-            transition: opacity 0.5s ease;
             position: absolute;
-            left: 0;
-            right: 0;
+            left: 0; right: 0;
         }
+        
         .section.active {
             opacity: 1;
             height: auto;
             overflow: visible;
             pointer-events: auto;
             position: relative;
-            animation: fadeIn 0.5s;
         }
         
-        /* Navigation styling */
         .nav-buttons {
             display: none;
             opacity: 0;
-            transition: opacity 0.8s ease;
+            margin-top: 2rem;
         }
+        
         .nav-buttons.visible {
             display: flex;
             flex-direction: column;
             opacity: 1;
-            animation: fadeIn 0.8s;
         }
+        
         .topic-paragraph {
             opacity: 0.5;
             transition: opacity 0.3s;
             cursor: pointer;
+            margin-bottom: 0.75rem;
         }
-        .topic-paragraph:hover {
-            opacity: 1;
+        
+        .topic-paragraph:hover { opacity: 1; }
+        .paragraph { margin-bottom: 1rem; }
+        .question { font-weight: 500; margin-bottom: 1.5rem; }
+        .typewriter-content { margin-bottom: 1rem; }
+        
+        @media (max-width: 768px) {
+            .container { padding: 1rem; }
+            .background-image { 
+                max-height: 50vh;
+                max-width: 60vw;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="view column align-center">
+    <div class="background-image-container" id="background-container"></div>
+    <div class="view">
         <img src="./images/bicycle.png" alt="Bicycle" class="bicycle-image">
-        <div class="box-s padding-xl column">
-            <div id="introduction"><p id="typewriter-content"></p></div>
+        <div class="container" style="mix-blend-mode:difference; color:white;">
             <div id="conversation-flow"></div>
         </div>
     </div>
 
     <script>
-        // Force scroll to top immediately and when DOM loads
-        window.scrollTo(0, 0);
         document.addEventListener('DOMContentLoaded', () => {
             window.scrollTo(0, 0);
-            setTimeout(() => window.scrollTo(0, 0), 50);
-            new TypewriterController();
+            new BicycleApp();
         });
 
-        class Typewriter {
-            constructor(element, options = {}) {
-                this.element = element;
-                this.words = element.textContent.trim();
-                this.element.textContent = '';
-                this.speed = options.speed || 1000;
-                this.delay = options.delay || 10;
-                this.onComplete = options.onComplete || (() => {});
-                this.isRunning = false;
-                this.controller = options.controller || null;
-                this.currentParagraph = null;
-            }
-
-            async type() {
-                if (this.isRunning) return;
-                this.isRunning = true;
-                
-                this.element.innerHTML = '';
-                this.currentParagraph = document.createElement('p');
-                this.currentParagraph.className = 'paragraph';
-                this.element.appendChild(this.currentParagraph);
-                
-                const chars = this.words.split('');
-                let currentLine = '';
-                
-                for (const char of chars) {
-                    if (!this.isRunning) break;
-                    
-                    if (char === '\n') {
-                        if (currentLine.trim() !== '') {
-                            this.currentParagraph.textContent = currentLine;
-                            currentLine = '';
-                        }
-                        
-                        this.currentParagraph = document.createElement('p');
-                        this.currentParagraph.className = 'paragraph';
-                        this.element.appendChild(this.currentParagraph);
-                        
-                        this.scrollToBottom();
-                        await new Promise(resolve => setTimeout(resolve, this.delay / 3));
-                    } else {
-                        currentLine += char;
-                        this.currentParagraph.textContent = currentLine;
-                        
-                        const delay = ['.', '!', '?'].includes(char) ? this.delay : 
-                                     [',', ';'].includes(char) ? this.delay / 2 : this.speed;
-                        
-                        this.scrollToBottom();
-                        await new Promise(resolve => setTimeout(resolve, delay));
-                    }
-                }
-                
-                this.isRunning = false;
-                this.onComplete();
-            }
-
-            scrollToBottom() {
-                if (this.isUserAtBottom() || (this.controller && !this.controller.userHasScrolled)) {
-                    window.scrollTo({top: document.body.scrollHeight, behavior: 'auto'});
-                    if (this.controller) this.controller.userHasScrolled = false;
-                }
-            }
-            
-            isUserAtBottom() {
-                if (this.controller) return this.controller.isUserAtBottom();
-                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                const windowHeight = window.innerHeight;
-                const documentHeight = Math.max(
-                    document.body.scrollHeight, document.body.offsetHeight,
-                    document.documentElement.clientHeight, document.documentElement.scrollHeight,
-                    document.documentElement.offsetHeight
-                );
-                return documentHeight - (scrollTop + windowHeight) <= 100;
-            }
-
-            stop() { this.isRunning = false; }
-        }
-
-        class TypewriterController {
+        class BicycleApp {
             constructor() {
-                this.activeTypewriter = null;
-                this.navButtons = Object.assign(document.createElement('div'), {
-                    id: 'nav-buttons',
-                    className: 'nav-buttons'
-                });
                 this.conversationFlow = document.getElementById('conversation-flow');
-                this.answeredQuestions = new Set();
-                this.isTyping = false;
-                this.userHasScrolled = false;
+                this.bgContainer = document.getElementById('background-container');
                 this.markdownSections = {};
                 this.introText = "";
-                this.typewriterSpeed = 15;
-                this.typewriterDelay = 150;
-                this.currentSectionIndex = -1;
+                this.activeTypewriter = null;
+                this.isTyping = false;
+                this.userHasScrolled = false;
+                this.answeredQuestions = new Set();
+                this.imageCache = {};
+                this.positions = [
+                    'top-left', 'top-right', 'bottom-left', 'bottom-right', 
+                    'top-center', 'bottom-center', 'left-center', 'right-center'
+                ];
+                this.currentPosition = 0;
+                this.currentTextPosition = null; // Track current text position
                 
-                this.loadMarkdownContent();
+                // Create navigation buttons container
+                this.navButtons = document.createElement('div');
+                this.navButtons.id = 'nav-buttons';
+                this.navButtons.className = 'nav-buttons';
+                
+                // Set up event listeners
                 window.addEventListener('scroll', () => {
                     this.userHasScrolled = true;
-                    setTimeout(() => { this.userHasScrolled = false; }, 2000);
+                    setTimeout(() => this.userHasScrolled = false, 2000);
                 });
-
-                // Add keyboard navigation
-                window.addEventListener('keydown', (e) => this.handleKeyNavigation(e));
-
-                // Add hash change listener
                 window.addEventListener('hashchange', () => this.handleHashChange());
+                window.addEventListener('resize', () => this.resizeImages());
                 
-                // Also handle popstate for browser back/forward navigation
-                window.addEventListener('popstate', () => this.handleHashChange());
+                // Initialize the app
+                this.init();
             }
             
-            async loadMarkdownContent() {
+            async init() {
                 try {
-                    const markdownText = await (await fetch('BICYCLE_FOR_THE_MIND.MD')).text();
-                    const introEndIndex = markdownText.indexOf('## ');
-                    this.introText = this.processMarkdown(
-                        introEndIndex > 0 ? markdownText.substring(0, introEndIndex).trim() : markdownText.trim(), 
-                        true
-                    );
-                    
-                    const lines = markdownText.split('\n');
-                    let currentSection = null;
-                    let currentContent = [];
-                    
-                    for (const line of lines) {
-                        if (line.startsWith('## ')) {
-                            if (currentSection) {
-                                this.markdownSections[currentSection] = this.processMarkdown(currentContent.join('\n'), true);
-                                currentContent = [];
-                            }
-                            currentSection = line.substring(3).trim();
-                        } else if (currentSection && !line.startsWith('# ')) {
-                            currentContent.push(line);
-                        }
-                    }
-                    
-                    if (currentSection) {
-                        this.markdownSections[currentSection] = this.processMarkdown(currentContent.join('\n'), true);
-                    }
-                    
-                    this.createSectionButtons();
-                    
-                    // Check for initial hash before starting introduction
-                    const initialHash = window.location.hash.substring(1);
-                    if (initialHash) {
-                        const sectionTitle = this.getSectionTitleFromHash(initialHash);
+                    await this.loadContent();
+                    const hash = window.location.hash.substring(1);
+                    if (hash) {
+                        const sectionTitle = this.getSectionTitleFromHash(hash);
                         if (sectionTitle && this.markdownSections[sectionTitle]) {
-                            // Skip introduction and show the requested section
-                            this.showSection(this.getSectionId(sectionTitle), sectionTitle);
+                            await this.showSection(this.getSectionId(sectionTitle), sectionTitle);
                             return;
                         }
                     }
-                    
-                    // If no valid hash or no hash at all, start with introduction
-                    this.startIntroduction();
+                    this.startIntro();
                 } catch (error) {
-                    console.error('Error loading markdown:', error);
+                    console.error('Error initializing app:', error);
                 }
             }
             
-            createSectionButtons() {
+            async loadContent() {
+                try {
+                    const response = await fetch('BICYCLE_FOR_THE_MIND.MD');
+                    if (!response.ok) throw new Error(`Failed to fetch markdown: ${response.status}`);
+                    
+                    const text = await response.text();
+                    const sections = this.parseMarkdown(text);
+                    
+                    if (sections.intro) this.introText = sections.intro;
+                    this.markdownSections = sections.sections;
+                    
+                    this.createNavigationButtons();
+                } catch (error) {
+                    console.error('Error loading content:', error);
+                }
+            }
+            
+            parseMarkdown(text) {
+                const lines = text.split('\n');
+                let currentSection = null;
+                let currentContent = [];
+                let sections = {};
+                let intro = "";
+                
+                for (const line of lines) {
+                    if (line.startsWith('## ')) {
+                        if (currentSection) {
+                            sections[currentSection] = currentContent.join('\n');
+                            currentContent = [];
+                        } else if (currentContent.length > 0) {
+                            intro = currentContent.join('\n');
+                            currentContent = [];
+                        }
+                        currentSection = line.substring(3).trim();
+                    } else if (currentSection) {
+                        currentContent.push(line);
+                    } else {
+                        currentContent.push(line);
+                    }
+                }
+                
+                // Handle the last section
+                if (currentSection) {
+                    sections[currentSection] = currentContent.join('\n');
+                } else if (currentContent.length > 0 && !intro) {
+                    intro = currentContent.join('\n');
+                }
+                
+                // If no intro but we have sections, use first section as intro
+                if (!intro && Object.keys(sections).length > 0) {
+                    const firstKey = Object.keys(sections)[0];
+                    intro = sections[firstKey];
+                    delete sections[firstKey];
+                }
+                
+                return { intro, sections };
+            }
+            
+            createNavigationButtons() {
                 this.navButtons.innerHTML = '';
                 
-                for (const sectionTitle in this.markdownSections) {
-                    const paragraph = Object.assign(document.createElement('p'), {
-                        className: 'topic-paragraph',
-                        textContent: sectionTitle
-                    });
-                    paragraph.setAttribute('data-section', this.getSectionId(sectionTitle));
+                for (const title in this.markdownSections) {
+                    const btn = document.createElement('h5');
+                    btn.className = 'topic-paragraph';
+                    btn.textContent = title;
+                    btn.dataset.section = this.getSectionId(title);
                     
-                    paragraph.addEventListener('click', (e) => {
+                    btn.addEventListener('click', () => {
                         if (this.isTyping) return;
-                        this.hideNavigation();
-                        this.showSection(e.target.getAttribute('data-section'), sectionTitle);
+                        this.navButtons.classList.remove('visible');
+                        this.showSection(btn.dataset.section, title);
                     });
                     
-                    this.navButtons.appendChild(paragraph);
+                    this.navButtons.appendChild(btn);
                 }
             }
             
             getSectionId(title) {
-                return title.toUpperCase()
-                    .replace(/[^A-Z0-9]+/g, '-')
-                    .replace(/^-+|-+$/g, '');
+                return title.toUpperCase().replace(/[^A-Z0-9]+/g, '-').replace(/^-+|-+$/g, '');
             }
             
-            hideNavigation() {
-                this.navButtons.classList.remove('visible');
+            getSectionTitleFromHash(hash) {
+                return Object.keys(this.markdownSections).find(
+                    title => this.getSectionId(title) === hash
+                );
             }
             
-            async startIntroduction() {
-                // Force scroll to top again before animations
+            async startIntro() {
                 window.scrollTo(0, 0);
                 
-                // Wait for image to fade in
-                await new Promise(resolve => setTimeout(resolve, 3000));
+                const bicycleImage = document.querySelector('.bicycle-image');
+                bicycleImage.classList.add('fade-out');
                 
-                // Scroll smoothly to the typewriter content
-                const introElement = document.getElementById('introduction');
-                introElement.scrollIntoView({ 
-                    behavior: 'smooth', 
-                    block: 'start' 
-                });
+                await this.wait(2000);
+                bicycleImage.style.display = 'none';
                 
-                // Small delay before starting to type
-                await new Promise(resolve => setTimeout(resolve, 500));
+                // Create intro section
+                const section = document.createElement('section');
+                section.id = 'INTRODUCTION-section';
+                section.className = 'section active';
+                this.conversationFlow.appendChild(section);
                 
-                const typewriter = new Typewriter(document.getElementById('typewriter-content'), {
-                    speed: this.typewriterSpeed,
-                    delay: this.typewriterDelay,
-                    onComplete: () => {
-                        this.navButtons.classList.add('visible');
-                        this.conversationFlow.appendChild(this.navButtons);
-                    },
-                    controller: this
-                });
+                // Add content container
+                const content = document.createElement('div');
+                content.id = 'typewriter-content';
+                content.className = 'typewriter-content';
+                section.appendChild(content);
                 
-                typewriter.words = this.introText;
-                this.activeTypewriter = typewriter;
-                await typewriter.type();
+                this.isTyping = true;
+                await this.typeText(content, this.introText, true);
+                this.isTyping = false;
+                
+                // Move nav buttons after section
+                if (this.navButtons.parentNode) {
+                    this.navButtons.parentNode.removeChild(this.navButtons);
+                }
+                section.after(this.navButtons);
+                this.navButtons.classList.add('visible');
+                
+                // Hide all background images
+                document.querySelectorAll('.background-image.active')
+                    .forEach(img => img.classList.remove('active'));
+                
+                // Update background
+                this.bgContainer.style.backgroundColor = 'rgba(255, 255, 255, 1)';
             }
             
             async showSection(sectionId, sectionTitle) {
-                // Check if section already exists in the DOM
+                // Check if section already exists
                 const existingSection = document.getElementById(`${sectionId}-section`);
                 if (existingSection) {
-                    // If section exists, just make it visible
-                    document.querySelectorAll('.section.active').forEach(s => s.classList.remove('active'));
+                    document.querySelectorAll('.section.active')
+                        .forEach(s => s.classList.remove('active'));
                     existingSection.classList.add('active');
-                    this.moveNavButtonsAfterSection(existingSection);
+                    this.moveNavButtons(existingSection);
                     return;
                 }
                 
                 if (this.answeredQuestions.has(sectionId)) return;
-                
                 this.answeredQuestions.add(sectionId);
                 this.isTyping = true;
                 
                 // Update URL hash without triggering hashchange event
-                const currentHash = window.location.hash;
                 const newHash = `#${sectionId}`;
-                if (currentHash !== newHash) {
+                if (window.location.hash !== newHash) {
                     window.history.replaceState(null, '', newHash);
                 }
                 
-                // Hide all current sections
-                document.querySelectorAll('.section.active').forEach(s => s.classList.remove('active'));
+                // Hide all active sections
+                document.querySelectorAll('.section.active')
+                    .forEach(s => s.classList.remove('active'));
                 
-                const sectionElement = Object.assign(document.createElement('section'), {
-                    id: `${sectionId}-section`,
-                    className: 'section active'
-                });
+                // Create new section
+                const section = document.createElement('section');
+                section.id = `${sectionId}-section`;
+                section.className = 'section active';
+                this.conversationFlow.appendChild(section);
                 
-                sectionElement.appendChild(Object.assign(document.createElement('p'), {
-                    className: 'question',
-                    textContent: sectionTitle
-                }));
+                // Add question title
+                const question = document.createElement('h5');
+                question.className = 'question';
+                question.textContent = sectionTitle;
+                section.appendChild(question);
                 
-                const contentDiv = Object.assign(document.createElement('div'), {
-                    id: `${sectionId}-content`,
-                    className: 'typewriter-content'
-                });
+                // Add content container
+                const contentWrapper = document.createElement('div');
+                section.appendChild(contentWrapper);
                 
-                const answerDiv = document.createElement('div');
-                answerDiv.appendChild(contentDiv);
-                sectionElement.appendChild(answerDiv);
-                this.conversationFlow.appendChild(sectionElement);
+                const content = document.createElement('div');
+                content.id = `${sectionId}-content`;
+                content.className = 'typewriter-content';
+                contentWrapper.appendChild(content);
                 
-                const typewriter = new Typewriter(contentDiv, {
-                    speed: this.typewriterSpeed,
-                    delay: this.typewriterDelay,
-                    onComplete: () => {
-                        this.isTyping = false;
-                        this.moveNavButtonsAfterSection(sectionElement);
-                    },
-                    controller: this
-                });
+                // Type the content
+                await this.typeText(content, this.markdownSections[sectionTitle], false);
+                this.isTyping = false;
                 
-                typewriter.words = this.markdownSections[sectionTitle];
-                this.activeTypewriter = typewriter;
-                await typewriter.type();
+                // Move nav buttons
+                this.moveNavButtons(section);
             }
             
-            moveNavButtonsAfterSection(section) {
+            async typeText(element, text, enableImageMatch = false) {
+                element.innerHTML = '';
+                let currentParagraph = document.createElement('h5');
+                currentParagraph.className = 'paragraph';
+                element.appendChild(currentParagraph);
+                
+                const chars = text.split('');
+                let currentLine = '';
+                let currentWord = '';
+                let shouldPause = false;
+                
+                for (const char of chars) {
+                    // Update current text position
+                    this.updateCurrentTextPosition(currentParagraph);
+                    
+                    if (char === '\n') {
+                        if (currentLine.trim() !== '') {
+                            currentParagraph.textContent = currentLine;
+                            currentLine = '';
+                        }
+                        
+                        if (enableImageMatch && currentWord.trim()) {
+                            this.tryLoadImage(currentWord.trim());
+                            currentWord = '';
+                        }
+                        
+                        currentParagraph = document.createElement('h5');
+                        currentParagraph.className = 'paragraph';
+                        element.appendChild(currentParagraph);
+                        this.scrollToBottom();
+                        
+                        // Add longer pause after line break
+                        await this.wait(300);
+                        shouldPause = false;
+                    } else {
+                        currentLine += char;
+                        
+                        if (enableImageMatch) {
+                            if (/\s/.test(char) || /[.,!?;:]/.test(char)) {
+                                if (currentWord.trim()) {
+                                    this.tryLoadImage(currentWord.trim());
+                                    currentWord = '';
+                                }
+                            } else {
+                                currentWord += char;
+                            }
+                        }
+                        
+                        currentParagraph.textContent = currentLine;
+                        
+                        // Calculate delay based on character
+                        let delay = 30; // Normal typing speed
+                        
+                        // Add pauses after punctuation
+                        if (['.', '!', '?'].includes(char)) {
+                            delay = 300; // Longer pause after sentence-ending punctuation
+                            shouldPause = true;
+                        } else if ([',', ';', ':'].includes(char)) {
+                            delay = 150; // Medium pause after mid-sentence punctuation
+                        } else if (shouldPause) {
+                            // Extra delay after the first character following sentence punctuation
+                            delay = 100;
+                            shouldPause = false;
+                        }
+                        
+                        this.scrollToBottom();
+                        await this.wait(delay);
+                    }
+                }
+                
+                if (enableImageMatch && currentWord.trim()) {
+                    this.tryLoadImage(currentWord.trim());
+                }
+            }
+            
+            // Track the current text position for placing images far from text
+            updateCurrentTextPosition(element) {
+                if (!element) return;
+                
+                const rect = element.getBoundingClientRect();
+                const viewportHeight = window.innerHeight;
+                const viewportWidth = window.innerWidth;
+                
+                // Determine which quadrant the text is in
+                this.currentTextPosition = {
+                    isTop: rect.top < (viewportHeight / 2),
+                    isLeft: rect.left < (viewportWidth / 2),
+                    element: element
+                };
+            }
+            
+            tryLoadImage(word) {
+                if (word.length <= 2) return;
+                
+                word = word.toLowerCase().replace(/[^\w\s]/g, '');
+                
+                // Check cache first
+                if (this.imageCache[word]) {
+                    this.showImage(this.imageCache[word]);
+                    return;
+                }
+                
+                // Try to load new image
+                const img = new Image();
+                img.className = `background-image ${this.getPositionFarFromText()}`;
+                
+                img.onload = () => {
+                    this.bgContainer.appendChild(img);
+                    const imageInfo = { word, element: img };
+                    this.imageCache[word] = imageInfo;
+                    this.showImage(imageInfo);
+                };
+                
+                img.onerror = () => {
+                    // Image failed to load - do nothing
+                };
+                
+                img.src = `intro/${word}.png`;
+            }
+            
+            showImage(imageInfo) {
+                // Hide current active images
+                document.querySelectorAll('.background-image.active')
+                    .forEach(img => img.classList.remove('active'));
+                
+                // Update position for variety and to be far from text
+                const oldPosition = imageInfo.element.className.split(' ')[1];
+                const newPosition = this.getPositionFarFromText();
+                
+                imageInfo.element.classList.remove(oldPosition);
+                imageInfo.element.classList.add(newPosition);
+                
+                // Show image
+                imageInfo.element.classList.add('active');
+                this.resizeImages();
+            }
+            
+            getPositionFarFromText() {
+                // If we don't know where the text is, use original rotation method
+                if (!this.currentTextPosition) {
+                    return this.getNextPosition();
+                }
+                
+                // Choose a position that's far from the current text position
+                let oppositePositions = [];
+                
+                if (this.currentTextPosition.isTop && this.currentTextPosition.isLeft) {
+                    // Text is in top-left, place image in bottom-right area
+                    oppositePositions = ['bottom-right', 'bottom-center', 'right-center'];
+                } else if (this.currentTextPosition.isTop && !this.currentTextPosition.isLeft) {
+                    // Text is in top-right, place image in bottom-left area
+                    oppositePositions = ['bottom-left', 'bottom-center', 'left-center'];
+                } else if (!this.currentTextPosition.isTop && this.currentTextPosition.isLeft) {
+                    // Text is in bottom-left, place image in top-right area
+                    oppositePositions = ['top-right', 'top-center', 'right-center'];
+                } else {
+                    // Text is in bottom-right, place image in top-left area
+                    oppositePositions = ['top-left', 'top-center', 'left-center'];
+                }
+                
+                // Pick a random position from the opposite quadrant
+                return oppositePositions[Math.floor(Math.random() * oppositePositions.length)];
+            }
+            
+            getNextPosition() {
+                const position = this.positions[this.currentPosition];
+                this.currentPosition = (this.currentPosition + 1) % this.positions.length;
+                return position;
+            }
+            
+            moveNavButtons(section) {
                 if (this.navButtons.parentNode) {
                     this.navButtons.parentNode.removeChild(this.navButtons);
                 }
                 
-                // Insert nav buttons after the specified section
-                if (section) {
-                    section.after(this.navButtons);
-                } else {
-                    // Fallback to appending to conversation flow
-                    this.conversationFlow.appendChild(this.navButtons);
-                }
-                
-                this.updateNavButtons();
-                
-                // Make sure the nav buttons are visible
+                section.after(this.navButtons);
                 this.navButtons.classList.add('visible');
                 
                 if (this.isUserAtBottom()) {
@@ -380,23 +544,35 @@
                 }
             }
             
-            moveNavButtonsAfterLastSection() {
-                const activeSection = document.querySelector('.section.active');
-                this.moveNavButtonsAfterSection(activeSection);
+            handleHashChange() {
+                const hash = window.location.hash.substring(1);
+                if (!hash) return;
+                
+                const sectionTitle = this.getSectionTitleFromHash(hash);
+                if (!sectionTitle || !this.markdownSections[sectionTitle]) return;
+                
+                const sectionId = this.getSectionId(sectionTitle);
+                const existingSection = document.getElementById(`${sectionId}-section`);
+                
+                document.querySelectorAll('.section.active')
+                    .forEach(s => s.classList.remove('active'));
+                
+                if (existingSection) {
+                    existingSection.classList.add('active');
+                    this.moveNavButtons(existingSection);
+                } else {
+                    this.showSection(sectionId, sectionTitle);
+                }
             }
             
-            updateNavButtons() {
-                let hasUnansweredQuestions = false;
-                
-                document.querySelectorAll('.topic-paragraph').forEach(paragraph => {
-                    const sectionId = paragraph.getAttribute('data-section');
-                    // Always show topic paragraphs now, regardless of whether they've been answered
-                    paragraph.style.display = 'block';
-                    if (!this.answeredQuestions.has(sectionId)) hasUnansweredQuestions = true;
-                });
-                
-                // Always show navigation buttons
-                this.navButtons.classList.add('visible');
+            resizeImages() {
+                // Let CSS handle image sizing
+            }
+            
+            scrollToBottom() {
+                if (this.isUserAtBottom() || !this.userHasScrolled) {
+                    window.scrollTo({top: document.body.scrollHeight, behavior: 'auto'});
+                }
             }
             
             isUserAtBottom() {
@@ -410,116 +586,10 @@
                 return documentHeight - (scrollTop + windowHeight) <= 100;
             }
             
-            removeMarkdownFormatting(text) {
-                return text.replace(/\*\*(.*?)\*\*/g, '$1')
-                    .replace(/\*(.*?)\*/g, '$1')
-                    .replace(/^\s*-\s+/gm, '')
-                    .replace(/^\s*#{1,6}\s*/gm, '')
-                    .replace(/`{3}([\s\S]*?)`{3}/gm, '$1')
-                    .replace(/`([^`]+)`/g, '$1')
-                    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '$1')
-                    .replace(/!\[([^\]]+)\]\(([^)]+)\)/g, '$1')
-                    .replace(/^>\s*(.*?)$/gm, '$1')
-                    .replace(/~~(.*?)~~/g, '$1')
-                    .replace(/^---+$/gm, '')
-                    .replace(/\n={2,}$/gm, '');
-            }
-            
-            processMarkdown(text, plainText = false) {
-                return plainText ? this.removeMarkdownFormatting(text) : marked.parse(text);
-            }
-
-            // Add new method to handle hash changes
-            handleHashChange() {
-                const hash = window.location.hash.substring(1);
-                if (!hash) return;
-                
-                const sectionTitle = this.getSectionTitleFromHash(hash);
-                if (!sectionTitle || !this.markdownSections[sectionTitle]) return;
-                
-                // Get section id
-                const sectionId = this.getSectionId(sectionTitle);
-                const existingSection = document.getElementById(`${sectionId}-section`);
-                
-                // Hide all active sections
-                document.querySelectorAll('.section.active').forEach(s => s.classList.remove('active'));
-                
-                if (existingSection) {
-                    // Make the requested section visible
-                    existingSection.classList.add('active');
-                    this.moveNavButtonsAfterSection(existingSection);
-                } else {
-                    // Create and show new section
-                    this.showSection(sectionId, sectionTitle);
-                }
-            }
-
-            // Add new method to convert hash to section title
-            getSectionTitleFromHash(hash) {
-                return Object.keys(this.markdownSections).find(title => 
-                    this.getSectionId(title) === hash
-                );
-            }
-
-            // Add keyboard navigation handler
-            handleKeyNavigation(e) {
-                if (this.isTyping) return;
-                
-                // Get all sections that have been created
-                const sectionElements = Array.from(document.querySelectorAll('.section'));
-                if (sectionElements.length === 0) return;
-                
-                // Find the currently active section
-                const activeIndex = sectionElements.findIndex(el => el.classList.contains('active'));
-                let newIndex = activeIndex;
-                
-                switch (e.key) {
-                    case 'ArrowRight':
-                    case 'ArrowDown':
-                    case 'PageDown':
-                        newIndex = activeIndex < sectionElements.length - 1 ? activeIndex + 1 : activeIndex;
-                        break;
-                    case 'ArrowLeft':
-                    case 'ArrowUp':
-                    case 'PageUp':
-                        newIndex = activeIndex > 0 ? activeIndex - 1 : activeIndex;
-                        break;
-                    case 'Home':
-                        newIndex = 0;
-                        break;
-                    case 'End':
-                        newIndex = sectionElements.length - 1;
-                        break;
-                    default:
-                        return; // Exit if not a navigation key
-                }
-                
-                // If the index changed, navigate to that section
-                if (newIndex !== activeIndex && newIndex >= 0 && newIndex < sectionElements.length) {
-                    e.preventDefault(); // Prevent default scroll behavior
-                    
-                    // Get section ID from the element
-                    const sectionId = sectionElements[newIndex].id.replace('-section', '');
-                    
-                    // Find the section title for this ID
-                    const sectionTitle = this.getSectionTitleFromHash(sectionId);
-                    
-                    if (sectionTitle) {
-                        // Update all section visibility
-                        document.querySelectorAll('.section.active').forEach(s => s.classList.remove('active'));
-                        sectionElements[newIndex].classList.add('active');
-                        
-                        // Update URL hash and move nav buttons
-                        window.history.replaceState(null, '', `#${sectionId}`);
-                        this.moveNavButtonsAfterSection(sectionElements[newIndex]);
-                        
-                        // Scroll to make the section visible
-                        sectionElements[newIndex].scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }
-                }
+            wait(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
             }
         }
     </script>
 </body>
 </html>
-

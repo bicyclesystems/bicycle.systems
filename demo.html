@@ -1,0 +1,2025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIKE Conversation Flow</title>
+    <style>
+        /* Base styles */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+            padding: 2rem;
+        }
+        
+        /* Layout */
+        .conversation-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            min-height: 90vh;
+            padding-top: 160px;
+        }
+        
+        /* UI Elements */
+        .participant-profiles {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            z-index: 1000;
+        }
+        
+        .participant-profile {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid #e2e8f0;
+            margin-right: -15px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            transform: scale(0.5);
+        }
+        
+        .participant-profile.animate-in {
+            animation: profilePopIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        
+        .participant-profile img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .participant-profile.active { border-color: #2563eb; }
+        
+        /* Status Bar */
+        .status-bar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            background-color: #ffffff;
+            border-radius: 0.375rem;
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        
+        .current-event { font-weight: 600; margin-right: 0.5rem; }
+        .current-time { font-weight: 500; margin-right: 0.5rem; }
+        
+        .events-container, .locations-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.25rem;
+        }
+        
+        .event-badge, .location-badge {
+            font-size: 0.8rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .event-badge {
+            background-color: #047857;
+            color: white;
+        }
+        
+        .location-badge {
+            background-color: #e2e8f0;
+            color: #1e293b;
+        }
+        
+        .event-badge.active {
+            background-color: #2563eb;
+            color: white;
+            font-weight: 500;
+        }
+        
+        .location-badge.active {
+            background-color: #6d28d9;
+            color: white;
+            font-weight: 500;
+        }
+        
+        /* Playback Controls */
+        .playback-controls {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #ffffff;
+            border-radius: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            z-index: 1000;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .play-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #2563eb;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+        
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .btn.secondary {
+            background-color: transparent;
+            border: 1px solid #2563eb;
+            color: #2563eb;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+        
+        #speed-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 80px;
+            height: 4px;
+            background: #e2e8f0;
+            border-radius: 2px;
+            outline: none;
+        }
+        
+        #speed-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #2563eb;
+            cursor: pointer;
+        }
+        
+        #speed-value {
+            font-weight: 600;
+            color: #2563eb;
+            width: 25px;
+            text-align: right;
+        }
+        
+        /* Messages */
+        .message {
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
+            line-height: 1.6;
+            max-width: 80%;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+            position: relative;
+        }
+        
+        .message.current, .module-container.current {
+            position: fixed;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            max-width: 80%;
+            z-index: 100;
+        }
+        
+        .message:not(.current), .module-container:not(.current) {
+            display: none;
+        }
+        
+        .message-content {
+            flex: 1;
+        }
+        
+        .message-profile {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            flex-shrink: 0;
+            border: 2px solid #e2e8f0;
+        }
+        
+        .message-profile img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .message-timestamp {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            font-size: 0.7rem;
+            opacity: 0.7;
+            color: inherit;
+        }
+        
+        /* Message Types */
+        .ai-message, .bike-message {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            align-self: flex-start;
+            border-bottom-left-radius: 0.25rem;
+        }
+        
+        .teacher-message, .student-message {
+            background-color: #2563eb;
+            color: white;
+            align-self: flex-end;
+            margin-left: auto;
+            border-bottom-right-radius: 0.25rem;
+        }
+        
+        .remote_student-message {
+            background-color: #6d28d9;
+            color: white;
+            align-self: flex-end;
+            margin-left: auto;
+            border-bottom-right-radius: 0.25rem;
+        }
+        
+        /* Modules */
+        .module-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #f8fafc;
+            padding: 5rem 2rem 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: -1;
+            overflow: auto;
+        }
+        
+        .module-container.remote-module {
+            background-color: #f0e7ff;
+        }
+        
+        .module-container.current {
+            margin: 0;
+            max-width: 100%;
+            z-index: 10;
+            display: flex;
+            top: 0;
+            left: 0;
+            transform: none;
+        }
+        
+        .module-content {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 1rem;
+            padding: 2rem;
+            max-width: 800px;
+            width: 90%;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .remote-module .module-content {
+            border-left: 5px solid #6d28d9;
+        }
+        
+        .module-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid #e2e8f0;
+            text-align: center;
+        }
+        
+        .module-timestamp {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 0.7rem;
+            opacity: 0.7;
+            z-index: 2;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+        }
+        
+        /* Loading */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 400px;
+        }
+        
+        .loading-spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #2563eb;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        
+        /* Animations */
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        @keyframes profilePopIn {
+            0% { opacity: 0; transform: scale(0.5); }
+            70% { opacity: 1; transform: scale(1.1); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        
+        .message.hidden, .module-container.hidden {
+            opacity: 0;
+            transform: translate(-50%, -30px) scale(0.8);
+            position: fixed;
+            top: 100px;
+            left: 50%;
+            z-index: 1;
+            pointer-events: none;
+            transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+        }
+        
+        .message.appearing, .module-container.appearing {
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            position: fixed;
+            top: 100px;
+            left: 50%;
+            z-index: 2;
+            pointer-events: auto;
+        }
+        
+        @keyframes popIn {
+            0% { opacity: 0; transform: translate(-50%, -30px) scale(0.8); }
+            70% { opacity: 1; transform: translate(-50%, 0) scale(1.03); }
+            100% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+        }
+
+        /* Document System Styles */
+        .documents-sidebar {
+            position: fixed;
+            right: 20px;
+            top: 80px;
+            width: 300px;
+            max-height: calc(100vh - 200px);
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            z-index: 90;
+            border: 1px solid #e2e8f0;
+            transform: translateX(310px);
+            transition: transform 0.3s ease-out;
+        }
+
+        .documents-sidebar.visible {
+            transform: translateX(0);
+        }
+
+        .documents-header {
+            padding: 1rem;
+            font-weight: 600;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .documents-toggle {
+            position: absolute;
+            top: 0;
+            left: -40px;
+            width: 40px;
+            height: 40px;
+            background-color: white;
+            border-radius: 0.75rem 0 0 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: -4px 4px 12px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+            border-right: none;
+        }
+
+        .documents-content {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 0;
+        }
+
+        .document-item {
+            border-bottom: 1px solid #f1f5f9;
+            padding: 0;
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height 0.5s ease-out, opacity 0.5s ease;
+            opacity: 0;
+        }
+
+        .document-item.visible {
+            opacity: 1;
+            max-height: 1000px;
+        }
+
+        .document-header {
+            padding: 0.75rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            background-color: #f8fafc;
+            font-weight: 700;
+        }
+
+        .document-content {
+            padding: 0.75rem 1rem;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            display: none;
+        }
+
+        .document-content.open {
+            display: block;
+        }
+
+        .document-item .toggle-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .document-item.expanded .toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        .document-badge {
+            display: inline-block;
+            font-size: 0.7rem;
+            padding: 0.1rem 0.35rem;
+            border-radius: 0.25rem;
+            margin-left: 0.5rem;
+            background-color: #2563eb;
+            color: white;
+            font-weight: 500;
+        }
+
+        .document-badge.new {
+            animation: pulse 2s infinite;
+        }
+
+        .document-badge.file-type {
+            font-size: 0.65rem;
+            margin-left: 0.5rem;
+            padding: 0.1rem 0.25rem;
+            vertical-align: middle;
+        }
+
+        /* Attachment Preview Styles */
+        .attachment-preview {
+            display: flex;
+            align-items: center;
+            background-color: #f8fafc;
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            margin-top: 0.5rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        .attachment-icon {
+            font-size: 1.8rem;
+            margin-right: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+        }
+
+        .attachment-description {
+            flex: 1;
+        }
+
+        .attachment-description p {
+            margin: 0.2rem 0 0 0;
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        .download-button {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 0.25rem;
+            padding: 0.35rem 0.75rem;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .download-button:hover {
+            background-color: #1d4ed8;
+        }
+
+        /* For specific file types */
+        .attachment-item[data-type="pdf"] .attachment-icon {
+            color: #e53e3e;
+        }
+
+        .attachment-item[data-type="slides"] .attachment-icon,
+        .attachment-item[data-type="pptx"] .attachment-icon {
+            color: #dd6b20;
+        }
+
+        .attachment-item[data-type="html"] .attachment-icon {
+            color: #38a169;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        /* Onboarding Mode - Hide UI elements during onboarding */
+        body.onboarding-mode .participant-profiles,
+        body.onboarding-mode .documents-sidebar,
+        body.onboarding-mode .status-bar .events-container,
+        body.onboarding-mode .status-bar .locations-container {
+            display: none !important;
+        }
+
+        body.onboarding-mode .conversation-container {
+            padding-top: 80px;
+        }
+
+        body.onboarding-mode .status-bar {
+            background-color: transparent;
+            box-shadow: none;
+            border: none;
+        }
+        
+        /* Continue Button Styles */
+        .continue-button {
+            animation: pulse 2s infinite;
+            padding: 0.75rem 1.5rem !important;
+            font-size: 1.1rem !important;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4) !important;
+        }
+        
+        @keyframes pulse {
+            0% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.05); }
+            100% { transform: translateX(-50%) scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Fixed UI Elements -->
+    <div class="participant-profiles" id="participant-profiles"></div>
+
+    <div class="status-bar">
+        <div>
+            <span id="current-event" class="current-event"></span>
+            <span id="current-time" class="current-time"></span>
+            <div id="events-container" class="events-container"></div>
+            <div id="locations-container" class="locations-container"></div>
+        </div>
+    </div>
+
+    <div class="playback-controls">
+        <button id="play-button" class="play-btn">
+            <span class="play-icon">▶</span>
+        </button>
+        <div class="playback-speed">
+            <label for="speed-slider">Speed:</label>
+            <input type="range" id="speed-slider" min="0.5" max="3" step="0.5" value="1">
+            <span id="speed-value">1x</span>
+        </div>
+        <button id="restart-button" class="btn secondary">
+            <span>⟲</span>
+        </button>
+    </div>
+
+    <!-- Documents Sidebar -->
+    <div class="documents-sidebar" id="documents-sidebar">
+        <div class="documents-toggle" id="documents-toggle">
+            <span>📄</span>
+        </div>
+        <div class="documents-header">
+            <span>Documents</span>
+            <span id="document-count" class="document-badge">0</span>
+        </div>
+        <div class="documents-content" id="documents-content">
+            <!-- Documents will be added dynamically -->
+        </div>
+    </div>
+
+    <!-- Define the HelloModule web component template -->
+    <template id="hello-module-template">
+        <style>
+            :host {
+                display: block;
+                width: 100%;
+                height: 100%;
+            }
+            .hello-module {
+                background-color: #f8f9ff;
+                border-radius: 1rem;
+                padding: 2rem;
+                max-width: 800px;
+                width: 90%;
+                box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+                margin: 0 auto;
+                text-align: center;
+                border-left: 5px solid #4f46e5;
+                position: relative;
+            }
+            .hello-title {
+                font-size: 2.5rem;
+                font-weight: 700;
+                margin-bottom: 1rem;
+                color: #4f46e5;
+            }
+            .hello-name {
+                font-size: 3rem;
+                font-weight: 800;
+                background: linear-gradient(135deg, #6366f1, #8b5cf6, #d946ef);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                margin-bottom: 1.5rem;
+            }
+            .hello-module-timestamp {
+                position: absolute;
+                top: 10px;
+                right: 15px;
+                font-size: 0.7rem;
+                opacity: 0.7;
+                z-index: 2;
+                background-color: rgba(255, 255, 255, 0.8);
+                padding: 0.25rem 0.5rem;
+                border-radius: 0.25rem;
+            }
+        </style>
+        <div class="hello-module">
+            <div class="hello-module-timestamp"></div>
+            <div class="hello-title">Hello,</div>
+            <div class="hello-name"></div>
+        </div>
+    </template>
+
+    <!-- Main Content Container -->
+    <div class="conversation-container">
+        <div class="loading">
+            <div class="loading-spinner"></div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+    // Define the HelloModule web component
+    class HelloModule extends HTMLElement {
+        constructor() {
+            super();
+            const template = document.getElementById('hello-module-template');
+            const shadowRoot = this.attachShadow({ mode: 'open' });
+            shadowRoot.appendChild(template.content.cloneNode(true));
+        }
+        
+        connectedCallback() {
+            // Initialize with default values
+            this.updateName('Friend');
+            this.updateTimestamp('');
+        }
+        
+        updateName(name) {
+            const nameElement = this.shadowRoot.querySelector('.hello-name');
+            if (nameElement) {
+                nameElement.textContent = name;
+            }
+        }
+        
+        updateTimestamp(timestamp) {
+            const timestampElement = this.shadowRoot.querySelector('.hello-module-timestamp');
+            if (timestampElement) {
+                timestampElement.textContent = timestamp;
+            }
+        }
+    }
+    
+    // Register the web component
+    customElements.define('hello-module', HelloModule);
+    
+    // Global variables
+    let isPlaying = false;
+    let playbackSpeed = 1;
+    let currentIndex = 0;
+    let playbackTimer = null;
+    
+    // Main initialization function
+    window.addEventListener('DOMContentLoaded', () => {
+        // Show loading state
+        document.querySelector('.conversation-container').innerHTML = `
+            <div class="loading">
+                <div class="loading-spinner"></div>
+            </div>
+        `;
+
+        fetch('conversations.json')
+            .then(response => response.json())
+            .then(data => {
+                // Store data globally for later use
+                window.conversationData = data;
+                
+                // Render everything
+                renderConversation(data);
+                
+                // Setup the initial status bar
+                const firstElement = document.querySelector('.current');
+                updateStatusBar(firstElement);
+                
+                // Setup playback controls
+                setupControls();
+                
+                // Setup navigation
+                setupNavigation();
+                
+                // Find and navigate to the onboarding flow to start
+                const onboardingEvent = data.events.find(event => event.id === 'onboarding-flow');
+                if (onboardingEvent) {
+                    navigateToEvent(onboardingEvent.title);
+                }
+            })
+            .catch(error => {
+                console.error('Error loading conversation data:', error);
+                document.querySelector('.conversation-container').innerHTML = `
+                    <div style="padding: 2rem; text-align: center;">
+                        <h2>Error Loading Conversation</h2>
+                        <p>Could not load the conversation data. Please check the console for details.</p>
+                    </div>
+                `;
+            });
+    });
+    
+    // Load conversation data
+    async function loadData() {
+        const response = await fetch('conversations.json');
+        if (!response.ok) throw new Error('Failed to load conversation data');
+        
+        const data = await response.json();
+        window.conversationData = data;
+        
+        renderConversation(data);
+        
+        // Initialize documents system if there are documents in the data
+        if (data.documents) {
+            initializeDocuments(data.documents);
+        }
+    }
+    
+    // Initialize documents system
+    function initializeDocuments(documents) {
+        // Setup toggle functionality for the documents sidebar
+        const toggle = document.getElementById('documents-toggle');
+        const sidebar = document.getElementById('documents-sidebar');
+        
+        toggle.addEventListener('click', () => {
+            sidebar.classList.toggle('visible');
+        });
+        
+        // Create document items but keep them hidden initially
+        const container = document.getElementById('documents-content');
+        
+        documents.forEach((doc, index) => {
+            const docItem = createDocumentItem(doc, index);
+            container.appendChild(docItem);
+        });
+        
+        // Update document count
+        updateDocumentCount();
+    }
+    
+    // Create a document item element
+    function createDocumentItem(doc, index) {
+        const docItem = document.createElement('div');
+        docItem.className = 'document-item';
+        docItem.dataset.docId = doc.id || 'doc-' + index;
+        docItem.dataset.timestamp = doc.timestamp || '';
+        
+        const header = document.createElement('div');
+        header.className = 'document-header';
+        
+        const title = document.createElement('span');
+        title.textContent = doc.title || `Document ${index + 1}`;
+        
+        const toggleIcon = document.createElement('span');
+        toggleIcon.className = 'toggle-icon';
+        toggleIcon.textContent = '▼';
+        
+        header.appendChild(title);
+        header.appendChild(toggleIcon);
+        
+        const content = document.createElement('div');
+        content.className = 'document-content';
+        content.innerHTML = doc.content || '';
+        
+        docItem.appendChild(header);
+        docItem.appendChild(content);
+        
+        // Toggle functionality for expanding/collapsing document
+        header.addEventListener('click', () => {
+            docItem.classList.toggle('expanded');
+            content.classList.toggle('open');
+            toggleIcon.style.transform = content.classList.contains('open') ? 'rotate(180deg)' : '';
+        });
+        
+        return docItem;
+    }
+    
+    // Update the document count badge
+    function updateDocumentCount() {
+        const visibleDocs = document.querySelectorAll('.document-item.visible');
+        const countBadge = document.getElementById('document-count');
+        if (countBadge) {
+            countBadge.textContent = visibleDocs.length;
+        }
+    }
+    
+    // Show documents that should be visible at the current timestamp
+    function updateVisibleDocuments() {
+        const currentElement = document.querySelector('.current');
+        if (!currentElement || !currentElement.dataset.timestamp) return;
+        
+        const currentTime = new Date(currentElement.dataset.timestamp).getTime();
+        
+        // Get attachments from the current event
+        const currentEvent = getCurrentEvent();
+        if (!currentEvent) return;
+        
+        // Find sidebar or create it if it doesn't exist yet
+        let sidebar = document.getElementById('documents-sidebar');
+        if (!sidebar) {
+            sidebar = createDocumentsSidebar();
+        }
+        
+        // Get the documents container
+        const container = document.getElementById('documents-content');
+        
+        // Process documents from the global documents array
+        if (window.conversationData.documents) {
+            processDocumentsForTimestamp(window.conversationData.documents, currentTime, container);
+        }
+        
+        // Process attachments from the current event
+        if (currentEvent.content && currentEvent.content.attachments) {
+            processAttachmentsForTimestamp(currentEvent.content.attachments, currentTime, container);
+        }
+        
+        // Update document count
+        updateDocumentCount();
+    }
+    
+    // Process documents for the current timestamp
+    function processDocumentsForTimestamp(documents, currentTime, container) {
+        documents.forEach((doc, index) => {
+            if (!doc.timestamp) return;
+            
+            const docTime = new Date(doc.timestamp).getTime();
+            
+            // Check if this document should be visible
+            if (docTime <= currentTime) {
+                // Check if document already exists
+                let docItem = document.querySelector(`.document-item[data-doc-id="${doc.id || 'doc-' + index}"]`);
+                
+                // Create document item if it doesn't exist
+                if (!docItem) {
+                    docItem = createDocumentItem(doc, index);
+                    container.appendChild(docItem);
+                }
+                
+                // Make the document visible if it's not already
+                if (!docItem.classList.contains('visible')) {
+                    showNewDocument(docItem);
+                }
+            }
+        });
+    }
+    
+    // Process attachments for the current timestamp
+    function processAttachmentsForTimestamp(attachments, currentTime, container) {
+        attachments.forEach((attachment, index) => {
+            // Check if attachment already exists
+            let attachmentItem = document.querySelector(`.document-item[data-doc-id="${attachment.id || 'attachment-' + index}"]`);
+            
+            // Create attachment item if it doesn't exist
+            if (!attachmentItem) {
+                attachmentItem = createAttachmentItem(attachment, index);
+                container.appendChild(attachmentItem);
+            }
+            
+            // Make the attachment visible if it's not already
+            if (!attachmentItem.classList.contains('visible')) {
+                showNewDocument(attachmentItem);
+            }
+        });
+    }
+    
+    // Show a new document with animation
+    function showNewDocument(docItem) {
+        docItem.classList.add('visible');
+        
+        // Add 'new' badge to indicate a new document
+        const header = docItem.querySelector('.document-header');
+        const newBadge = document.createElement('span');
+        newBadge.className = 'document-badge new';
+        newBadge.textContent = 'NEW';
+        header.appendChild(newBadge);
+        
+        // Auto-open the first time
+        const content = docItem.querySelector('.document-content');
+        content.classList.add('open');
+        docItem.classList.add('expanded');
+        
+        // Show the sidebar when new documents appear
+        document.getElementById('documents-sidebar').classList.add('visible');
+        
+        // Remove 'new' badge after a few seconds
+        setTimeout(() => {
+            if (newBadge.parentNode) {
+                newBadge.classList.remove('new');
+                
+                // After animation ends, remove the badge
+                setTimeout(() => {
+                    if (newBadge.parentNode) {
+                        newBadge.parentNode.removeChild(newBadge);
+                    }
+                }, 2000);
+            }
+        }, 5000);
+    }
+    
+    // Create an attachment item element
+    function createAttachmentItem(attachment, index) {
+        const attachmentItem = document.createElement('div');
+        attachmentItem.className = 'document-item attachment-item';
+        attachmentItem.dataset.docId = attachment.id || 'attachment-' + index;
+        
+        // Set data-type for styling
+        if (attachment.file_type) {
+            attachmentItem.dataset.type = attachment.file_type.toLowerCase();
+        }
+        
+        const header = document.createElement('div');
+        header.className = 'document-header';
+        
+        const title = document.createElement('span');
+        title.textContent = attachment.title || `Attachment ${index + 1}`;
+        
+        // Add file type badge
+        if (attachment.file_type) {
+            const typeBadge = document.createElement('span');
+            typeBadge.className = 'document-badge file-type';
+            typeBadge.textContent = attachment.file_type.toUpperCase();
+            typeBadge.style.backgroundColor = getFileTypeColor(attachment.file_type);
+            title.appendChild(typeBadge);
+        }
+        
+        const toggleIcon = document.createElement('span');
+        toggleIcon.className = 'toggle-icon';
+        toggleIcon.textContent = '▼';
+        
+        header.appendChild(title);
+        header.appendChild(toggleIcon);
+        
+        const content = document.createElement('div');
+        content.className = 'document-content';
+        
+        // Create attachment preview based on file type
+        if (attachment.url) {
+            const preview = createAttachmentPreview(attachment);
+            content.appendChild(preview);
+        } else {
+            content.innerHTML = '<p>No preview available</p>';
+        }
+        
+        attachmentItem.appendChild(header);
+        attachmentItem.appendChild(content);
+        
+        // Toggle functionality for expanding/collapsing attachment
+        header.addEventListener('click', () => {
+            attachmentItem.classList.toggle('expanded');
+            content.classList.toggle('open');
+            toggleIcon.style.transform = content.classList.contains('open') ? 'rotate(180deg)' : '';
+        });
+        
+        return attachmentItem;
+    }
+    
+    // Create attachment preview based on file type
+    function createAttachmentPreview(attachment) {
+        const container = document.createElement('div');
+        container.className = 'attachment-preview';
+        
+        const fileType = attachment.file_type ? attachment.file_type.toLowerCase() : '';
+        
+        // Create icon and description based on file type
+        const icon = document.createElement('div');
+        icon.className = 'attachment-icon';
+        
+        const desc = document.createElement('div');
+        desc.className = 'attachment-description';
+        
+        switch (fileType) {
+            case 'pdf':
+                icon.innerHTML = '📄';
+                desc.innerHTML = `<strong>${attachment.title}</strong><p>PDF Document</p>`;
+                break;
+            case 'slides':
+            case 'pptx':
+                icon.innerHTML = '📊';
+                desc.innerHTML = `<strong>${attachment.title}</strong><p>Presentation</p>`;
+                break;
+            case 'html':
+                icon.innerHTML = '🌐';
+                desc.innerHTML = `<strong>${attachment.title}</strong><p>Web Document</p>`;
+                break;
+            default:
+                icon.innerHTML = '📎';
+                desc.innerHTML = `<strong>${attachment.title}</strong><p>${fileType ? fileType.toUpperCase() : 'Document'}</p>`;
+        }
+        
+        const downloadLink = document.createElement('button');
+        downloadLink.className = 'download-button';
+        downloadLink.textContent = 'View';
+        downloadLink.addEventListener('click', (e) => {
+            e.stopPropagation();
+            // In a real app, this would open the attachment
+            // For demo purposes, just log it
+            console.log('Opening attachment:', attachment.url);
+        });
+        
+        container.appendChild(icon);
+        container.appendChild(desc);
+        container.appendChild(downloadLink);
+        
+        return container;
+    }
+    
+    // Get color for file type badge
+    function getFileTypeColor(fileType) {
+        if (!fileType) return '#2563eb';
+        
+        switch (fileType.toLowerCase()) {
+            case 'pdf':
+                return '#e53e3e';
+            case 'slides':
+            case 'pptx':
+                return '#dd6b20';
+            case 'html':
+                return '#38a169';
+            default:
+                return '#2563eb';
+        }
+    }
+    
+    // Create documents sidebar if it doesn't exist
+    function createDocumentsSidebar() {
+        const sidebar = document.createElement('div');
+        sidebar.className = 'documents-sidebar';
+        sidebar.id = 'documents-sidebar';
+        
+        const toggle = document.createElement('div');
+        toggle.className = 'documents-toggle';
+        toggle.id = 'documents-toggle';
+        toggle.innerHTML = '<span>📄</span>';
+        
+        const header = document.createElement('div');
+        header.className = 'documents-header';
+        header.innerHTML = `
+            <span>Documents & Attachments</span>
+            <span id="document-count" class="document-badge">0</span>
+        `;
+        
+        const content = document.createElement('div');
+        content.className = 'documents-content';
+        content.id = 'documents-content';
+        
+        sidebar.appendChild(toggle);
+        sidebar.appendChild(header);
+        sidebar.appendChild(content);
+        
+        // Add toggle functionality
+        toggle.addEventListener('click', () => {
+            sidebar.classList.toggle('visible');
+        });
+        
+        document.body.appendChild(sidebar);
+        return sidebar;
+    }
+    
+    // Get current event based on the current element
+    function getCurrentEvent() {
+        const currentElement = document.querySelector('.current');
+        if (!currentElement || !currentElement.dataset.event) return null;
+        
+        const eventTitle = currentElement.dataset.event;
+        
+        if (!window.conversationData || !window.conversationData.events) return null;
+        
+        return window.conversationData.events.find(event => event.title === eventTitle);
+    }
+
+    // Check if current event is onboarding
+    function isOnboardingEvent() {
+        const event = getCurrentEvent();
+        return event && event.id === 'onboarding-flow';
+    }
+    
+    // Render conversation
+    function renderConversation(data) {
+        const container = document.querySelector('.conversation-container');
+        container.innerHTML = '';
+        
+        renderParticipants(data.participants);
+        
+        // Flatten all interactions across events for simpler navigation
+        const allElements = [];
+        
+        data.events.forEach(event => {
+            if (!event.content || !event.content.interactions) return;
+            
+            event.content.interactions.forEach(item => {
+                if (item.speaker) {
+                    const messageEl = createMessage(item, data.participants);
+                    
+                    // Add metadata
+                    messageEl.dataset.timestamp = item.timestamp || '';
+                    messageEl.dataset.event = event.title || '';
+                    messageEl.dataset.location = item.location || event.location || '';
+                    messageEl.dataset.id = item.id || '';
+                    
+                    // Hide initially
+                    messageEl.classList.add('hidden');
+                    container.appendChild(messageEl);
+                    allElements.push(messageEl);
+                } 
+                else if (item.type === 'module') {
+                    const moduleEl = createModule(item, event.location, event.title);
+                    
+                    // Add metadata
+                    moduleEl.dataset.timestamp = item.timestamp || '';
+                    moduleEl.dataset.event = event.title || '';
+                    moduleEl.dataset.location = item.location || event.location || '';
+                    moduleEl.dataset.id = item.id || '';
+                    
+                    // Hide initially
+                    moduleEl.classList.add('hidden');
+                    container.appendChild(moduleEl);
+                    allElements.push(moduleEl);
+                }
+            });
+        });
+        
+        // Sort elements by timestamp
+        allElements.sort((a, b) => {
+            const timeA = a.dataset.timestamp ? new Date(a.dataset.timestamp).getTime() : 0;
+            const timeB = b.dataset.timestamp ? new Date(b.dataset.timestamp).getTime() : 0;
+            return timeA - timeB;
+        });
+        
+        // Show first element
+        if (allElements.length > 0) {
+            allElements[0].classList.remove('hidden');
+            allElements[0].classList.add('current', 'appearing');
+        }
+    }
+    
+    // Create message element
+    function createMessage(message, participants) {
+        const participant = participants[message.speaker] || {};
+        
+        // Create elements
+        const messageEl = document.createElement('div');
+        messageEl.className = `message ${participant.type || 'unknown'}-message`;
+        
+        const profileEl = document.createElement('div');
+        profileEl.className = 'message-profile';
+        
+        if (participant.avatar) {
+            const img = document.createElement('img');
+            img.src = participant.avatar;
+            img.alt = `${participant.name} Profile`;
+            profileEl.appendChild(img);
+        } else if (participant.avatarBgColor) {
+            profileEl.style.backgroundColor = participant.avatarBgColor;
+        }
+        
+        const contentEl = document.createElement('div');
+        contentEl.className = 'message-content';
+        
+        // Add speaker name
+        const nameEl = document.createElement('div');
+        nameEl.style.fontWeight = 'bold';
+        nameEl.style.marginBottom = '0.5rem';
+        nameEl.textContent = participant.name || 'Unknown';
+        
+        // Add location for remote students
+        if (participant.type === 'remote_student' && message.location) {
+            const locationSpan = document.createElement('span');
+            locationSpan.style.marginLeft = '0.5rem';
+            locationSpan.style.fontSize = '0.8em';
+            locationSpan.style.opacity = '0.8';
+            locationSpan.textContent = `(${message.location})`;
+            nameEl.appendChild(locationSpan);
+        }
+        
+        contentEl.appendChild(nameEl);
+        
+        // Add message content
+        const messageText = document.createElement('div');
+        messageText.textContent = message.content || '';
+        contentEl.appendChild(messageText);
+        
+        // Add critical thinking content if available
+        if (message.qa && message.qa.question && message.qa.answer) {
+            const qaEl = document.createElement('div');
+            qaEl.style.marginTop = '0.75rem';
+            qaEl.style.borderLeft = '2px solid #2563eb';
+            qaEl.style.paddingLeft = '0.75rem';
+            qaEl.style.opacity = '0.85';
+            
+            const questionEl = document.createElement('div');
+            questionEl.style.fontWeight = 'bold';
+            questionEl.style.marginBottom = '0.25rem';
+            questionEl.style.fontSize = '0.9em';
+            questionEl.style.cursor = 'pointer';
+            questionEl.style.display = 'flex';
+            questionEl.style.alignItems = 'center';
+            questionEl.style.justifyContent = 'space-between';
+            
+            const questionText = document.createElement('span');
+            questionText.textContent = message.qa.question;
+            
+            const toggleIndicator = document.createElement('span');
+            toggleIndicator.textContent = '▼';
+            toggleIndicator.style.fontSize = '0.7em';
+            toggleIndicator.style.marginLeft = '0.5rem';
+            toggleIndicator.style.transition = 'transform 0.2s ease';
+            
+            questionEl.appendChild(questionText);
+            questionEl.appendChild(toggleIndicator);
+            
+            const answerEl = document.createElement('div');
+            answerEl.style.fontSize = '0.85em';
+            answerEl.style.display = 'none';
+            answerEl.style.transition = 'max-height 0.3s ease-out';
+            answerEl.style.overflow = 'hidden';
+            answerEl.textContent = message.qa.answer;
+            
+            // Toggle visibility on click
+            questionEl.addEventListener('click', () => {
+                if (answerEl.style.display === 'none') {
+                    answerEl.style.display = 'block';
+                    toggleIndicator.style.transform = 'rotate(180deg)';
+                } else {
+                    answerEl.style.display = 'none';
+                    toggleIndicator.style.transform = 'rotate(0deg)';
+                }
+            });
+            
+            qaEl.appendChild(questionEl);
+            qaEl.appendChild(answerEl);
+            contentEl.appendChild(qaEl);
+        }
+        
+        // Add timestamp
+        if (message.timestamp) {
+            const timestampEl = document.createElement('div');
+            timestampEl.className = 'message-timestamp';
+            timestampEl.textContent = formatTime(message.timestamp);
+            messageEl.appendChild(timestampEl);
+        }
+        
+        // Assemble message
+        messageEl.appendChild(profileEl);
+        messageEl.appendChild(contentEl);
+        
+        return messageEl;
+    }
+    
+    // Create module element
+    function createModule(item, eventLocation, eventTitle) {
+        // Check if this is a hello module
+        if (item.module_type === 'hello') {
+            const moduleEl = document.createElement('div');
+            moduleEl.className = 'module-container';
+            
+            // Create the hello module web component
+            const helloModule = document.createElement('hello-module');
+            
+            // Set name from data
+            if (item.content && item.content.name) {
+                helloModule.updateName(item.content.name);
+            }
+            
+            // Add timestamp
+            if (item.timestamp) {
+                helloModule.updateTimestamp(formatTime(item.timestamp));
+            }
+            
+            // Add metadata
+            moduleEl.dataset.timestamp = item.timestamp || '';
+            moduleEl.dataset.event = eventTitle || '';
+            moduleEl.dataset.location = item.location || eventLocation || '';
+            
+            moduleEl.appendChild(helloModule);
+            return moduleEl;
+        }
+        
+        // Regular module creation for other module types
+        const moduleEl = document.createElement('div');
+        moduleEl.className = 'module-container';
+        
+        // Add special class for remote interaction modules
+        if (item.module_type === 'remote-interaction' || item.module_type === 'remote-learning') {
+            moduleEl.classList.add('remote-module');
+        }
+        
+        const moduleContent = document.createElement('div');
+        moduleContent.className = 'module-content';
+        
+        const titleEl = document.createElement('h3');
+        titleEl.className = 'module-title';
+        titleEl.textContent = item.title || item.module_type || 'Module';
+        
+        // For remote interactions, add context to the title
+        if (item.module_type === 'remote-interaction' && item.content && item.content.student) {
+            // Create a context badge next to the title
+            const contextBadge = document.createElement('span');
+            contextBadge.style.fontSize = '0.7rem';
+            contextBadge.style.padding = '0.25rem 0.5rem';
+            contextBadge.style.borderRadius = '0.25rem';
+            contextBadge.style.marginLeft = '0.5rem';
+            contextBadge.style.backgroundColor = '#e2e8f0';
+            contextBadge.style.fontWeight = 'normal';
+            contextBadge.textContent = eventLocation || 'Unknown location';
+            titleEl.appendChild(contextBadge);
+        }
+        
+        const descEl = document.createElement('p');
+        descEl.textContent = `[${item.module_type} module]`;
+        descEl.style.fontStyle = 'italic';
+        
+        // Show student info for remote interactions
+        if (item.module_type === 'remote-interaction' && item.content && item.content.student) {
+            const studentInfo = document.createElement('div');
+            studentInfo.style.marginTop = '1rem';
+            studentInfo.style.padding = '0.5rem';
+            studentInfo.style.backgroundColor = '#f0e7ff';
+            studentInfo.style.borderRadius = '0.5rem';
+            
+            // Create container for locations with visual indication
+            const locationsContainer = document.createElement('div');
+            locationsContainer.style.display = 'flex';
+            locationsContainer.style.justifyContent = 'space-between';
+            locationsContainer.style.marginBottom = '0.5rem';
+            locationsContainer.style.padding = '0.5rem';
+            locationsContainer.style.borderRadius = '0.25rem';
+            locationsContainer.style.backgroundColor = 'rgba(109, 40, 217, 0.1)';
+            
+            // Add teacher location on left
+            if (eventLocation) {
+                const teacherLocationInfo = document.createElement('div');
+                teacherLocationInfo.innerHTML = `<strong>Teacher:</strong> ${eventLocation}`;
+                locationsContainer.appendChild(teacherLocationInfo);
+            }
+            
+            // Add student location on right
+            if (item.content.location) {
+                const studentLocationInfo = document.createElement('div');
+                studentLocationInfo.innerHTML = `<strong>Student:</strong> ${item.content.location}`;
+                locationsContainer.appendChild(studentLocationInfo);
+            }
+            
+            studentInfo.appendChild(locationsContainer);
+            
+            const studentName = document.createElement('div');
+            studentName.style.fontWeight = 'bold';
+            studentName.textContent = `Remote Student: ${item.content.student.replace('remote_', '')}`;
+            
+            const actionInfo = document.createElement('div');
+            actionInfo.textContent = `Action: ${item.content.action || 'interaction'}`;
+            
+            studentInfo.appendChild(studentName);
+            studentInfo.appendChild(actionInfo);
+            moduleContent.appendChild(studentInfo);
+        }
+        
+        if (item.timestamp) {
+            const timestampEl = document.createElement('div');
+            timestampEl.className = 'module-timestamp';
+            timestampEl.textContent = formatTime(item.timestamp);
+            moduleEl.appendChild(timestampEl);
+        }
+        
+        moduleContent.appendChild(titleEl);
+        moduleContent.appendChild(descEl);
+        moduleEl.appendChild(moduleContent);
+        
+        return moduleEl;
+    }
+    
+    // Format timestamp
+    function formatTime(timestamp) {
+        const date = new Date(timestamp);
+        return date.toLocaleString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    }
+    
+    // Get all content elements ordered by time
+    function getAllElements() {
+        const elements = document.querySelectorAll('.message[data-timestamp], .module-container[data-timestamp]');
+        const elementsArray = Array.from(elements);
+        
+        elementsArray.sort((a, b) => {
+            const timeA = new Date(a.dataset.timestamp).getTime();
+            const timeB = new Date(b.dataset.timestamp).getTime();
+            return timeA - timeB;
+        });
+        
+        return elementsArray;
+    }
+    
+    // Display an element
+    function displayElement(index) {
+        const elements = getAllElements();
+        
+        // Hide all messages and modules
+        elements.forEach(el => {
+            el.classList.remove('current', 'appearing');
+            el.classList.add('hidden');
+        });
+        
+        if (index < 0 || index >= elements.length) return;
+        
+        // Show current element
+        const currentElement = elements[index];
+        currentElement.classList.remove('hidden');
+        currentElement.classList.add('current', 'appearing');
+        
+        // Update status bar
+        updateStatusBar(currentElement);
+        
+        // Update documents sidebar if it exists
+        updateVisibleDocuments();
+        
+        // Update participant profiles
+        updateParticipantProfiles();
+    }
+    
+    // Check if current element is last onboarding message
+    function isLastOnboardingMessage(element) {
+        if (!element || !isOnboardingEvent()) return false;
+        
+        // Check message content for the final question from onboarding
+        if (element.classList.contains('message')) {
+            const content = element.querySelector('.message-content');
+            if (content && content.textContent.includes("What would you like to do first?")) {
+                return true;
+            }
+        }
+        
+        // Check message ID if we have it
+        if (element.dataset.id === 'system-next-steps') {
+            return true;
+        }
+        
+        return false;
+    }
+    
+    // Add continue button to transition from onboarding to regular mode
+    function addContinueButton(element) {
+        // Remove any existing continue buttons first
+        document.querySelectorAll('.continue-button').forEach(btn => btn.remove());
+        
+        // Create continue button
+        const continueBtn = document.createElement('button');
+        continueBtn.className = 'btn continue-button';
+        continueBtn.textContent = 'Continue to Regular Demo';
+        continueBtn.style.position = 'fixed';
+        continueBtn.style.bottom = '80px';
+        continueBtn.style.left = '50%';
+        continueBtn.style.transform = 'translateX(-50%)';
+        continueBtn.style.zIndex = '2000';
+        
+        // Add click event to navigate to the first regular event
+        continueBtn.addEventListener('click', () => {
+            const data = window.conversationData;
+            if (data && data.events && data.events.length > 1) {
+                // Find first non-onboarding event (usually lesson-planning)
+                const nextEvent = data.events.find(event => event.id !== 'onboarding-flow');
+                if (nextEvent) {
+                    navigateToEvent(nextEvent.title);
+                }
+            }
+        });
+        
+        document.body.appendChild(continueBtn);
+    }
+    
+    // Update status bar with current info
+    function updateStatusBar(element) {
+        if (!element) return;
+        
+        const eventName = element.dataset.event || '';
+        const timestamp = element.dataset.timestamp || '';
+        const location = element.dataset.location || '';
+        
+        document.getElementById('current-event').textContent = eventName;
+        
+        if (timestamp) {
+            const date = new Date(timestamp);
+            document.getElementById('current-time').textContent = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+        
+        // Update events badges
+        updateEventBadges(eventName);
+        
+        // Update location badges
+        updateLocationBadges(eventName, location);
+        
+        // Check if this is an onboarding event and update UI accordingly
+        if (isOnboardingEvent()) {
+            document.body.classList.add('onboarding-mode');
+            
+            // Check if this is the last onboarding message
+            if (isLastOnboardingMessage(element)) {
+                addContinueButton(element);
+            } else {
+                // Remove continue button if not at the last message
+                document.querySelectorAll('.continue-button').forEach(btn => btn.remove());
+            }
+        } else {
+            document.body.classList.remove('onboarding-mode');
+            // Remove continue button when not in onboarding mode
+            document.querySelectorAll('.continue-button').forEach(btn => btn.remove());
+        }
+    }
+    
+    // Update event badges
+    function updateEventBadges(activeEvent) {
+        const container = document.getElementById('events-container');
+        container.innerHTML = '';
+        
+        if (!window.conversationData) return;
+        
+        // Collect unique events
+        const events = new Set();
+        window.conversationData.events.forEach(event => {
+            if (event.title) events.add(event.title);
+        });
+        
+        // Create badges
+        events.forEach(event => {
+            if (!event) return;
+            
+            const badge = document.createElement('span');
+            badge.className = 'event-badge';
+            badge.textContent = event;
+            
+            if (event === activeEvent) badge.classList.add('active');
+            
+            // Use a safer navigation method
+            badge.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                navigateToEvent(event);
+            });
+            
+            container.appendChild(badge);
+        });
+    }
+    
+    // Update location badges
+    function updateLocationBadges(eventName, activeLocation) {
+        const container = document.getElementById('locations-container');
+        container.innerHTML = '';
+        
+        if (!eventName) return;
+        
+        // Get locations for this event
+        const locations = getEventLocations(eventName);
+        
+        locations.forEach(location => {
+            if (!location) return;
+            
+            const badge = document.createElement('span');
+            badge.className = 'location-badge';
+            badge.textContent = location;
+            
+            if (location === activeLocation) badge.classList.add('active');
+            
+            // Use a safer navigation method
+            badge.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                navigateToLocation(location);
+            });
+            
+            container.appendChild(badge);
+        });
+    }
+    
+    // Get locations for an event
+    function getEventLocations(eventName) {
+        const elements = getAllElements();
+        const locations = new Map();
+        
+        elements.filter(el => el.dataset.event === eventName).forEach(el => {
+            const location = el.dataset.location;
+            const timestamp = el.dataset.timestamp;
+            
+            if (location && timestamp) {
+                const time = new Date(timestamp).getTime();
+                
+                if (!locations.has(location) || time < locations.get(location)) {
+                    locations.set(location, time);
+                }
+            }
+        });
+        
+        return Array.from(locations.keys());
+    }
+    
+    // Navigate to event
+    function navigateToEvent(eventName) {
+        if (isPlaying) pausePlayback();
+        
+        const elements = getAllElements();
+        
+        for (let i = 0; i < elements.length; i++) {
+            if (elements[i].dataset.event === eventName) {
+                currentIndex = i;
+                // Call displayElement which will update both status bar and profiles
+                displayElement(currentIndex);
+                
+                // Force a refresh of participant profiles to ensure sync
+                setTimeout(() => {
+                    updateParticipantProfiles();
+                }, 50);
+                
+                break;
+            }
+        }
+    }
+    
+    // Navigate to location
+    function navigateToLocation(location) {
+        if (isPlaying) pausePlayback();
+        
+        const elements = getAllElements();
+        
+        for (let i = 0; i < elements.length; i++) {
+            if (elements[i].dataset.location === location) {
+                currentIndex = i;
+                // Call displayElement which will update both status bar and profiles
+                displayElement(currentIndex);
+                
+                // Force a refresh of participant profiles to ensure sync
+                setTimeout(() => {
+                    updateParticipantProfiles();
+                }, 50);
+                
+                break;
+            }
+        }
+    }
+    
+    // Render participant profiles
+    function renderParticipants(participants) {
+        const container = document.getElementById('participant-profiles');
+        container.innerHTML = '';
+        
+        // Filter out the bike and count remaining participants
+        const activeParticipants = Object.entries(participants).filter(([id, participant]) => {
+            return id !== 'bike' && participant.type !== 'bike';
+        });
+        
+        // Only show profiles if there are 2 or more non-bike participants
+        if (activeParticipants.length < 2) {
+            container.style.display = 'none';
+            return;
+        }
+        
+        // Show the container since we have multiple participants
+        container.style.display = 'flex';
+        
+        // Render each non-bike participant
+        activeParticipants.forEach(([id, participant]) => {
+            const profileEl = document.createElement('div');
+            profileEl.className = 'participant-profile';
+            profileEl.dataset.speaker = id;
+            profileEl.dataset.type = participant.type || 'unknown';
+            
+            if (participant.avatar) {
+                const img = document.createElement('img');
+                img.src = participant.avatar;
+                img.alt = `${participant.name} Profile`;
+                profileEl.appendChild(img);
+            } else if (participant.avatarBgColor) {
+                profileEl.style.backgroundColor = participant.avatarBgColor;
+            }
+            
+            profileEl.title = participant.name;
+            
+            // Add location indicator for remote students
+            if (participant.type === 'remote_student' && participant.location) {
+                profileEl.title += ` (${participant.location})`;
+                
+                const locationIndicator = document.createElement('span');
+                locationIndicator.className = 'location-indicator';
+                locationIndicator.textContent = '🌐';
+                locationIndicator.style.position = 'absolute';
+                locationIndicator.style.bottom = '-2px';
+                locationIndicator.style.right = '-2px';
+                locationIndicator.style.fontSize = '10px';
+                locationIndicator.style.backgroundColor = '#6d28d9';
+                locationIndicator.style.color = 'white';
+                locationIndicator.style.width = '16px';
+                locationIndicator.style.height = '16px';
+                locationIndicator.style.borderRadius = '50%';
+                locationIndicator.style.display = 'flex';
+                locationIndicator.style.alignItems = 'center';
+                locationIndicator.style.justifyContent = 'center';
+                locationIndicator.style.border = '1px solid white';
+                
+                profileEl.appendChild(locationIndicator);
+            }
+            
+            container.appendChild(profileEl);
+        });
+    }
+    
+    // Update participant profiles based on current event
+    function updateParticipantProfiles() {
+        const currentElement = document.querySelector('.current');
+        if (!currentElement || !currentElement.dataset.event) return;
+        
+        const eventName = currentElement.dataset.event;
+        const data = window.conversationData;
+        
+        // Find current event
+        const event = data.events.find(e => e.title === eventName);
+        if (!event || !event.participants) return;
+        
+        // Get profiles container
+        const container = document.getElementById('participant-profiles');
+        const profiles = document.querySelectorAll('.participant-profile');
+        
+        // Reset all profiles first
+        profiles.forEach(profile => {
+            profile.style.display = 'none';
+            profile.classList.remove('active');
+        });
+        
+        // Filter out bike from event participants
+        const activeEventParticipants = event.participants.filter(participantId => {
+            const participant = data.participants[participantId];
+            return participantId !== 'bike' && participant && participant.type !== 'bike';
+        });
+        
+        // Exit if not enough non-bike participants
+        if (activeEventParticipants.length < 2) {
+            container.style.display = 'none';
+            return;
+        }
+        
+        // Make sure the container is visible
+        container.style.display = 'flex';
+        
+        // Track which profiles need animation
+        const newProfiles = [];
+        
+        // Process each profile based on event participants
+        profiles.forEach(profile => {
+            const speaker = profile.dataset.speaker;
+            
+            // Check if this profile should be shown for the current event
+            if (activeEventParticipants.includes(speaker)) {
+                // Make profile visible
+                profile.style.display = 'flex';
+                profile.classList.add('active');
+                
+                // Track new profiles for animation
+                if (!profile.dataset.animated) {
+                    newProfiles.push(profile);
+                }
+            }
+        });
+        
+        // Animate new profiles with staggered timing
+        newProfiles.forEach((profile, index) => {
+            setTimeout(() => {
+                profile.classList.add('animate-in');
+                profile.dataset.animated = 'true';
+            }, index * 150);
+        });
+    }
+    
+    // Setup playback controls
+    function setupControls() {
+        // Play button
+        const playButton = document.getElementById('play-button');
+        const playIcon = playButton.querySelector('.play-icon');
+        
+        playButton.addEventListener('click', () => {
+            if (isPlaying) {
+                pausePlayback();
+                playIcon.textContent = '▶';
+            } else {
+                startPlayback();
+                playIcon.textContent = '⏸';
+            }
+        });
+        
+        // Restart button
+        const restartButton = document.getElementById('restart-button');
+        restartButton.addEventListener('click', () => {
+            pausePlayback();
+            currentIndex = 0;
+            displayElement(currentIndex);
+            setTimeout(() => {
+                startPlayback();
+                playIcon.textContent = '⏸';
+            }, 300);
+        });
+        
+        // Speed slider
+        const speedSlider = document.getElementById('speed-slider');
+        const speedValue = document.getElementById('speed-value');
+        
+        speedSlider.addEventListener('input', function() {
+            playbackSpeed = parseFloat(this.value);
+            speedValue.textContent = `${playbackSpeed}x`;
+            
+            if (isPlaying) {
+                pausePlayback();
+                startPlayback();
+            }
+        });
+    }
+    
+    // Setup navigation
+    function setupNavigation() {
+        // Keyboard navigation
+        document.addEventListener('keydown', event => {
+            if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+                navigateNext();
+                event.preventDefault();
+            } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+                navigatePrevious();
+                event.preventDefault();
+            }
+        });
+        
+        // Mouse wheel navigation
+        let isScrolling = false;
+        window.addEventListener('wheel', event => {
+            if (isScrolling) return;
+            isScrolling = true;
+            
+            if (event.deltaY > 0) {
+                navigateNext();
+            } else {
+                navigatePrevious();
+            }
+            
+            event.preventDefault();
+            
+            setTimeout(() => {
+                isScrolling = false;
+            }, 300);
+        }, { passive: false });
+    }
+    
+    // Navigate to next element
+    function navigateNext() {
+        if (isPlaying) pausePlayback();
+        
+        const elements = getAllElements();
+        if (currentIndex >= elements.length - 1) return;
+        
+        currentIndex++;
+        displayElement(currentIndex);
+    }
+    
+    // Navigate to previous element
+    function navigatePrevious() {
+        if (isPlaying) pausePlayback();
+        
+        if (currentIndex <= 0) return;
+        
+        currentIndex--;
+        displayElement(currentIndex);
+    }
+    
+    // Start playback
+    function startPlayback() {
+        if (isPlaying) return;
+        isPlaying = true;
+        
+        const elements = getAllElements();
+        
+        if (currentIndex >= elements.length - 1) {
+            currentIndex = 0;
+            displayElement(currentIndex);
+        }
+        
+        playNextElement();
+    }
+    
+    // Pause playback
+    function pausePlayback() {
+        isPlaying = false;
+        clearTimeout(playbackTimer);
+    }
+    
+    // Play next element
+    function playNextElement() {
+        if (!isPlaying) return;
+        
+        const elements = getAllElements();
+        
+        // Stop at the end
+        if (currentIndex >= elements.length - 1) {
+            pausePlayback();
+            document.querySelector('.play-icon').textContent = '▶';
+            return;
+        }
+        
+        currentIndex++;
+        displayElement(currentIndex);
+        
+        // Calculate delay based on content
+        const element = elements[currentIndex];
+        let delay = 2000; // Default delay
+        
+        if (element.classList.contains('message')) {
+            const content = element.querySelector('.message-content');
+            if (content) {
+                const length = content.textContent.length;
+                delay = Math.max(1500, Math.min(4000, length * 20));
+            }
+        }
+        
+        // Apply speed adjustment
+        delay = delay / playbackSpeed;
+        
+        // Schedule next element
+        playbackTimer = setTimeout(playNextElement, delay);
+    }
+    </script>
+</body>
+</html> 
