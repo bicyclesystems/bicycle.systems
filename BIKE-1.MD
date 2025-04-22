@@ -1,7 +1,5 @@
 # BIKE 1.0
 
-We stand at the threshold of a new era.
-
 BIKE 1.0 is the first manifestation of a fundamentally new relationship between humanity and technology.
 A relationship where machines understand natural human expression, not artificial commands.
 

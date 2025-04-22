@@ -14,23 +14,22 @@
     "teacher": {
       "type": "teacher",
       "name": "Ms. Johnson",
-      "avatar": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=80&h=80&fit=crop"
+      "avatar": "https://randomuser.me/api/portraits/women/44.jpg"
     },
     "bike": {
-      "type": "ai",
-      "name": "BIKE",
-      "avatar": null,
-      "avatarBgColor": "black"
+      "type": "bike",
+      "name": "BIKE AI",
+      "avatar": "https://via.placeholder.com/150/3b82f6/ffffff?text=BIKE"
     },
     "student1": {
       "type": "student",
-      "name": "Student 1",
-      "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop"
+      "name": "Alex",
+      "avatar": "https://randomuser.me/api/portraits/men/32.jpg"
     },
     "student2": {
       "type": "student",
-      "name": "Student 2",
-      "avatar": "https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?w=80&h=80&fit=crop"
+      "name": "Maya",
+      "avatar": "https://randomuser.me/api/portraits/women/67.jpg"
     },
     "student3": {
       "type": "student",
@@ -39,9 +38,9 @@
     },
     "remote_student1": {
       "type": "remote_student",
-      "name": "Remote Student 1",
-      "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&h=80&fit=crop",
-      "location": "Hospital"
+      "name": "Raj",
+      "location": "Mumbai",
+      "avatar": "https://randomuser.me/api/portraits/men/22.jpg"
     },
     "remote_student2": {
       "type": "remote_student",
@@ -54,9 +53,277 @@
       "name": "Remote Student 3",
       "avatar": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=80&h=80&fit=crop",
       "location": "Library"
+    },
+    "user": {
+      "type": "user",
+      "name": "User",
+      "avatar": "https://randomuser.me/api/portraits/men/42.jpg"
+    },
+    "system": {
+      "type": "system",
+      "name": "System",
+      "avatar": "https://via.placeholder.com/150/64748b/ffffff?text=System"
     }
   },
   "events": [
+    {
+      "id": "onboarding-flow",
+      "title": "Onboarding Flow",
+      "start_time": "2023-11-01T09:00:00",
+      "end_time": "2023-11-01T09:15:00",
+      "location": "Work",
+      "description": "Initial onboarding experience for new Bicycle user",
+      "participants": ["user", "system", "bike"],
+      "content": {
+        "interactions": [
+          {
+            "id": "initial-welcome",
+            "speaker": "system",
+            "content": "Welcome to Bicycle.",
+            "qa": null,
+            "timestamp": "2023-11-01T09:00:00"
+          },
+          {
+            "id": "usage-options",
+            "speaker": "system",
+            "content": "How do you want to use Bicycle?\n- For work\n- For personal life\n- For school",
+            "qa": null,
+            "timestamp": "2023-11-01T09:00:10"
+          },
+          {
+            "id": "user-selection-work",
+            "speaker": "user",
+            "content": "[Selects \"For work\"]",
+            "qa": null,
+            "timestamp": "2023-11-01T09:00:20"
+          },
+          {
+            "id": "account-creation",
+            "speaker": "system",
+            "content": "Continue with:\n- Google\n- Email and password",
+            "qa": null,
+            "timestamp": "2023-11-01T09:00:30"
+          },
+          {
+            "id": "user-selection-google",
+            "speaker": "user",
+            "content": "[Selects Google]",
+            "qa": null,
+            "timestamp": "2023-11-01T09:00:40"
+          },
+          {
+            "id": "welcome-after-auth",
+            "speaker": "system",
+            "content": "[After authentication] Welcome, [name]!\n\nBy continuing, you agree to our [Terms](link) and [Privacy Policy](link).",
+            "qa": null,
+            "timestamp": "2023-11-01T09:01:00"
+          },
+          {
+            "id": "team-setup",
+            "speaker": "system",
+            "content": "Start with your team",
+            "qa": null,
+            "timestamp": "2023-11-01T09:01:10"
+          },
+          {
+            "id": "user-skip-team",
+            "speaker": "user",
+            "content": "[Enters emails or clicks \"Take me to Bicycle\"]",
+            "qa": null,
+            "timestamp": "2023-11-01T09:01:20"
+          },
+          {
+            "id": "intro-greeting",
+            "speaker": "system",
+            "content": "Good morning, [name]!",
+            "qa": null,
+            "timestamp": "2023-11-01T09:01:30"
+          },
+          {
+            "id": "intro-purpose",
+            "speaker": "system",
+            "content": "Bicycle uses conversation for everything. What do you need help with?",
+            "qa": null,
+            "timestamp": "2023-11-01T09:01:40"
+          },
+          {
+            "id": "user-how-it-works",
+            "speaker": "user",
+            "content": "Show me how it works",
+            "qa": null,
+            "timestamp": "2023-11-01T09:01:50"
+          },
+          {
+            "id": "feature-intro",
+            "speaker": "system",
+            "content": "Bicycle remembers our conversations and builds context. Try asking something simple.",
+            "qa": null,
+            "timestamp": "2023-11-01T09:02:00"
+          },
+          {
+            "id": "user-schedule-question",
+            "speaker": "user",
+            "content": "What's my schedule today?",
+            "qa": null,
+            "timestamp": "2023-11-01T09:02:10"
+          },
+          {
+            "id": "calendar-access-request",
+            "speaker": "system",
+            "content": "I need access to your calendar. Connect Google Calendar?",
+            "qa": null,
+            "timestamp": "2023-11-01T09:02:20"
+          },
+          {
+            "id": "user-calendar-approve",
+            "speaker": "user",
+            "content": "Yes",
+            "qa": null,
+            "timestamp": "2023-11-01T09:02:30"
+          },
+          {
+            "id": "calendar-info",
+            "speaker": "system",
+            "content": "[After auth] Today's schedule:\n- 10:00 AM: Team standup\n- 1:00 PM: Product review\n- 3:30 PM: 1:1 with Sarah",
+            "qa": null,
+            "timestamp": "2023-11-01T09:02:50"
+          },
+          {
+            "id": "email-access-request",
+            "speaker": "system",
+            "content": "Connect your email?",
+            "qa": null,
+            "timestamp": "2023-11-01T09:03:00"
+          },
+          {
+            "id": "user-email-approve",
+            "speaker": "user",
+            "content": "Yes",
+            "qa": null,
+            "timestamp": "2023-11-01T09:03:10"
+          },
+          {
+            "id": "email-access-confirmed",
+            "speaker": "system",
+            "content": "[After auth] Now you can send emails by telling me what to say and to whom.",
+            "qa": null,
+            "timestamp": "2023-11-01T09:03:30"
+          },
+          {
+            "id": "user-email-demo",
+            "speaker": "user",
+            "content": "Send an email to Alex about our meeting tomorrow",
+            "qa": null,
+            "timestamp": "2023-11-01T09:03:40"
+          },
+          {
+            "id": "email-content-request",
+            "speaker": "system",
+            "content": "What should I say to Alex?",
+            "qa": null,
+            "timestamp": "2023-11-01T09:03:50"
+          },
+          {
+            "id": "user-email-content",
+            "speaker": "user",
+            "content": "Let's confirm for 10am and discuss the project timeline",
+            "qa": null,
+            "timestamp": "2023-11-01T09:04:00"
+          },
+          {
+            "id": "email-draft-approval",
+            "speaker": "system",
+            "content": "[Shows draft email] Send now?",
+            "qa": null,
+            "timestamp": "2023-11-01T09:04:10"
+          },
+          {
+            "id": "user-approve-email",
+            "speaker": "user",
+            "content": "Yes",
+            "qa": null,
+            "timestamp": "2023-11-01T09:04:20"
+          },
+          {
+            "id": "email-sent-confirmation",
+            "speaker": "system",
+            "content": "Email sent!",
+            "qa": null,
+            "timestamp": "2023-11-01T09:04:30"
+          },
+          {
+            "id": "team-invitation-prompt",
+            "speaker": "system",
+            "content": "Invite team members?",
+            "qa": null,
+            "timestamp": "2023-11-01T09:04:40"
+          },
+          {
+            "id": "user-team-approval",
+            "speaker": "user",
+            "content": "Yes",
+            "qa": null,
+            "timestamp": "2023-11-01T09:04:50"
+          },
+          {
+            "id": "team-invitation-interface",
+            "speaker": "system",
+            "content": "Enter email addresses:\n[Team invitation interface]\n\nAnyone with \"@yourcompany.com\" can join your workspace.",
+            "qa": null,
+            "timestamp": "2023-11-01T09:05:00"
+          },
+          {
+            "id": "user-team-emails",
+            "speaker": "user",
+            "content": "[Enters emails]",
+            "qa": null,
+            "timestamp": "2023-11-01T09:05:10"
+          },
+          {
+            "id": "invitations-sent",
+            "speaker": "system",
+            "content": "Invitations sent!",
+            "qa": null,
+            "timestamp": "2023-11-01T09:05:20"
+          },
+          {
+            "id": "final-setup",
+            "speaker": "system",
+            "content": "All set! Need help? Just ask \"What can you do?\"\n\nSay \"Open settings\" to customize your experience.",
+            "qa": null,
+            "timestamp": "2023-11-01T09:05:30"
+          },
+          {
+            "id": "user-thanks",
+            "speaker": "user",
+            "content": "Thanks!",
+            "qa": null,
+            "timestamp": "2023-11-01T09:05:40"
+          },
+          {
+            "id": "system-next-steps",
+            "speaker": "system",
+            "content": "What would you like to do first?",
+            "qa": null,
+            "timestamp": "2023-11-01T09:05:50"
+          }
+        ],
+        "attachments": [
+          {
+            "id": "onboarding-guide",
+            "type": "document",
+            "title": "Getting Started with Bicycle",
+            "file_type": "pdf",
+            "url": "resources/getting_started_guide.pdf"
+          }
+        ],
+        "metrics": {
+          "onboarding_completion": 100,
+          "services_connected": ["Google Calendar", "Email"],
+          "team_invites_sent": 3
+        }
+      }
+    },
     {
       "id": "lesson-planning",
       "title": "Lesson Planning",
@@ -1302,6 +1569,38 @@
           }
         }
       }
+    }
+  ],
+  "documents": [
+    {
+      "id": "doc1",
+      "title": "Photosynthesis Overview",
+      "content": "<p>Photosynthesis is the process used by plants, algae and certain bacteria to harness energy from sunlight and turn it into chemical energy.</p><p>Basic equation: 6CO<sub>2</sub> + 6H<sub>2</sub>O + light energy → C<sub>6</sub>H<sub>12</sub>O<sub>6</sub> + 6O<sub>2</sub></p><p>This process is crucial for maintaining atmospheric oxygen levels and supporting food chains throughout the world.</p>",
+      "timestamp": "2023-09-15T09:05:00"
+    },
+    {
+      "id": "doc2",
+      "title": "Light-Dependent Reactions",
+      "content": "<p>Light-dependent reactions take place in the thylakoid membrane of the chloroplast:</p><ul><li>Chlorophyll absorbs light energy</li><li>Water molecules are split, releasing oxygen</li><li>ATP is produced</li><li>NADP+ is reduced to NADPH</li></ul><p>These reactions convert light energy into chemical energy that will be used in the Calvin cycle.</p>",
+      "timestamp": "2023-09-15T09:13:00"
+    },
+    {
+      "id": "doc3",
+      "title": "Calvin Cycle (Light-Independent Reactions)",
+      "content": "<p>The Calvin cycle takes place in the stroma of the chloroplast and doesn't directly require light:</p><ul><li>Carbon dioxide is incorporated into organic molecules (carbon fixation)</li><li>The enzyme RuBisCO catalyzes this reaction</li><li>Energy from ATP and NADPH (from light-dependent reactions) is used</li><li>Glucose and other carbohydrates are produced</li></ul>",
+      "timestamp": "2023-09-15T09:17:00" 
+    },
+    {
+      "id": "doc4",
+      "title": "Factors Affecting Photosynthesis Rate",
+      "content": "<p>Several factors can influence how quickly plants photosynthesize:</p><ul><li><strong>Light intensity:</strong> Higher intensity increases rate until light saturation point</li><li><strong>Carbon dioxide concentration:</strong> Higher levels generally increase rate</li><li><strong>Temperature:</strong> Each species has an optimal temperature range</li><li><strong>Water availability:</strong> Drought stress reduces photosynthetic rate</li><li><strong>Pollution:</strong> Can damage chloroplasts and reduce efficiency</li></ul>",
+      "timestamp": "2023-09-15T09:22:00"
+    },
+    {
+      "id": "doc5",
+      "title": "Global Importance of Photosynthesis",
+      "content": "<p>Photosynthesis impacts our planet in numerous ways:</p><ul><li>Produces oxygen that most organisms need for respiration</li><li>Removes carbon dioxide from the atmosphere</li><li>Forms the basis of food chains worldwide</li><li>Creates fossil fuels (over millions of years)</li><li>Helps regulate climate and water cycles</li></ul><p>It is estimated that photosynthesis is responsible for producing about 130 terawatts of energy per year, which is about six times the power consumption of human civilization.</p>",
+      "timestamp": "2023-09-15T09:27:00"
     }
   ]
 } 

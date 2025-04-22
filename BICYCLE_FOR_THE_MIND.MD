@@ -1,19 +1,12 @@
-# BICYCLE, JUST THINK
-
-Computing was meant to help us think "different". Instead, it became a cage.
-
-We don't use computers. We fight them. We dig through files. We open apps. We waste time managing software instead of thinking freely. Everything about modern computing is a desperate attempt to make an inefficient model seem functional.
-
-Bicycle erases everything that slows us down. No apps. No OS. No files. No browsers. 
-Just pure intelligence. Instant execution of thought.
-
-Bicycle reimagines computing from first principles.
-
-This isn't computing improved. This is computing, reborn.
-
-Let's ride
-
-🚴💨🔥 
+## BICYCLE, JUST THINK
+We humans stand at the edge of the industrial revolution's final form.
+Ancient cultures knew something we forgot. We are now forced to ask who we are.
+Computing was meant to become "bicycle for the mind". Instead, it became a cage.
+We don't use computers. We fight them. We dig through files. Apps. We waste time managing software instead of thinking freely.
+Bicycle erases everything. Apps. OS. Files. Browsers.
+Not workers. Humans. Just pure intelligence. Instant execution of thought.
+Bicycle reimagines computing from first principles. This is computing, reborn.
+Let's ride.
 
 ## WHAT IF YOUR COMPUTER ACTUALLY UNDERSTOOD YOU?
 
