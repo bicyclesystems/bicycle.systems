@@ -43,25 +43,49 @@
         
         .background-image {
             position: absolute;
-            display: none;
+            display: block;
+            pointer-events: none;
             mix-blend-mode: multiply;
             filter: contrast(1.05) brightness(1.1) saturate(0.9);
             max-height: 40vh;
             max-width: 40vw;
             object-fit: contain;
+            opacity: 0;
+            transition: opacity 2s;
         }
         
-        .background-image.active { display: block; }
+        .background-image.active { opacity: 1; pointer-events: auto; }
         
         /* Position classes */
         .top-left { top: 40px; left: 40px; }
         .top-right { top: 40px; right: 40px; }
         .bottom-left { bottom: 40px; left: 40px; }
         .bottom-right { bottom: 40px; right: 40px; }
-        .top-center { top: 40px; left: 50%; transform: translateX(-50%); }
-        .bottom-center { bottom: 40px; left: 50%; transform: translateX(-50%); }
-        .left-center { top: 50%; left: 40px; transform: translateY(-50%); }
-        .right-center { top: 50%; right: 40px; transform: translateY(-50%); }
+        .center {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .center-left {
+            top: 50%;
+            left: 40px;
+            transform: translateY(-50%);
+        }
+        .center-right {
+            top: 50%;
+            right: 40px;
+            transform: translateY(-50%);
+        }
+        .top {
+            top: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .bottom {
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
         
         .section {
             opacity: 0;
@@ -111,6 +135,14 @@
                 max-width: 60vw;
             }
         }
+        .fade-in-char {
+            opacity: 0;
+            transition: opacity 0.4s;
+            /* display: inline-block; */
+        }
+        .fade-in-char.visible {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -128,466 +160,322 @@
             new BicycleApp();
         });
 
+        // --- Utility Functions ---
+        function wait(ms) { return new Promise(res => setTimeout(res, ms)); }
+        function isUserAtBottom() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const windowHeight = window.innerHeight;
+            const documentHeight = Math.max(
+                document.body.scrollHeight, document.body.offsetHeight,
+                document.documentElement.clientHeight, document.documentElement.scrollHeight,
+                document.documentElement.offsetHeight
+            );
+            return documentHeight - (scrollTop + windowHeight) <= 100;
+        }
+        function scrollToBottom() {
+            if (isUserAtBottom()) {
+                window.scrollTo({top: document.body.scrollHeight, behavior: 'auto'});
+            }
+        }
+        function createEl(tag, className, text) {
+            const el = document.createElement(tag);
+            if (className) el.className = className;
+            if (text) el.textContent = text;
+            return el;
+        }
+
         class BicycleApp {
             constructor() {
                 this.conversationFlow = document.getElementById('conversation-flow');
                 this.bgContainer = document.getElementById('background-container');
-                this.markdownSections = {};
+                this.sections = {};
                 this.introText = "";
-                this.activeTypewriter = null;
                 this.isTyping = false;
-                this.userHasScrolled = false;
-                this.answeredQuestions = new Set();
+                this.answered = new Set();
                 this.imageCache = {};
                 this.positions = [
-                    'top-left', 'top-right', 'bottom-left', 'bottom-right', 
-                    'top-center', 'bottom-center', 'left-center', 'right-center'
+                    'bottom-left', 'bottom-right', 'center', 'center-left', 'center-right', 'top', 'top-right', 'top-left'
                 ];
                 this.currentPosition = 0;
-                this.currentTextPosition = null; // Track current text position
-                
-                // Create navigation buttons container
-                this.navButtons = document.createElement('div');
+                this.currentTextPosition = null;
+                this.previousImagePosition = null;
+                this.navButtons = createEl('div', 'nav-buttons');
                 this.navButtons.id = 'nav-buttons';
-                this.navButtons.className = 'nav-buttons';
-                
-                // Set up event listeners
-                window.addEventListener('scroll', () => {
-                    this.userHasScrolled = true;
-                    setTimeout(() => this.userHasScrolled = false, 2000);
-                });
                 window.addEventListener('hashchange', () => this.handleHashChange());
-                window.addEventListener('resize', () => this.resizeImages());
-                
-                // Initialize the app
+                window.addEventListener('resize', () => {});
                 this.init();
             }
-            
             async init() {
-                try {
-                    await this.loadContent();
-                    const hash = window.location.hash.substring(1);
-                    if (hash) {
-                        const sectionTitle = this.getSectionTitleFromHash(hash);
-                        if (sectionTitle && this.markdownSections[sectionTitle]) {
-                            await this.showSection(this.getSectionId(sectionTitle), sectionTitle);
-                            return;
-                        }
+                await this.loadContent();
+                const hash = window.location.hash.substring(1);
+                if (hash && this.sections[this.getTitleFromHash(hash)]) {
+                    const bicycleImage = document.querySelector('.bicycle-image');
+                    if (bicycleImage) {
+                        bicycleImage.classList.add('fade-out');
+                        await wait(2000);
+                        bicycleImage.style.display = 'none';
                     }
-                    this.startIntro();
-                } catch (error) {
-                    console.error('Error initializing app:', error);
+                    await this.showSection(this.getSectionId(this.getTitleFromHash(hash)), this.getTitleFromHash(hash));
+                    return;
                 }
+                this.startIntro();
             }
-            
             async loadContent() {
-                try {
-                    const response = await fetch('BICYCLE_FOR_THE_MIND.MD');
-                    if (!response.ok) throw new Error(`Failed to fetch markdown: ${response.status}`);
-                    
-                    const text = await response.text();
-                    const sections = this.parseMarkdown(text);
-                    
-                    if (sections.intro) this.introText = sections.intro;
-                    this.markdownSections = sections.sections;
-                    
-                    this.createNavigationButtons();
-                } catch (error) {
-                    console.error('Error loading content:', error);
-                }
+                const response = await fetch('BICYCLE_FOR_THE_MIND.MD');
+                if (!response.ok) throw new Error(`Failed to fetch markdown: ${response.status}`);
+                const text = await response.text();
+                const { intro, sections } = this.parseMarkdown(text);
+                this.introText = intro;
+                this.sections = sections;
+                this.createNavButtons();
             }
-            
             parseMarkdown(text) {
                 const lines = text.split('\n');
-                let currentSection = null;
-                let currentContent = [];
-                let sections = {};
-                let intro = "";
-                
+                let current = null, content = [], sections = {}, intro = "";
                 for (const line of lines) {
                     if (line.startsWith('## ')) {
-                        if (currentSection) {
-                            sections[currentSection] = currentContent.join('\n');
-                            currentContent = [];
-                        } else if (currentContent.length > 0) {
-                            intro = currentContent.join('\n');
-                            currentContent = [];
-                        }
-                        currentSection = line.substring(3).trim();
-                    } else if (currentSection) {
-                        currentContent.push(line);
-                    } else {
-                        currentContent.push(line);
-                    }
+                        if (current) sections[current] = content.join('\n');
+                        else if (content.length) intro = content.join('\n');
+                        current = line.substring(3).trim();
+                        content = [];
+                    } else content.push(line);
                 }
-                
-                // Handle the last section
-                if (currentSection) {
-                    sections[currentSection] = currentContent.join('\n');
-                } else if (currentContent.length > 0 && !intro) {
-                    intro = currentContent.join('\n');
+                if (current) sections[current] = content.join('\n');
+                else if (content.length && !intro) intro = content.join('\n');
+                if (!intro && Object.keys(sections).length) {
+                    const first = Object.keys(sections)[0];
+                    intro = sections[first];
+                    delete sections[first];
                 }
-                
-                // If no intro but we have sections, use first section as intro
-                if (!intro && Object.keys(sections).length > 0) {
-                    const firstKey = Object.keys(sections)[0];
-                    intro = sections[firstKey];
-                    delete sections[firstKey];
-                }
-                
                 return { intro, sections };
             }
-            
-            createNavigationButtons() {
+            createNavButtons() {
                 this.navButtons.innerHTML = '';
-                
-                for (const title in this.markdownSections) {
-                    const btn = document.createElement('h5');
-                    btn.className = 'topic-paragraph';
-                    btn.textContent = title;
+                Object.keys(this.sections).forEach(title => {
+                    const btn = createEl('h5', 'topic-paragraph', title);
                     btn.dataset.section = this.getSectionId(title);
-                    
-                    btn.addEventListener('click', () => {
+                    btn.onclick = () => {
                         if (this.isTyping) return;
                         this.navButtons.classList.remove('visible');
                         this.showSection(btn.dataset.section, title);
-                    });
-                    
+                    };
                     this.navButtons.appendChild(btn);
-                }
+                });
             }
-            
             getSectionId(title) {
                 return title.toUpperCase().replace(/[^A-Z0-9]+/g, '-').replace(/^-+|-+$/g, '');
             }
-            
-            getSectionTitleFromHash(hash) {
-                return Object.keys(this.markdownSections).find(
-                    title => this.getSectionId(title) === hash
-                );
+            getTitleFromHash(hash) {
+                return Object.keys(this.sections).find(title => this.getSectionId(title) === hash);
             }
-            
             async startIntro() {
                 window.scrollTo(0, 0);
-                
                 const bicycleImage = document.querySelector('.bicycle-image');
+                await wait(2000);
                 bicycleImage.classList.add('fade-out');
-                
-                await this.wait(2000);
-                bicycleImage.style.display = 'none';
-                
-                // Create intro section
-                const section = document.createElement('section');
+                const section = createEl('section', 'section active');
                 section.id = 'INTRODUCTION-section';
-                section.className = 'section active';
                 this.conversationFlow.appendChild(section);
-                
-                // Add content container
-                const content = document.createElement('div');
+                const content = createEl('div', 'typewriter-content');
                 content.id = 'typewriter-content';
-                content.className = 'typewriter-content';
                 section.appendChild(content);
-                
                 this.isTyping = true;
                 await this.typeText(content, this.introText, true);
                 this.isTyping = false;
-                
-                // Move nav buttons after section
-                if (this.navButtons.parentNode) {
-                    this.navButtons.parentNode.removeChild(this.navButtons);
-                }
+                bicycleImage.style.display = 'none';
+                if (this.navButtons.parentNode) this.navButtons.parentNode.removeChild(this.navButtons);
                 section.after(this.navButtons);
                 this.navButtons.classList.add('visible');
-                
-                // Hide all background images
-                document.querySelectorAll('.background-image.active')
-                    .forEach(img => img.classList.remove('active'));
-                
-                // Update background
+                document.querySelectorAll('.background-image.active').forEach(img => img.classList.remove('active'));
                 this.bgContainer.style.backgroundColor = 'rgba(255, 255, 255, 1)';
             }
-            
             async showSection(sectionId, sectionTitle) {
-                // Check if section already exists
-                const existingSection = document.getElementById(`${sectionId}-section`);
-                if (existingSection) {
-                    document.querySelectorAll('.section.active')
-                        .forEach(s => s.classList.remove('active'));
-                    existingSection.classList.add('active');
-                    this.moveNavButtons(existingSection);
+                const existing = document.getElementById(`${sectionId}-section`);
+                if (existing) {
+                    document.querySelectorAll('.section.active').forEach(s => s.classList.remove('active'));
+                    existing.classList.add('active');
+                    this.moveNavButtons(existing);
                     return;
                 }
-                
-                if (this.answeredQuestions.has(sectionId)) return;
-                this.answeredQuestions.add(sectionId);
+                if (this.answered.has(sectionId)) return;
+                this.answered.add(sectionId);
                 this.isTyping = true;
-                
-                // Update URL hash without triggering hashchange event
                 const newHash = `#${sectionId}`;
-                if (window.location.hash !== newHash) {
-                    window.history.replaceState(null, '', newHash);
-                }
-                
-                // Hide all active sections
-                document.querySelectorAll('.section.active')
-                    .forEach(s => s.classList.remove('active'));
-                
-                // Create new section
-                const section = document.createElement('section');
+                if (window.location.hash !== newHash) window.history.replaceState(null, '', newHash);
+                document.querySelectorAll('.section.active').forEach(s => s.classList.remove('active'));
+                const section = createEl('section', 'section active');
                 section.id = `${sectionId}-section`;
-                section.className = 'section active';
                 this.conversationFlow.appendChild(section);
-                
-                // Add question title
-                const question = document.createElement('h5');
-                question.className = 'question';
-                question.textContent = sectionTitle;
-                section.appendChild(question);
-                
-                // Add content container
-                const contentWrapper = document.createElement('div');
+                section.appendChild(createEl('h5', 'question', sectionTitle));
+                const contentWrapper = createEl('div');
                 section.appendChild(contentWrapper);
-                
-                const content = document.createElement('div');
+                const content = createEl('div', 'typewriter-content');
                 content.id = `${sectionId}-content`;
-                content.className = 'typewriter-content';
                 contentWrapper.appendChild(content);
-                
-                // Type the content
-                await this.typeText(content, this.markdownSections[sectionTitle], false);
+                await this.typeText(content, this.sections[sectionTitle], false);
                 this.isTyping = false;
-                
-                // Move nav buttons
                 this.moveNavButtons(section);
             }
-            
             async typeText(element, text, enableImageMatch = false) {
                 element.innerHTML = '';
-                let currentParagraph = document.createElement('h5');
-                currentParagraph.className = 'paragraph';
+                let currentParagraph = createEl('h5', 'paragraph');
                 element.appendChild(currentParagraph);
-                
-                const chars = text.split('');
-                let currentLine = '';
-                let currentWord = '';
-                let shouldPause = false;
-                
-                for (const char of chars) {
-                    // Update current text position
-                    this.updateCurrentTextPosition(currentParagraph);
-                    
-                    if (char === '\n') {
-                        if (currentLine.trim() !== '') {
-                            currentParagraph.textContent = currentLine;
-                            currentLine = '';
-                        }
-                        
-                        if (enableImageMatch && currentWord.trim()) {
-                            this.tryLoadImage(currentWord.trim());
-                            currentWord = '';
-                        }
-                        
-                        currentParagraph = document.createElement('h5');
-                        currentParagraph.className = 'paragraph';
-                        element.appendChild(currentParagraph);
-                        this.scrollToBottom();
-                        
-                        // Add longer pause after line break
-                        await this.wait(300);
-                        shouldPause = false;
+                const parseSegments = md => {
+                    const regex = /\[([^\]]+)\]\(([^)]+)\)/g;
+                    let last = 0, match, segs = [];
+                    while ((match = regex.exec(md))) {
+                        if (match.index > last) segs.push({ type: 'text', content: md.slice(last, match.index) });
+                        segs.push({ type: 'link', content: match[1], href: match[2] });
+                        last = regex.lastIndex;
+                    }
+                    if (last < md.length) segs.push({ type: 'text', content: md.slice(last) });
+                    return segs;
+                };
+                const segments = enableImageMatch ? parseSegments(text) : [{ type: 'text', content: text }];
+                let shouldPause = false, currentWord = '';
+                for (const segment of segments) {
+                    let segContent = segment.content, segHref = segment.href, isLink = segment.type === 'link', node;
+                    if (isLink) {
+                        node = document.createElement('a');
+                        node.href = segHref;
+                        node.target = '_blank';
+                        node.rel = 'noopener noreferrer';
+                        node.style.textDecoration = 'underline';
+                        node.style.color = 'inherit';
+                        let linkSpan = createEl('span', 'fade-in-char', segContent);
+                        node.appendChild(linkSpan);
+                        currentParagraph.appendChild(node);
+                        void linkSpan.offsetWidth;
+                        linkSpan.classList.add('visible');
+                        await wait(30 * segContent.length);
+                        continue;
                     } else {
-                        currentLine += char;
-                        
-                        if (enableImageMatch) {
-                            if (/\s/.test(char) || /[.,!?;:]/.test(char)) {
-                                if (currentWord.trim()) {
-                                    this.tryLoadImage(currentWord.trim());
-                                    currentWord = '';
-                                }
-                            } else {
-                                currentWord += char;
+                        node = document.createTextNode('');
+                        currentParagraph.appendChild(node);
+                    }
+                    for (let i = 0; i < segContent.length; i++) {
+                        const char = segContent[i];
+                        this.updateCurrentTextPosition(currentParagraph);
+                        if (char === '\n') {
+                            if (currentParagraph.childNodes.length && currentParagraph.textContent.trim() !== '') {
+                                currentParagraph = createEl('h5', 'paragraph');
+                                element.appendChild(currentParagraph);
+                                node = document.createTextNode('');
+                                currentParagraph.appendChild(node);
                             }
-                        }
-                        
-                        currentParagraph.textContent = currentLine;
-                        
-                        // Calculate delay based on character
-                        let delay = 30; // Normal typing speed
-                        
-                        // Add pauses after punctuation
-                        if (['.', '!', '?'].includes(char)) {
-                            delay = 300; // Longer pause after sentence-ending punctuation
-                            shouldPause = true;
-                        } else if ([',', ';', ':'].includes(char)) {
-                            delay = 150; // Medium pause after mid-sentence punctuation
-                        } else if (shouldPause) {
-                            // Extra delay after the first character following sentence punctuation
-                            delay = 100;
+                            scrollToBottom();
+                            await wait(300);
                             shouldPause = false;
+                        } else {
+                            let charNode;
+                            if (char !== ' ' && char !== '\u00A0') {
+                                charNode = createEl('span', 'fade-in-char', char);
+                                currentParagraph.appendChild(charNode);
+                                void charNode.offsetWidth;
+                                charNode.classList.add('visible');
+                            } else {
+                                currentParagraph.appendChild(document.createTextNode(char));
+                            }
+                            if (enableImageMatch) {
+                                if (/\s/.test(char) || /[.,!?;:]/.test(char)) {
+                                    if (currentWord.trim().length > 3) this.tryLoadImage(currentWord.trim());
+                                    currentWord = '';
+                                } else currentWord += char;
+                            }
+                            let delay = 30;
+                            if (['.', '!', '?'].includes(char)) { delay = 300; shouldPause = true; }
+                            else if ([',', ';', ':'].includes(char)) delay = 150;
+                            else if (shouldPause) { delay = 100; shouldPause = false; }
+                            scrollToBottom();
+                            await wait(delay);
                         }
-                        
-                        this.scrollToBottom();
-                        await this.wait(delay);
+                    }
+                    if (enableImageMatch && currentWord.trim().length > 3) {
+                        this.tryLoadImage(currentWord.trim());
+                        currentWord = '';
                     }
                 }
-                
-                if (enableImageMatch && currentWord.trim()) {
-                    this.tryLoadImage(currentWord.trim());
-                }
             }
-            
-            // Track the current text position for placing images far from text
             updateCurrentTextPosition(element) {
                 if (!element) return;
-                
                 const rect = element.getBoundingClientRect();
-                const viewportHeight = window.innerHeight;
-                const viewportWidth = window.innerWidth;
-                
-                // Determine which quadrant the text is in
+                const vh = window.innerHeight, vw = window.innerWidth;
                 this.currentTextPosition = {
-                    isTop: rect.top < (viewportHeight / 2),
-                    isLeft: rect.left < (viewportWidth / 2),
-                    element: element
+                    isTop: rect.top < (vh / 2),
+                    isLeft: rect.left < (vw / 2),
+                    element
                 };
             }
-            
             tryLoadImage(word) {
-                if (word.length <= 2) return;
-                
+                if (!word || word.length <= 3) return;
                 word = word.toLowerCase().replace(/[^\w\s]/g, '');
-                
-                // Check cache first
-                if (this.imageCache[word]) {
-                    this.showImage(this.imageCache[word]);
-                    return;
-                }
-                
-                // Try to load new image
+                const key = word;
+                if (this.imageCache[key]) return this.showImage(this.imageCache[key]);
                 const img = new Image();
                 img.className = `background-image ${this.getPositionFarFromText()}`;
-                
                 img.onload = () => {
                     this.bgContainer.appendChild(img);
-                    const imageInfo = { word, element: img };
-                    this.imageCache[word] = imageInfo;
+                    const imageInfo = { word: key, element: img };
+                    this.imageCache[key] = imageInfo;
                     this.showImage(imageInfo);
                 };
-                
-                img.onerror = () => {
-                    // Image failed to load - do nothing
-                };
-                
-                img.src = `intro/${word}.png`;
+                img.onerror = () => {};
+                img.src = `intro/${key}.png`;
             }
-            
             showImage(imageInfo) {
-                // Hide current active images
-                document.querySelectorAll('.background-image.active')
-                    .forEach(img => img.classList.remove('active'));
-                
-                // Update position for variety and to be far from text
-                const oldPosition = imageInfo.element.className.split(' ')[1];
-                const newPosition = this.getPositionFarFromText();
-                
-                imageInfo.element.classList.remove(oldPosition);
-                imageInfo.element.classList.add(newPosition);
-                
-                // Show image
+                document.querySelectorAll('.background-image.active').forEach(img => img.classList.remove('active'));
+                const oldPos = imageInfo.element.className.split(' ')[1];
+                const newPos = this.getPositionFarFromText();
+                imageInfo.element.classList.remove(oldPos);
+                imageInfo.element.classList.add(newPos);
+                if (!this.bgContainer.contains(imageInfo.element)) this.bgContainer.appendChild(imageInfo.element);
                 imageInfo.element.classList.add('active');
-                this.resizeImages();
             }
-            
             getPositionFarFromText() {
-                // If we don't know where the text is, use original rotation method
                 if (!this.currentTextPosition) {
-                    return this.getNextPosition();
+                    let pos = this.positions[this.currentPosition];
+                    if (this.previousImagePosition && this.positions.length > 1) {
+                        let attempts = 0;
+                        while (pos === this.previousImagePosition && attempts < this.positions.length) {
+                            this.currentPosition = (this.currentPosition + 1) % this.positions.length;
+                            pos = this.positions[this.currentPosition];
+                            attempts++;
+                        }
+                    }
+                    this.previousImagePosition = pos;
+                    this.currentPosition = (this.currentPosition + 1) % this.positions.length;
+                    return pos;
                 }
-                
-                // Choose a position that's far from the current text position
-                let oppositePositions = [];
-                
-                if (this.currentTextPosition.isTop && this.currentTextPosition.isLeft) {
-                    // Text is in top-left, place image in bottom-right area
-                    oppositePositions = ['bottom-right', 'bottom-center', 'right-center'];
-                } else if (this.currentTextPosition.isTop && !this.currentTextPosition.isLeft) {
-                    // Text is in top-right, place image in bottom-left area
-                    oppositePositions = ['bottom-left', 'bottom-center', 'left-center'];
-                } else if (!this.currentTextPosition.isTop && this.currentTextPosition.isLeft) {
-                    // Text is in bottom-left, place image in top-right area
-                    oppositePositions = ['top-right', 'top-center', 'right-center'];
-                } else {
-                    // Text is in bottom-right, place image in top-left area
-                    oppositePositions = ['top-left', 'top-center', 'left-center'];
-                }
-                
-                // Pick a random position from the opposite quadrant
-                return oppositePositions[Math.floor(Math.random() * oppositePositions.length)];
+                let opp = [];
+                if (this.currentTextPosition.isTop && this.currentTextPosition.isLeft) opp = ['bottom-right', 'bottom', 'center', 'center-right'];
+                else if (this.currentTextPosition.isTop && !this.currentTextPosition.isLeft) opp = ['bottom-left', 'bottom', 'center', 'center-left'];
+                else if (!this.currentTextPosition.isTop && this.currentTextPosition.isLeft) opp = ['top-right', 'top', 'center', 'center-right'];
+                else opp = ['top-left', 'top', 'center', 'center-left'];
+                if (this.previousImagePosition && opp.length > 1) opp = opp.filter(pos => pos !== this.previousImagePosition);
+                const newPos = opp[Math.floor(Math.random() * opp.length)];
+                this.previousImagePosition = newPos;
+                return newPos;
             }
-            
-            getNextPosition() {
-                const position = this.positions[this.currentPosition];
-                this.currentPosition = (this.currentPosition + 1) % this.positions.length;
-                return position;
-            }
-            
             moveNavButtons(section) {
-                if (this.navButtons.parentNode) {
-                    this.navButtons.parentNode.removeChild(this.navButtons);
-                }
-                
+                if (this.navButtons.parentNode) this.navButtons.parentNode.removeChild(this.navButtons);
                 section.after(this.navButtons);
                 this.navButtons.classList.add('visible');
-                
-                if (this.isUserAtBottom()) {
-                    window.scrollTo({top: document.body.scrollHeight, behavior: 'smooth'});
-                }
+                if (isUserAtBottom()) window.scrollTo({top: document.body.scrollHeight, behavior: 'smooth'});
             }
-            
             handleHashChange() {
                 const hash = window.location.hash.substring(1);
                 if (!hash) return;
-                
-                const sectionTitle = this.getSectionTitleFromHash(hash);
-                if (!sectionTitle || !this.markdownSections[sectionTitle]) return;
-                
+                const sectionTitle = this.getTitleFromHash(hash);
+                if (!sectionTitle || !this.sections[sectionTitle]) return;
                 const sectionId = this.getSectionId(sectionTitle);
-                const existingSection = document.getElementById(`${sectionId}-section`);
-                
-                document.querySelectorAll('.section.active')
-                    .forEach(s => s.classList.remove('active'));
-                
-                if (existingSection) {
-                    existingSection.classList.add('active');
-                    this.moveNavButtons(existingSection);
+                const existing = document.getElementById(`${sectionId}-section`);
+                document.querySelectorAll('.section.active').forEach(s => s.classList.remove('active'));
+                if (existing) {
+                    existing.classList.add('active');
+                    this.moveNavButtons(existing);
                 } else {
                     this.showSection(sectionId, sectionTitle);
                 }
-            }
-            
-            resizeImages() {
-                // Let CSS handle image sizing
-            }
-            
-            scrollToBottom() {
-                if (this.isUserAtBottom() || !this.userHasScrolled) {
-                    window.scrollTo({top: document.body.scrollHeight, behavior: 'auto'});
-                }
-            }
-            
-            isUserAtBottom() {
-                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                const windowHeight = window.innerHeight;
-                const documentHeight = Math.max(
-                    document.body.scrollHeight, document.body.offsetHeight,
-                    document.documentElement.clientHeight, document.documentElement.scrollHeight,
-                    document.documentElement.offsetHeight
-                );
-                return documentHeight - (scrollTop + windowHeight) <= 100;
-            }
-            
-            wait(ms) {
-                return new Promise(resolve => setTimeout(resolve, ms));
             }
         }
     </script>
