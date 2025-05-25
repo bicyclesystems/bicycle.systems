@@ -1,6 +1,4 @@
 ## BICYCLE, JUST THINK
-We stand at the edge of the industrial revolution's final form.
-Ancient cultures knew something we forgot. We are now forced to ask who we are.
 Computing was meant to become "bicycle for the mind". Instead, it became a cage.
 We don't use computers. We fight them. We dig through files. Apps. We waste time managing software instead of thinking freely.
 Bicycle erases everything. Apps. OS. Files. Browsers.
