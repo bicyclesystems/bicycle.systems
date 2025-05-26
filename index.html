@@ -5,20 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bicycle. Just think</title>
     <link rel="icon" href="./images/favicon.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&display=swap" rel="stylesheet">
     <script defer data-domain="bicycle.systems" src="https://plausible.io/js/script.js"></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { 
-            font-family: 'Times New Roman', Times, serif;
-            line-height: 1.6; 
-            color: #333; 
+            font-family: 'EB Garamond', serif;
+            color: #333;
+            font-weight: 400;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
         }
         
-        h1, h2, h3, h4, h5, h6 { font-weight: 500; line-height: 1.2; margin-bottom: 0.5em; }
-        h5 { font-size: 1.8rem; margin-bottom: 1rem; }
+        h1, h2, h3, h4, h5, h6 {font-weight: 400; line-height: 1.2; margin-bottom: 0.5em; }
+        h5 { font-size: 2.2rem; margin-bottom: 1rem; }
         
         .view { min-height: 100vh; width: 100%; padding: 1rem; }
-        .container { max-width: 800px; width: 100%; padding: 2rem; margin: 0 auto; }
+        .container { max-width: 1024px; width: 100%; padding: 2rem; margin: 0 auto; }
         #conversation-flow { padding-bottom: 25vh; position: relative; }
         
         .bicycle-image { 
@@ -125,7 +131,7 @@
         
         .topic-paragraph:hover { opacity: 1; }
         .paragraph { margin-bottom: 1rem; }
-        .question { font-weight: 500; margin-bottom: 1.5rem; }
+        .question { margin-bottom: 1.5rem; }
         .typewriter-content { margin-bottom: 1rem; }
         
         @media (max-width: 768px) {
@@ -236,7 +242,7 @@
                     if (line.startsWith('## ')) {
                         if (current) sections[current] = content.join('\n');
                         else if (content.length) intro = content.join('\n');
-                        current = line.substring(3).trim();
+                        current = this.toTitleCase(line.substring(3).trim());
                         content = [];
                     } else content.push(line);
                 }
@@ -261,6 +267,9 @@
                     };
                     this.navButtons.appendChild(btn);
                 });
+            }
+            toTitleCase(str) {
+                return str.toLowerCase().replace(/\b\w/g, l => l.toUpperCase());
             }
             getSectionId(title) {
                 return title.toUpperCase().replace(/[^A-Z0-9]+/g, '-').replace(/^-+|-+$/g, '');
