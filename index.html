@@ -149,10 +149,76 @@
         .fade-in-char.visible {
             opacity: 1;
         }
+        
+        .ping-pong-circle {
+            position: fixed;
+            width: 180px;
+            height: 180px;
+            background-color: rgba(0, 0, 0, 1);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-family: 'EB Garamond', serif;
+            font-size: 1.1rem;
+            font-weight: 400;
+            text-align: center;
+            line-height: 1.3;
+            padding: 18px;
+            box-sizing: border-box;
+            z-index: 1000;
+            pointer-events: auto;
+            user-select: none;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+            cursor: pointer;
+            text-decoration: none;
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .ping-pong-circle:hover {
+            transform: scale(1.05);
+            opacity: 0.8;
+        }
+        
+        .ping-pong-circle.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .ping-pong-circle .version {
+            font-weight: 500;
+            margin-bottom: 4px;
+            font-size: 1.3rem;
+        }
+        
+        .ping-pong-circle .tagline {
+            font-style: italic;
+            margin-bottom: 4px;
+            font-size: 1.1rem;
+        }
+        
+        .ping-pong-circle .launch-date {
+            font-size: 0.95rem;
+            opacity: 0.8;
+        }
+        
+        @media (max-width: 768px) {
+            .ping-pong-circle {
+                transform: scale(0.75);
+            }
+        }
     </style>
 </head>
 <body>
     <div class="background-image-container" id="background-container"></div>
+    <a href="https://x.com/bicyclesystems" target="_blank" rel="noopener noreferrer" class="ping-pong-circle" id="ping-pong-circle">
+        <div class="version">BIKE-0.1</div>
+        <div class="tagline">Not an app. A loop.</div>
+        <div class="launch-date">Launching July 21.</div>
+    </a>
     <div class="view">
         <img src="./images/bicycle.png" alt="Bicycle" class="bicycle-image">
         <div class="container" style="mix-blend-mode:difference; color:white;">
@@ -163,7 +229,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             window.scrollTo(0, 0);
-            new BicycleApp();
+            const app = new BicycleApp();
         });
 
         // --- Utility Functions ---
@@ -190,6 +256,81 @@
             return el;
         }
 
+        class PingPongCircle {
+            constructor(elementId) {
+                this.element = document.getElementById(elementId);
+                this.x = Math.random() * (window.innerWidth - 180);
+                this.y = Math.random() * (window.innerHeight - 180);
+                this.vx = (Math.random() - 0.5) * 1; // Much slower velocity between -0.5 and 0.5
+                this.vy = (Math.random() - 0.5) * 1;
+                this.width = 180;
+                this.height = 180;
+                this.isPaused = false;
+                this.isVisible = false;
+                
+                // Ensure minimum speed but much slower
+                if (Math.abs(this.vx) < 0.3) this.vx = this.vx >= 0 ? 0.3 : -0.3;
+                if (Math.abs(this.vy) < 0.3) this.vy = this.vy >= 0 ? 0.3 : -0.3;
+                
+                this.setupEventListeners();
+                this.updatePosition();
+                this.animate();
+            }
+            
+            show() {
+                this.isVisible = true;
+                this.element.classList.add('visible');
+            }
+            
+            hide() {
+                this.isVisible = false;
+                this.element.classList.remove('visible');
+            }
+            
+            setupEventListeners() {
+                this.element.addEventListener('mouseenter', () => {
+                    this.isPaused = true;
+                });
+                
+                this.element.addEventListener('mouseleave', () => {
+                    this.isPaused = false;
+                });
+            }
+            
+            updatePosition() {
+                this.element.style.left = this.x + 'px';
+                this.element.style.top = this.y + 'px';
+            }
+            
+            animate() {
+                if (!this.isPaused && this.isVisible) {
+                    this.x += this.vx;
+                    this.y += this.vy;
+                    
+                    // Bounce off edges
+                    if (this.x <= 0 || this.x >= window.innerWidth - this.width) {
+                        this.vx = -this.vx;
+                        this.x = Math.max(0, Math.min(this.x, window.innerWidth - this.width));
+                    }
+                    
+                    if (this.y <= 0 || this.y >= window.innerHeight - this.height) {
+                        this.vy = -this.vy;
+                        this.y = Math.max(0, Math.min(this.y, window.innerHeight - this.height));
+                    }
+                    
+                    this.updatePosition();
+                }
+                requestAnimationFrame(() => this.animate());
+            }
+            
+            handleResize() {
+                // Keep circle within new bounds
+                this.x = Math.min(this.x, window.innerWidth - this.width);
+                this.y = Math.min(this.y, window.innerHeight - this.height);
+                this.updatePosition();
+            }
+        }
+
         class BicycleApp {
             constructor() {
                 this.conversationFlow = document.getElementById('conversation-flow');
@@ -208,8 +349,15 @@
                 this.navButtons = createEl('div', 'nav-buttons');
                 this.navButtons.id = 'nav-buttons';
                 window.addEventListener('hashchange', () => this.handleHashChange());
-                window.addEventListener('resize', () => {});
                 this.init();
+                
+                // Initialize ping-pong circle
+                this.pingPongCircle = new PingPongCircle('ping-pong-circle');
+                window.addEventListener('resize', () => {
+                    if (this.pingPongCircle) {
+                        this.pingPongCircle.handleResize();
+                    }
+                });
             }
             async init() {
                 await this.loadContent();
@@ -222,6 +370,7 @@
                         bicycleImage.style.display = 'none';
                     }
                     await this.showSection(this.getSectionId(this.getTitleFromHash(hash)), this.getTitleFromHash(hash));
+                    this.pingPongCircle.show();
                     return;
                 }
                 this.startIntro();
@@ -297,6 +446,7 @@
                 this.navButtons.classList.add('visible');
                 document.querySelectorAll('.background-image.active').forEach(img => img.classList.remove('active'));
                 this.bgContainer.style.backgroundColor = 'rgba(255, 255, 255, 1)';
+                this.pingPongCircle.show();
             }
             async showSection(sectionId, sectionTitle) {
                 const existing = document.getElementById(`${sectionId}-section`);
