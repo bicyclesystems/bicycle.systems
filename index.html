@@ -152,8 +152,8 @@
         
         .ping-pong-circle {
             position: fixed;
-            width: 180px;
-            height: 180px;
+            width: 140px;
+            height: 140px;
             background-color: rgba(0, 0, 0, 1);
             border-radius: 50%;
             display: flex;
@@ -166,7 +166,7 @@
             font-weight: 400;
             text-align: center;
             line-height: 1.3;
-            padding: 18px;
+            padding: 14px;
             box-sizing: border-box;
             z-index: 1000;
             pointer-events: auto;
@@ -214,10 +214,8 @@
 </head>
 <body>
     <div class="background-image-container" id="background-container"></div>
-    <a href="https://x.com/bicyclesystems" target="_blank" rel="noopener noreferrer" class="ping-pong-circle" id="ping-pong-circle">
+    <a href="https://say.bike" target="_blank" rel="noopener noreferrer" class="ping-pong-circle" id="ping-pong-circle">
         <div class="version">BIKE-0.1</div>
-        <div class="tagline">Not an app. A loop.</div>
-        <div class="launch-date">Launching July 21.</div>
     </a>
     <div class="view">
         <video class="bicycle-image" autoplay muted playsinline loop>
@@ -261,12 +259,12 @@
         class PingPongCircle {
             constructor(elementId) {
                 this.element = document.getElementById(elementId);
-                this.x = Math.random() * (window.innerWidth - 180);
-                this.y = Math.random() * (window.innerHeight - 180);
+                this.x = Math.random() * (window.innerWidth - 140);
+                this.y = Math.random() * (window.innerHeight - 140);
                 this.vx = (Math.random() - 0.5) * 1; // Much slower velocity between -0.5 and 0.5
                 this.vy = (Math.random() - 0.5) * 1;
-                this.width = 180;
-                this.height = 180;
+                this.width = 140;
+                this.height = 140;
                 this.isPaused = false;
                 this.isVisible = false;
                 
@@ -431,7 +429,7 @@
             async startIntro() {
                 window.scrollTo(0, 0);
                 const bicycleImage = document.querySelector('.bicycle-image');
-                await wait(2000);
+                await wait(5000);
                 bicycleImage.classList.add('fade-out');
                 const section = createEl('section', 'section active');
                 section.id = 'INTRODUCTION-section';
