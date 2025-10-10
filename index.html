@@ -156,7 +156,7 @@
             height: 140px;
             background-color: rgba(0, 0, 0, 1);
             border-radius: 50%;
-            display: flex;
+            display: none;
             flex-direction: column;
             align-items: center;
             justify-content: center;
@@ -618,6 +618,15 @@
             moveNavButtons(section) {
                 if (this.navButtons.parentNode) this.navButtons.parentNode.removeChild(this.navButtons);
                 section.after(this.navButtons);
+                // Hide buttons for already answered questions
+                this.navButtons.querySelectorAll('.topic-paragraph').forEach(btn => {
+                    const sectionId = btn.dataset.section;
+                    if (this.answered.has(sectionId)) {
+                        btn.style.display = 'none';
+                    } else {
+                        btn.style.display = 'block';
+                    }
+                });
                 this.navButtons.classList.add('visible');
                 if (isUserAtBottom()) window.scrollTo({top: document.body.scrollHeight, behavior: 'smooth'});
             }
